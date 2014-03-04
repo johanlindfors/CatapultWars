@@ -1,0 +1,277 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>17b52f90-9b33-4188-8a0e-808582bbabbc</UniqueIdentifier>
+      <Extensions>ico;bmp;dlg;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;resw;resjson</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{c900b8bd-4627-4ae5-94b3-3452a86b797f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures">
+      <UniqueIdentifier>{1913e92d-6b3c-4075-b6cc-0eff48a71a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Ammo">
+      <UniqueIdentifier>{a4e5e096-8eb2-4520-a6a4-83e6ff32060b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Backgrounds">
+      <UniqueIdentifier>{ac6d7913-be8b-4de0-804f-1431d0c6fc6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults">
+      <UniqueIdentifier>{b8debc84-2b70-446a-aeb0-36e159cabcff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Red">
+      <UniqueIdentifier>{8d6c3077-f2cf-4d6e-9b11-bb1915ab2a08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Red\redDestroyed">
+      <UniqueIdentifier>{9a049f1b-d6c6-47aa-9928-c002b9dc44c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Red\redFire">
+      <UniqueIdentifier>{5d00228b-49ac-48e9-97de-f5374edc29aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Red\redIdle">
+      <UniqueIdentifier>{b43faeb6-cfb1-4a5c-9dc8-cb162716ca53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Red\redPullback">
+      <UniqueIdentifier>{eb2ea843-d5ce-4359-808c-161782af0f30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Blue">
+      <UniqueIdentifier>{454d0472-158c-49d7-b4e3-1bfbc9abf98d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Blue\bluePullback">
+      <UniqueIdentifier>{ae554558-06f4-453a-b61b-ab29ec258064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Blue\blueIdle">
+      <UniqueIdentifier>{0272aac3-7d03-4543-afad-181d32719d4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Blue\blueFire">
+      <UniqueIdentifier>{c9bf5ca6-6724-40f7-b6b6-cabb72f2305b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Blue\blueDestroyed">
+      <UniqueIdentifier>{04cb9868-40cf-4828-aff8-e027b89a85f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Hud">
+      <UniqueIdentifier>{89c65fd5-fd5d-4038-9f90-2e35f3973973}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Fire_Miss">
+      <UniqueIdentifier>{cdbc5cd3-04e8-424e-b88a-c74eae9e97c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Textures\Catapults\Hit_Smoke">
+      <UniqueIdentifier>{a8314872-96f5-409d-bf5d-b754ab3df510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Sounds">
+      <UniqueIdentifier>{e3ed27ca-2809-492c-bfa3-a10e2159c0f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets\Fonts">
+      <UniqueIdentifier>{29c678b4-96e1-475b-8b72-38ba375bac1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Players">
+      <UniqueIdentifier>{8d67a80e-0938-4fb4-8aa8-ee744e7c0d60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Catapult">
+      <UniqueIdentifier>{82ff7391-81c2-4bd6-bb1e-84ae0b82e591}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{b3d86b55-bea3-4315-be3d-b98b3e8f70a6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\ApplicationIcon.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\AlignmentGrid.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Tiles\FlipCycleTileLarge.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Tiles\FlipCycleTileMedium.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Tiles\FlipCycleTileSmall.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Tiles\IconicTileMediumLarge.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Tiles\IconicTileSmall.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Ammo\rock_ammo.DDS">
+      <Filter>Assets\Textures\Ammo</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\blank.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\cloud1.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\cloud2.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\defeat.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\gameplay_screen.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\instructions.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\mountain.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\sky.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\title_screen.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\victory.DDS">
+      <Filter>Assets\Textures\Backgrounds</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redDestroyed\redCatapult_destroyed.DDS">
+      <Filter>Assets\Textures\Catapults\Red\redDestroyed</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redFire\redCatapult_fire.DDS">
+      <Filter>Assets\Textures\Catapults\Red\redFire</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redIdle\redIdle.DDS">
+      <Filter>Assets\Textures\Catapults\Red\redIdle</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redPullback\redCatapult_Pullback.DDS">
+      <Filter>Assets\Textures\Catapults\Red\redPullback</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\bluePullback\blueCatapult_Pullback.DDS">
+      <Filter>Assets\Textures\Catapults\Blue\bluePullback</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueIdle\blueIdle.DDS">
+      <Filter>Assets\Textures\Catapults\Blue\blueIdle</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueFire\blueCatapult_fire.DDS">
+      <Filter>Assets\Textures\Catapults\Blue\blueFire</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueDestroyed\blueCatapult_destroyed.DDS">
+      <Filter>Assets\Textures\Catapults\Blue\blueDestroyed</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\ammoType.DDS">
+      <Filter>Assets\Textures\Hud</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\Arrow.DDS">
+      <Filter>Assets\Textures\Hud</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\hudBackground.DDS">
+      <Filter>Assets\Textures\Hud</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\windArrow.DDS">
+      <Filter>Assets\Textures\Hud</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Fire_Miss\fire_miss.DDS">
+      <Filter>Assets\Textures\Catapults\Fire_Miss</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Hit_Smoke\smoke.DDS">
+      <Filter>Assets\Textures\Catapults\Hit_Smoke</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CatapultWars.cpp" />
+    <ClCompile Include="CubeRenderer.cpp" />
+    <ClCompile Include="Direct3DBase.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CatapultGame.cpp" />
+    <ClCompile Include="Player.cpp">
+      <Filter>Players</Filter>
+    </ClCompile>
+    <ClCompile Include="AI.cpp">
+      <Filter>Players</Filter>
+    </ClCompile>
+    <ClCompile Include="Human.cpp">
+      <Filter>Players</Filter>
+    </ClCompile>
+    <ClCompile Include="Catapult.cpp">
+      <Filter>Catapult</Filter>
+    </ClCompile>
+    <ClCompile Include="Projectile.cpp">
+      <Filter>Catapult</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioManager.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CatapultWars.h" />
+    <ClInclude Include="CubeRenderer.h" />
+    <ClInclude Include="Direct3DBase.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DirectXHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CatapultGame.h" />
+    <ClInclude Include="Player.h">
+      <Filter>Players</Filter>
+    </ClInclude>
+    <ClInclude Include="AI.h">
+      <Filter>Players</Filter>
+    </ClInclude>
+    <ClInclude Include="Human.h">
+      <Filter>Players</Filter>
+    </ClInclude>
+    <ClInclude Include="Catapult.h">
+      <Filter>Catapult</Filter>
+    </ClInclude>
+    <ClInclude Include="Projectile.h">
+      <Filter>Catapult</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioManager.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="WMAppManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sounds\BoulderHit.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\CatapultExplosion.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\CatapultFire.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\Lose.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\RopeStretch.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\Win.wav">
+      <Filter>Assets\Sounds</Filter>
+    </Media>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\Fonts\HUDFont.spritefont">
+      <Filter>Assets\Fonts</Filter>
+    </None>
+    <None Include="Assets\Fonts\MenuFont.spritefont">
+      <Filter>Assets\Fonts</Filter>
+    </None>
+  </ItemGroup>
+</Project>
