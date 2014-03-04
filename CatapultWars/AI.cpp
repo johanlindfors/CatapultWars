@@ -1,15 +1,14 @@
 #include "pch.h"
 #include "AI.h"
-#include "Catapult.h"
 
 using namespace CatapultGame;
 
 AI::AI()
 {
-	Catapult = new CatapultGame::Catapult();
+	Catapult = new CatapultGame::Catapult(
+		L"Textures/Catapults/Red/redIdle/redIdle",
+		XMFLOAT2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
 	// (game, screenSpriteBatch,
-	//	"Textures/Catapults/Red/redIdle/redIdle",
-	//	new Vector2(600, 332), SpriteEffects.FlipHorizontally, true);
 }
 
 AI::~AI()

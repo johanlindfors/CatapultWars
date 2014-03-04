@@ -4,6 +4,8 @@
 
 namespace CatapultGame {
 
+	class Catapult;
+
 	class Player
 	{
 	public:

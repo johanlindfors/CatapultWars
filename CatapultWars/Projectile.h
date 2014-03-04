@@ -1,7 +1,12 @@
 #pragma once
-ref class Projectile sealed
-{
-public:
-	Projectile();
-};
+namespace CatapultGame {
+	class Projectile
+	{
+	public:
+		Projectile();
+		void Initialize();
+		void Draw();
+		void Fire(float velocityX, float velocityY);
+	};
+}
 
