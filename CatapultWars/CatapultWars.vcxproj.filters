@@ -240,6 +240,9 @@
     <ClInclude Include="Animation.h">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="property.hpp">
+      <Filter>Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="WMAppManifest.xml" />
