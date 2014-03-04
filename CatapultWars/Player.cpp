@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Player.h"
 
+using namespace CatapultGame;
 
 Player::Player()
 : MinShotStrength(150)

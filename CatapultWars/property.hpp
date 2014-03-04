@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #define READ_ONLY 1
 #define WRITE_ONLY 2
