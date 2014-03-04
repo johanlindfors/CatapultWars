@@ -28,7 +28,7 @@ void CatapultWars::Initialize(CoreApplicationView^ applicationView)
 	CoreApplication::Resuming +=
 		ref new EventHandler<Platform::Object^>(this, &CatapultWars::OnResuming);
 
-	m_renderer = ref new CubeRenderer();
+	m_game = ref new CatapultGame();
 }
 
 void CatapultWars::SetWindow(CoreWindow^ window)
@@ -48,7 +48,7 @@ void CatapultWars::SetWindow(CoreWindow^ window)
 	window->PointerReleased +=
 		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &CatapultWars::OnPointerReleased);
 
-	m_renderer->Initialize(CoreWindow::GetForCurrentThread());
+	m_game->Initialize(CoreWindow::GetForCurrentThread());
 }
 
 void CatapultWars::Load(Platform::String^ entryPoint)
@@ -65,9 +65,9 @@ void CatapultWars::Run()
 		{
 			timer->Update();
 			CoreWindow::GetForCurrentThread()->Dispatcher->ProcessEvents(CoreProcessEventsOption::ProcessAllIfPresent);
-			m_renderer->Update(timer->Total, timer->Delta);
-			m_renderer->Render();
-			m_renderer->Present(); // This call is synchronized to the display frame rate.
+			m_game->Update(timer->Total, timer->Delta);
+			m_game->Render();
+			m_game->Present(); // This call is synchronized to the display frame rate.
 		}
 		else
 		{
@@ -117,7 +117,7 @@ void CatapultWars::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ a
 	// aware that a deferral may not be held indefinitely. After about five seconds,
 	// the app will be forced to exit.
 	SuspendingDeferral^ deferral = args->SuspendingOperation->GetDeferral();
-	m_renderer->ReleaseResourcesForSuspending();
+	m_game->ReleaseResourcesForSuspending();
 
 	create_task([this, deferral]()
 	{
@@ -132,7 +132,7 @@ void CatapultWars::OnResuming(Platform::Object^ sender, Platform::Object^ args)
 	// Restore any data or state that was unloaded on suspend. By default, data
 	// and state are persisted when resuming from suspend. Note that this event
 	// does not occur if the app was previously terminated.
-	 m_renderer->CreateWindowSizeDependentResources();
+	m_game->CreateWindowSizeDependentResources();
 }
 
 IFrameworkView^ Direct3DApplicationSource::CreateView()

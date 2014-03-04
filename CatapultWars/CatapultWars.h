@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "pch.h"
-#include "CubeRenderer.h"
+#include "CatapultGame.h"
 
 ref class CatapultWars sealed : public Windows::ApplicationModel::Core::IFrameworkView
 {
@@ -27,7 +27,7 @@ protected:
 	void OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
 
 private:
-	CubeRenderer^ m_renderer;
+	CatapultGame^ m_game;
 	bool m_windowClosed;
 	bool m_windowVisible;
 };

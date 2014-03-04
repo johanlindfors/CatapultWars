@@ -163,7 +163,6 @@
     <ClInclude Include="Catapult.h" />
     <ClInclude Include="CatapultGame.h" />
     <ClInclude Include="CatapultWars.h" />
-    <ClInclude Include="CubeRenderer.h" />
     <ClInclude Include="DirectXHelper.h" />
     <ClInclude Include="Direct3DBase.h" />
     <ClInclude Include="BasicTimer.h" />
@@ -179,7 +178,6 @@
     <ClCompile Include="Catapult.cpp" />
     <ClCompile Include="CatapultGame.cpp" />
     <ClCompile Include="CatapultWars.cpp" />
-    <ClCompile Include="CubeRenderer.cpp" />
     <ClCompile Include="Direct3DBase.cpp" />
     <ClCompile Include="Human.cpp" />
     <ClCompile Include="pch.cpp">

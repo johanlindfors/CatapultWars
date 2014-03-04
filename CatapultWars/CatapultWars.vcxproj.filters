@@ -175,7 +175,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CatapultWars.cpp" />
-    <ClCompile Include="CubeRenderer.cpp" />
     <ClCompile Include="Direct3DBase.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -207,7 +206,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CatapultWars.h" />
-    <ClInclude Include="CubeRenderer.h" />
     <ClInclude Include="Direct3DBase.h">
       <Filter>Common</Filter>
     </ClInclude>
