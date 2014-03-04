@@ -47,14 +47,14 @@ namespace CatapultGame {
 		property<Catapult, float, WRITE_ONLY>			Wind;
 		property<Catapult, Player*, WRITE_ONLY>			Enemy;
 		property<Catapult, Player*, WRITE_ONLY>			Self;
-		property<Catapult, XMFLOAT2, READ_ONLY>			Position;
+		XMFLOAT2										Position;
 		property<Catapult, bool, READ_WRITE>			GameOver;
 
 		void setWind(float wind) { m_wind = wind; }
 		void setEnemy(Player* enemy) { m_enemy = enemy; }
 		void setSelf(Player* self) { m_self = self; }
 		
-		XMFLOAT2 getPosition() { return m_catapultPosition; }
+		//XMFLOAT2 getPosition() { return m_catapultPosition; }
 
 	private:
 		ComPtr<ID3D11ShaderResourceView>				m_idleTexture;		

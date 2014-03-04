@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Catapult.h"
+#include "BoundingBox.h"
+#include "BoundingSphere.h"
 
 using namespace CatapultGame;
 
@@ -195,7 +197,7 @@ void Catapult::Draw()
 	}
 }
 
-void Catapult::Hit() 
+void Catapult::Hit()
 {
 	AnimationRunning = true;
 	m_animations[L"Destroyed"]->PlayFromFrameIndex(0);
@@ -211,47 +213,51 @@ void Catapult::Fire(float velocity)
 bool Catapult::CheckHit()
 {
 	bool bRes = false;
-	
-	//Vector3 center = new Vector3(projectile.ProjectilePosition, 0);
-	//BoundingSphere sphere = new BoundingSphere(center,
-	//	Math.Max(projectile.ProjectileTexture.Width / 2,
-	//	projectile.ProjectileTexture.Height / 2));
 
-	//// Check Self-Hit - create a bounding box around self
-	//Vector3 min = new Vector3(catapultPosition, 0);
-	//Vector3 max = new Vector3(catapultPosition +
-	//	new Vector2(animations["Fire"].FrameSize.X,
-	//	animations["Fire"].FrameSize.Y), 0);
-	//BoundingBox selfBox = new BoundingBox(min, max);
+	XMFLOAT3 center = XMFLOAT3(m_projectile->ProjectilePosition.x, m_projectile->ProjectilePosition.y, 0);
+	BoundingSphere* sphere = new BoundingSphere(center,
+		max(m_projectile->ProjectileTextureWidth / 2,
+		m_projectile->ProjectileTextureHeight / 2));
 
-	//// Check enemy - create a bounding box around the enemy
-	//min = new Vector3(enemy.Catapult.Position, 0);
-	//max = new Vector3(enemy.Catapult.Position +
-	//	new Vector2(animations["Fire"].FrameSize.X,
-	//	animations["Fire"].FrameSize.Y), 0);
-	//BoundingBox enemyBox = new BoundingBox(min, max);
+	// Check Self-Hit - create a bounding box around self
+	XMFLOAT3 min = XMFLOAT3(m_catapultPosition.x, m_catapultPosition.y, 0);
+	XMFLOAT3 max = XMFLOAT3(
+		m_catapultPosition.x + m_animations[L"Fire"]->FrameSize.x,
+		m_catapultPosition.y + m_animations[L"Fire"]->FrameSize.y,
+		0);
+	BoundingBox* selfBox = new BoundingBox(min, max);
 
-	//// Check self hit
-	//if (sphere.Intersects(selfBox) && currentState != CatapultState.Hit)
-	//{
-	//	AudioManager.PlaySound("catapultExplosion");
-	//	// Launch hit animation sequence on self
-	//	Hit();
-	//	enemy.Score++;
-	//	bRes = true;
-	//}
-	//// Check if enemy was hit
-	//else if (sphere.Intersects(enemyBox)
-	//	&& enemy.Catapult.CurrentState != CatapultState.Hit
-	//	&& enemy.Catapult.CurrentState != CatapultState.Reset)
-	//{
-	//	AudioManager.PlaySound("catapultExplosion");
-	//	// Launch enemy hit animaton
-	//	enemy.Catapult.Hit();
-	//	self.Score++;
-	//	bRes = true;
-	//	currentState = CatapultState.Reset;
-	//}
+	// Check enemy - create a bounding box around the enemy
+	min = XMFLOAT3(m_enemy->Catapult->Position.x, m_enemy->Catapult->Position.y, 0);
+	max = XMFLOAT3(
+		m_enemy->Catapult->Position.x + m_animations[L"Fire"]->FrameSize.x,
+		m_enemy->Catapult->Position.y + m_animations[L"Fire"]->FrameSize.y,
+		0);
+	BoundingBox* enemyBox = new BoundingBox(min, max);
+
+	// Check self hit
+	if (sphere->Intersects(selfBox) && m_currentState != CatapultState::Hit)
+	{
+		//AudioManager.PlaySound("catapultExplosion");
+
+		// Launch hit animation sequence on self
+		Hit();
+		m_enemy->Score = m_enemy->Score + 1;
+		bRes = true;
+	}
+	// Check if enemy was hit
+	else if (sphere->Intersects(enemyBox)
+		&& m_enemy->Catapult->CurrentState != CatapultState::Hit
+		&& m_enemy->Catapult->CurrentState != CatapultState::Reset)
+	{
+		//AudioManager.PlaySound("catapultExplosion");
+
+		// Launch enemy hit animaton
+		m_enemy->Catapult->Hit();
+		m_self->Score = m_enemy->Score + 1;
+		bRes = true;
+		m_currentState = CatapultState::Reset;
+	}
 
 	return bRes;
 }
