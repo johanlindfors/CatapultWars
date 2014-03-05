@@ -7,7 +7,7 @@ AI::AI()
 {
 	Catapult = new CatapultGame::Catapult(
 		L"Textures/Catapults/Red/redIdle/redIdle",
-		XMFLOAT2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
+		Vector2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
 	// (game, screenSpriteBatch,
 }
 

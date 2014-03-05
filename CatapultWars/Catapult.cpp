@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Catapult.h"
-#include "BoundingBox.h"
-#include "BoundingSphere.h"
+//#include "BoundingBox.h"
+//#include "BoundingSphere.h"
 
 using namespace CatapultGame;
 
-Catapult::Catapult(wchar_t* idleTexture, XMFLOAT2 position, SpriteEffects spriteEffect, bool isAi) :
+Catapult::Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
 m_winScore(5),
 m_gravity(500)
 {
@@ -328,7 +328,7 @@ bool Catapult::CheckHit()
 	bool bRes = false;
 
 	XMFLOAT3 center = XMFLOAT3(m_projectile->ProjectilePosition.x, m_projectile->ProjectilePosition.y, 0);
-	BoundingSphere* sphere = new BoundingSphere(center,
+	BoundingSphere sphere = BoundingSphere(center,
 		max(m_projectile->ProjectileTextureWidth / 2,
 		m_projectile->ProjectileTextureHeight / 2));
 
@@ -338,7 +338,7 @@ bool Catapult::CheckHit()
 		m_catapultPosition.x + m_animations[L"Fire"]->FrameSize.x,
 		m_catapultPosition.y + m_animations[L"Fire"]->FrameSize.y,
 		0);
-	BoundingBox* selfBox = new BoundingBox(min, max);
+	BoundingBox selfBox = BoundingBox(min, max);
 
 	// Check enemy - create a bounding box around the enemy
 	min = XMFLOAT3(m_enemy->Catapult->Position.x, m_enemy->Catapult->Position.y, 0);
@@ -346,10 +346,10 @@ bool Catapult::CheckHit()
 		m_enemy->Catapult->Position.x + m_animations[L"Fire"]->FrameSize.x,
 		m_enemy->Catapult->Position.y + m_animations[L"Fire"]->FrameSize.y,
 		0);
-	BoundingBox* enemyBox = new BoundingBox(min, max);
+	BoundingBox enemyBox = BoundingBox(min, max);
 
 	// Check self hit
-	if (sphere->Intersects(selfBox) && m_currentState != CatapultState::Hit)
+	if (sphere.Intersects(selfBox) && m_currentState != CatapultState::Hit)
 	{
 		//AudioManager.PlaySound("catapultExplosion");
 
@@ -359,7 +359,7 @@ bool Catapult::CheckHit()
 		bRes = true;
 	}
 	// Check if enemy was hit
-	else if (sphere->Intersects(enemyBox)
+	else if (sphere.Intersects(enemyBox)
 		&& m_enemy->Catapult->CurrentState != CatapultState::Hit
 		&& m_enemy->Catapult->CurrentState != CatapultState::Reset)
 	{

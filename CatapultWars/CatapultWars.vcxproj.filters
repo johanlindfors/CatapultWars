@@ -203,12 +203,6 @@
     <ClCompile Include="Animation.cpp">
       <Filter>Utility</Filter>
     </ClCompile>
-    <ClCompile Include="BoundingBox.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
-    <ClCompile Include="BoundingSphere.cpp">
-      <Filter>Utility</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CatapultWars.h" />
@@ -247,12 +241,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="property.hpp">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingBox.h">
-      <Filter>Utility</Filter>
-    </ClInclude>
-    <ClInclude Include="BoundingSphere.h">
       <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>

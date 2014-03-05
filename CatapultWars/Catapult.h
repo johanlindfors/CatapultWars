@@ -6,6 +6,7 @@
 #include "Projectile.h"
 #include "Player.h"
 #include "Animation.h"
+#include "SimpleMath.h"
 #include <unordered_map>
 
 using namespace Microsoft::WRL;
@@ -31,7 +32,7 @@ namespace CatapultGame {
 	class Catapult
 	{
 	public:
-		Catapult(wchar_t* idleTexture, XMFLOAT2 position, SpriteEffects spriteEffect, bool isAi);
+		Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
 		~Catapult();
 
 		void Initialize();
@@ -69,7 +70,7 @@ namespace CatapultGame {
 		float											m_wind;
 		Player*											m_enemy;
 		Player*											m_self;
-		XMFLOAT2										m_catapultPosition;
+		Vector2											m_catapultPosition;
 		const int										m_winScore;
 
 		std::unordered_map<wchar_t*, Animation*>		m_animations;
