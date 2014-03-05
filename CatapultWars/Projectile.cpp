@@ -21,3 +21,8 @@ void Projectile::Fire(float velocityX, float velocityY)
 {
 
 }
+
+bool Projectile::UpdateProjectileFlightData(float timeTotal, float timeDelta, float wind, float gravity)
+{
+	return false;
+}

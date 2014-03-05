@@ -112,20 +112,133 @@ void Catapult::Update(float timeTotal, float timeDelta)
 	case CatapultGame::Idle:
 		// Nothing to do
 		break;
+
 	case CatapultGame::Aiming:
+		if (m_lastUpdateState != CatapultState::Aiming)
+		{
+			//AudioManager::PlaySound(L"ropeStretch", true);
+
+			AnimationRunning = true;
+			if (m_isAI == true)
+			{
+				m_animations[L"Aim"]->PlayFromFrameIndex(0);
+m_stallUpdateCycles = 20;
+startStall = false;
+			}
+		}
+
+		// Progress Aiming "animation"
+		if (m_isAI == false)
+		{
+			UpdateAimAccordingToShotStrength();
+		}
+		else
+		{
+			m_animations[L"Aim"]->Update();
+			startStall = AimReachedShotStrength();
+			m_currentState = startStall ? CatapultState::Stalling : CatapultState::Aiming;
+		}
 		break;
-	case CatapultGame::Firing:
-		break;
-	case CatapultGame::ProjectileFlying:
-		break;
-	case CatapultGame::ProjectileHit:
-		break;
-	case CatapultGame::Hit:
-		break;
-	case CatapultGame::Reset:
-		break;
+
 	case CatapultGame::Stalling:
+		if (m_stallUpdateCycles-- <= 0)
+		{
+			Fire(ShotVelocity);
+			postUpdateStateChange = CatapultState::Firing;
+		}
 		break;
+
+	case CatapultGame::Firing:
+		// Progress Fire animation
+		if (m_lastUpdateState != CatapultState::Firing)
+		{
+			//AudioManager::StopSound(L"ropeStretch");
+			//AudioManager::PlaySound(L"catapultFire");
+			StartFiringFromLastAimPosition();
+		}
+
+		m_animations[L"Fire"]->Update();
+
+		// If in the "split" point of the animation start
+		// projectile fire sequence
+		if (m_animations[L"Fire"]->FrameIndex == m_splitFrames[L"Fire"])
+		{
+			postUpdateStateChange = (CatapultState)(m_currentState | CatapultState::ProjectileFlying);
+			m_projectile->ProjectilePosition = m_projectile->ProjectileStartPosition;
+		}
+		break;
+
+	case (CatapultState::Firing | CatapultState::ProjectileFlying) :
+		// Progress Fire animation
+		m_animations[L"Fire"]->Update();
+
+		// Update projectile velocity & position in flight
+		isGroundHit = m_projectile->UpdateProjectileFlightData(timeTotal, timeDelta, m_wind, m_gravity);
+		if (isGroundHit)
+		{
+			postUpdateStateChange == CatapultState::ProjectileHit;
+			m_animations[L"fireMiss"]->PlayFromFrameIndex(0);
+		}
+		break;
+
+	case CatapultGame::ProjectileFlying:
+		// Update projectile velocity & position in flight
+		isGroundHit = m_projectile->UpdateProjectileFlightData(timeTotal, timeDelta, m_wind, m_gravity);
+		if (isGroundHit)
+		{
+			postUpdateStateChange = CatapultState::ProjectileHit;
+			m_animations[L"fireMiss"]->PlayFromFrameIndex(0);
+		}
+		break;
+
+	case CatapultGame::ProjectileHit:
+		if (!CheckHit())
+		{
+			if (m_lastUpdateState != CatapultState::ProjectileHit)
+			{
+				//VibrateController.Default.Start(TimeSpan.FromMilliseconds(100));
+				//AudioManager::PlaySound(L"boulderHit");
+			}
+
+			// Hit animation finished playing
+			if (m_animations[L"fireMiss"]->IsActive == false)
+			{
+				postUpdateStateChange = CatapultState::Reset;
+			}
+
+			m_animations[L"fireMiss"]->Update();
+		}
+		else {
+			// Catapult hit - start longer vibration on any catapult hit
+			// Remember that the call to "CheckHit" updates the catapult's
+			// state to "Hit"
+
+			//VibrateController.Default.Start(TimeSpan.FromMilliseconds(500));
+		}
+		break;
+
+	case CatapultGame::Hit:
+		if ((m_animations[L"Destroyed"]->IsActive == false) &&
+			(m_animations[L"hitSmoke"]->IsActive == false))
+		{
+			if (m_enemy->Score >= m_winScore)
+			{
+				GameOver = true;
+				break;
+			}
+
+			postUpdateStateChange = CatapultState::Reset;
+		}
+
+		m_animations[L"Destroyed"]->Update();
+		m_animations[L"hitSmoke"]->Update();
+
+		break;
+
+	case CatapultGame::Reset:
+		AnimationRunning = false;
+		break;
+
 	default:
 		break;
 	}

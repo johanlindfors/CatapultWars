@@ -12,6 +12,11 @@ void Animation::PlayFromFrameIndex(int index)
 
 }
 
+void Animation::Update()
+{
+
+}
+
 void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, XMFLOAT2 position, SpriteEffects spriteEffects)
 {
 
