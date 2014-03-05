@@ -13,18 +13,17 @@ namespace CatapultGame {
 		~Player();
 
 		virtual void Initialize();
-
-		Catapult*		Catapult;
-		property<Player, Player*, WRITE_ONLY> Enemy;
-		property<Player, wchar_t*, READ_WRITE> Name;
-		property<Player, int, READ_WRITE> Score;
-		property<Player, bool, READ_WRITE> IsActive;
-
-		const float MinShotStrength;
-		const float MaxShotStrength;
-
 		virtual void Update(float timeTotal, float timeDelta);
 		virtual void Draw();
+
+		Catapult*		Catapult;
+		const float		MinShotStrength;
+		const float		MaxShotStrength; 
+		
+		property<Player, Player*,	WRITE_ONLY>	Enemy;
+		property<Player, wchar_t*,	READ_WRITE>	Name;
+		property<Player, int,		READ_WRITE>	Score;
+		property<Player, bool,		READ_WRITE>	IsActive;
 
 	private:
 		Player*			m_enemy;

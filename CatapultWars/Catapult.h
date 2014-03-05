@@ -59,7 +59,7 @@ namespace CatapultGame {
 
 	private:
 		ComPtr<ID3D11ShaderResourceView>				m_idleTexture;		
-		DirectX::SpriteEffects							m_spriteEffects;
+		SpriteEffects									m_spriteEffects;
 		Projectile*										m_projectile;
 		wchar_t*										m_idleTextureName;
 		bool											m_isAI;

@@ -1,4 +1,6 @@
 #pragma once
+#include "SimpleMath.h"
+
 namespace CatapultGame {
 	class Projectile
 	{
@@ -9,8 +11,8 @@ namespace CatapultGame {
 		void Fire(float velocityX, float velocityY);
 		bool UpdateProjectileFlightData(float timeTotal, float timeDelta, float wind, float gravity);
 
-		DirectX::XMFLOAT2 ProjectilePosition;
-		DirectX::XMFLOAT2 ProjectileStartPosition;
+		DirectX::SimpleMath::Vector2 ProjectilePosition;
+		DirectX::SimpleMath::Vector2 ProjectileStartPosition;
 		float ProjectileTextureWidth;
 		float ProjectileTextureHeight;
 	};

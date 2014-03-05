@@ -9,7 +9,6 @@ namespace CatapultGame {
 		~AI();
 
 		virtual void Initialize() override;
-
 		virtual void Update(float timeTotal, float timeDelta) override;
 		virtual void Draw() override;
 	};

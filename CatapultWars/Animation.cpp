@@ -68,6 +68,6 @@ void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vect
 		m_animatedCharacter.Get(), 
 		position + Offset,
 		&sourceRectangle,
-		Colors::White, 0.0f, (XMVECTOR)Vector2(0, 0), (GXMVECTOR)scale, spriteEffects, 0.0f);
+		Colors::White, 0.0f, Vector2(0, 0), scale, spriteEffects, 0.0f);
 
 }
