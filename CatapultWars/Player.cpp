@@ -23,7 +23,7 @@ Player::Player()
 	IsActive.getter(&Player::getIsActive);
 }
 
-void Player::Initialize()
+void Player::Initialize(ID3D11Device* device)
 {
 	m_score = 0;
 }

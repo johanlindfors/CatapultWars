@@ -38,4 +38,48 @@ namespace DX
 			return fileData;
 		});
 	}
+
+	inline void GetTextureSize(ID3D11Resource* res, UINT* width, UINT* height)
+	{
+		assert(res != 0);
+
+		// This is the most generic solution. you can make it a lot
+		// simpler if you know it will always be a 2D texture file
+		D3D11_RESOURCE_DIMENSION dim;
+		res->GetType(&dim);
+		switch (dim)
+		{
+		case D3D11_RESOURCE_DIMENSION_TEXTURE1D:
+		{
+			auto txt = reinterpret_cast<ID3D11Texture1D*>(res);
+			D3D11_TEXTURE1D_DESC desc;
+			txt->GetDesc(&desc);
+			if (width) *width = desc.Width;
+			if (height) *height = 1;
+		}
+			break;
+		case D3D11_RESOURCE_DIMENSION_TEXTURE2D:
+		{
+			auto txt = reinterpret_cast<ID3D11Texture2D*>(res);
+			D3D11_TEXTURE2D_DESC desc;
+			txt->GetDesc(&desc);
+			if (width) *width = desc.Width;
+			if (height) *height = desc.Height;
+		}
+			break;
+		case D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+		{
+			auto txt = reinterpret_cast<ID3D11Texture3D*>(res);
+			D3D11_TEXTURE3D_DESC desc;
+			txt->GetDesc(&desc);
+			if (width) *width = desc.Width;
+			if (height) *height = desc.Height;
+		}
+			break;
+		default:
+			if (width) *width = 0;
+			if (height) *height = 0;
+			break;
+		}
+	}
 }

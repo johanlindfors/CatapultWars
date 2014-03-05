@@ -15,11 +15,11 @@ AI::~AI()
 {
 }
 
-void AI::Initialize()
+void AI::Initialize(ID3D11Device* device)
 {	
-	Catapult->Initialize();
+	Catapult->Initialize(device);
 
-	Player::Initialize();
+	Player::Initialize(device);
 }
 
 void AI::Update(float timeTotal, float timeDelta)

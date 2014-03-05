@@ -35,7 +35,7 @@ namespace CatapultGame {
 		Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
 		~Catapult();
 
-		void Initialize();
+		void Initialize(ID3D11Device* device);
 		void Update(float timeTotal, float timeDelta);
 		void Draw();
 

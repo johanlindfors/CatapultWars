@@ -8,7 +8,7 @@ namespace CatapultGame {
 		AI();
 		~AI();
 
-		virtual void Initialize() override;
+		virtual void Initialize(ID3D11Device* device) override;
 		virtual void Update(float timeTotal, float timeDelta) override;
 		virtual void Draw() override;
 	};

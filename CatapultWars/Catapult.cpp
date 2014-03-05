@@ -20,7 +20,7 @@ Catapult::~Catapult()
 
 }
 
-void Catapult::Initialize()
+void Catapult::Initialize(ID3D11Device* device)
 {
 	IsActive = true;
 	AnimationRunning = false;
@@ -29,14 +29,14 @@ void Catapult::Initialize()
 
 	ParseXmlAndCreateAnimations();
 
-	XMFLOAT2 projectileStartPosition;
+	Vector2 projectileStartPosition;
 	if (m_isAI)
-		projectileStartPosition = XMFLOAT2(630, 340);
+		projectileStartPosition = Vector2(630, 340);
 	else
-		projectileStartPosition = XMFLOAT2(175, 340);
+		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile = new Projectile();
-	m_projectile->Initialize();
+	m_projectile = new Projectile(m_spriteBatch, L"Textures/Ammo/rock_ammo", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
+	m_projectile->Initialize(device);
 }
 
 void Catapult::ParseXmlAndCreateAnimations()

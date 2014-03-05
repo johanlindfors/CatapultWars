@@ -12,7 +12,7 @@ namespace CatapultGame {
 		Player();
 		~Player();
 
-		virtual void Initialize();
+		virtual void Initialize(ID3D11Device* device);
 		virtual void Update(float timeTotal, float timeDelta);
 		virtual void Draw();
 
