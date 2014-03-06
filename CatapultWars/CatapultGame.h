@@ -1,9 +1,7 @@
 #pragma once
 
 #include "Direct3DBase.h"
-#include "SpriteBatch.h"
 #include "SpriteFont.h"
-#include "SimpleMath.h"
 #include "Human.h"
 #include "AI.h"
 

@@ -1,7 +1,6 @@
 #pragma once
 #include "SpriteBatch.h"
 #include "property.hpp"
-#include "SimpleMath.h"
 
 using namespace std;
 using namespace DirectX;

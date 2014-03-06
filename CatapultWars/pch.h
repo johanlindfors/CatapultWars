@@ -6,8 +6,10 @@
 #include <memory>
 #include <agile.h>
 
+#include "SimpleMath.h"
 #include "DDSTextureLoader.h"
 #include "DirectXHelper.h"
+#include "SpriteBatch.h"
 
 #include "Catapult.h"
 #include "Player.h"

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Animation.h"
-#include "SimpleMath.h"
 
 using namespace CatapultWars;
 
