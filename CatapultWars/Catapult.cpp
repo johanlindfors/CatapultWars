@@ -290,7 +290,10 @@ void Catapult::Update(float timeTotal, float timeDelta)
 
 bool Catapult::AimReachedShotStrength()
 {
-	return(m_animations[L"Aim"]->FrameIndex == m_animations[L"Aim"]->FrameCount*ShotStrength);
+	int frameIndex = m_animations[L"Aim"]->FrameIndex;
+	int frameCount = m_animations[L"Aim"]->FrameCount;
+	int frameShot = frameCount * ShotStrength - 1;
+	return(frameIndex == frameShot);
 }
 
 void Catapult::UpdateAimAccordingToShotStrength()
@@ -369,11 +372,12 @@ bool Catapult::CheckHit()
 	XMFLOAT3 center = XMFLOAT3(m_projectile->ProjectilePosition.x, m_projectile->ProjectilePosition.y, 0);
 	BoundingSphere sphere = BoundingSphere(center,
 		max(m_projectile->ProjectileTextureWidth / 2,
-			m_projectile->ProjectileTextureHeight / 2));
+		m_projectile->ProjectileTextureHeight / 2));
 
 	// Check Self-Hit - create a bounding box around self
-	XMFLOAT3 catapultCenter = XMFLOAT3(m_catapultPosition.x - (m_animations[L"Fire"]->FrameSize.x/2), 
-		m_catapultPosition.y - (m_animations[L"Fire"]->FrameSize.x/2), 0);
+	XMFLOAT3 catapultCenter = XMFLOAT3(
+		m_catapultPosition.x + (m_animations[L"Fire"]->FrameSize.x / 2),
+		m_catapultPosition.y + (m_animations[L"Fire"]->FrameSize.x / 2), 0);
 	XMFLOAT3 extents = XMFLOAT3(
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,
@@ -381,8 +385,9 @@ bool Catapult::CheckHit()
 	BoundingBox selfBox = BoundingBox(catapultCenter, extents);
 
 	// Check enemy - create a bounding box around the enemy
-	catapultCenter = XMFLOAT3(m_enemy->Catapult->Position.x - (m_animations[L"Fire"]->FrameSize.x / 2),
-				   m_enemy->Catapult->Position.y - (m_animations[L"Fire"]->FrameSize.y)/2, 0);
+	catapultCenter = XMFLOAT3(
+		m_enemy->Catapult->Position.x + (m_animations[L"Fire"]->FrameSize.x / 2),
+		m_enemy->Catapult->Position.y + (m_animations[L"Fire"]->FrameSize.y / 2), 0);
 	extents = XMFLOAT3(
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,
@@ -408,7 +413,7 @@ bool Catapult::CheckHit()
 
 		// Launch enemy hit animaton
 		m_enemy->Catapult->Hit();
-		m_self->Score = m_enemy->Score + 1;
+		m_self->Score = m_self->Score + 1;
 		bRes = true;
 		CurrentState = CatapultState::Reset;
 	}
