@@ -1,18 +1,14 @@
 #include "pch.h"
 #include "AI.h"
 
-using namespace CatapultGame;
+using namespace CatapultWars;
 
 AI::AI()
 {
-	Catapult = new CatapultGame::Catapult(
-		L"Textures/Catapults/Red/redIdle/redIdle",
+	Catapult = ref new CatapultWars::Catapult(
+		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.dds",
 		Vector2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
 	// (game, screenSpriteBatch,
-}
-
-AI::~AI()
-{
 }
 
 void AI::Initialize(ID3D11Device* device)

@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "Catapult.h"
-//#include "BoundingBox.h"
-//#include "BoundingSphere.h"
 
-using namespace CatapultGame;
+using namespace CatapultWars;
 
 Catapult::Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
 m_winScore(5),
@@ -13,11 +11,6 @@ m_gravity(500)
 	m_catapultPosition = position;
 	m_spriteEffects = spriteEffect;
 	m_isAI = isAi;
-}
-
-Catapult::~Catapult()
-{
-
 }
 
 void Catapult::Initialize(ID3D11Device* device)
@@ -35,8 +28,8 @@ void Catapult::Initialize(ID3D11Device* device)
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile = new Projectile(m_spriteBatch, L"Textures/Ammo/rock_ammo", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
-	m_projectile->Initialize(device);
+	//m_projectile = new Projectile(m_spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
+	//m_projectile->Initialize(device);
 }
 
 void Catapult::ParseXmlAndCreateAnimations()
@@ -109,11 +102,11 @@ void Catapult::Update(float timeTotal, float timeDelta)
 
 	switch (m_currentState)
 	{
-	case CatapultGame::Idle:
+	case CatapultState::Idle:
 		// Nothing to do
 		break;
 
-	case CatapultGame::Aiming:
+	case CatapultState::Aiming:
 		if (m_lastUpdateState != CatapultState::Aiming)
 		{
 			//AudioManager::PlaySound(L"ropeStretch", true);
@@ -140,7 +133,7 @@ startStall = false;
 		}
 		break;
 
-	case CatapultGame::Stalling:
+	case CatapultState::Stalling:
 		if (m_stallUpdateCycles-- <= 0)
 		{
 			Fire(ShotVelocity);
@@ -148,7 +141,7 @@ startStall = false;
 		}
 		break;
 
-	case CatapultGame::Firing:
+	case CatapultState::Firing:
 		// Progress Fire animation
 		if (m_lastUpdateState != CatapultState::Firing)
 		{
@@ -181,7 +174,7 @@ startStall = false;
 		}
 		break;
 
-	case CatapultGame::ProjectileFlying:
+	case CatapultState::ProjectileFlying:
 		// Update projectile velocity & position in flight
 		isGroundHit = m_projectile->UpdateProjectileFlightData(timeTotal, timeDelta, m_wind, m_gravity);
 		if (isGroundHit)
@@ -191,7 +184,7 @@ startStall = false;
 		}
 		break;
 
-	case CatapultGame::ProjectileHit:
+	case CatapultState::ProjectileHit:
 		if (!CheckHit())
 		{
 			if (m_lastUpdateState != CatapultState::ProjectileHit)
@@ -217,7 +210,7 @@ startStall = false;
 		}
 		break;
 
-	case CatapultGame::Hit:
+	case CatapultState::Hit:
 		if ((m_animations[L"Destroyed"]->IsActive == false) &&
 			(m_animations[L"hitSmoke"]->IsActive == false))
 		{
@@ -235,7 +228,7 @@ startStall = false;
 
 		break;
 
-	case CatapultGame::Reset:
+	case CatapultState::Reset:
 		AnimationRunning = false;
 		break;
 

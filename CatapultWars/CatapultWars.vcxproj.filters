@@ -274,5 +274,8 @@
     <None Include="Assets\Fonts\MenuFont.spritefont">
       <Filter>Assets\Fonts</Filter>
     </None>
+    <None Include="Assets\Fonts\TestHudFont.spritefont">
+      <Filter>Assets\Fonts</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -3,7 +3,7 @@
 #include "DirectXHelper.h"
 #include "DDSTextureLoader.h"
 
-using namespace CatapultGame;
+using namespace CatapultWars;
 
 Projectile::Projectile(shared_ptr<SpriteBatch> spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
 {	

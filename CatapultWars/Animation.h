@@ -8,7 +8,7 @@ using namespace DirectX;
 using namespace Microsoft::WRL;
 using namespace DirectX::SimpleMath;
 
-namespace CatapultGame {
+namespace CatapultWars {
 	class Animation sealed
 	{
 	public:
@@ -23,6 +23,7 @@ namespace CatapultGame {
 		void Update();
 		void Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, SpriteEffects spriteEffects);
 		void Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vector2 scale, SpriteEffects spriteEffects);
+		
 		property<Animation, int, READ_WRITE> FrameIndex;
 		void setFrameIndex(int frameIndex)
 		{

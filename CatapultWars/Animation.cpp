@@ -2,7 +2,7 @@
 #include "Animation.h"
 #include "SimpleMath.h"
 
-using namespace CatapultGame;
+using namespace CatapultWars;
 
 Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize)
 {

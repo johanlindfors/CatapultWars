@@ -196,8 +196,15 @@
     <Media Include="Assets\Sounds\Win.wav" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Fonts\HUDFont.spritefont" />
-    <None Include="Assets\Fonts\MenuFont.spritefont" />
+    <None Include="Assets\Fonts\HUDFont.spritefont">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\MenuFont.spritefont">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
+    <None Include="Assets\Fonts\TestHudFont.spritefont">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DirectXTK\DirectXTK_WindowsPhone8.vcxproj">

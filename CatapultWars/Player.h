@@ -1,44 +1,53 @@
 #pragma once
-#include "property.hpp"
-#include "Catapult.h"
 
-namespace CatapultGame {
+namespace CatapultWars {
 
-	class Catapult;
-
-	class Player
+	ref class Player abstract
 	{
-	public:
-		Player();
-		~Player();
 
+	internal:
+		Player();
 		virtual void Initialize(ID3D11Device* device);
 		virtual void Update(float timeTotal, float timeDelta);
 		virtual void Draw();
 
-		Catapult*		Catapult;
+		property CatapultWars::Catapult^ Catapult
+		{
+			CatapultWars::Catapult^ get() { return m_catapult; }
+			void set(CatapultWars::Catapult^ catapult) { m_catapult = catapult; }
+		}
 		const float		MinShotStrength;
-		const float		MaxShotStrength; 
-		
-		property<Player, Player*,	WRITE_ONLY>	Enemy;
-		property<Player, wchar_t*,	READ_WRITE>	Name;
-		property<Player, int,		READ_WRITE>	Score;
-		property<Player, bool,		READ_WRITE>	IsActive;
+		const float		MaxShotStrength;
+
+		property Player^ Enemy {
+			void set(Player^ enemy) {
+				this->Catapult->Enemy = enemy;
+				this->Catapult->Self = this;
+			}
+		}
+
+		property Platform::String^ Name {
+			Platform::String^ get() { return m_name; }
+			void set(Platform::String^ name) { m_name = name; }
+		}
+
+		property int Score {
+			int get() { return m_score; }
+			void set(int score) { m_score = score; }
+		}
+
+		property bool IsActive {
+			bool get() { return m_isActive; }
+			void set(bool isActive) { m_isActive = isActive; }
+		}
+
 
 	private:
-		Player*			m_enemy;
-		void			setEnemy(Player* enemy) { m_enemy = enemy; }
-
-		wchar_t*		m_name;
-		wchar_t*		getName() { return m_name; }
-		void			setName(wchar_t* name) { m_name = name; }
-
-		int				m_score;
-		int				getScore() { return m_score; }
-		void			setScore(int score) { m_score = score; }
-
-		bool			m_isActive;
-		bool			getIsActive() { return m_isActive; }
-		void			setIsActive(bool isActive) { m_isActive = IsActive; }
+		CatapultWars::Catapult^			m_catapult;
+		CatapultWars::Player^			m_enemy;
+		Platform::String^				m_name;
+		int								m_score;
+		bool							m_isActive;
+		std::shared_ptr<SpriteBatch>	m_spriteBatch;
 	};
 }

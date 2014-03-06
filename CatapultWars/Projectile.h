@@ -7,7 +7,7 @@ using namespace DirectX;
 using namespace DirectX::SimpleMath;
 using namespace Microsoft::WRL;
 
-namespace CatapultGame {
+namespace CatapultWars {
 	class Projectile
 	{
 	public:

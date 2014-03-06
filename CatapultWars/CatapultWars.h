@@ -3,10 +3,10 @@
 #include "pch.h"
 #include "CatapultGame.h"
 
-ref class CatapultWars sealed : public Windows::ApplicationModel::Core::IFrameworkView
+ref class CatapultWarsBase sealed : public Windows::ApplicationModel::Core::IFrameworkView
 {
 public:
-	CatapultWars();
+	CatapultWarsBase();
 	
 	// IFrameworkView Methods.
 	virtual void Initialize(Windows::ApplicationModel::Core::CoreApplicationView^ applicationView);
@@ -27,7 +27,7 @@ protected:
 	void OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
 
 private:
-	CatapultGame^ m_game;
+	CatapultWars::CatapultGame^ m_game;
 	bool m_windowClosed;
 	bool m_windowVisible;
 };
