@@ -6,7 +6,7 @@ namespace CatapultWars{
 
 	CatapultGame::CatapultGame() :
 		m_minWind(0),
-		m_maxWind(0)
+		m_maxWind(2)
 	{
 		//EnabledGestures = GestureType.FreeDrag | GestureType.DragComplete | GestureType.Tap;
 	}
@@ -36,8 +36,9 @@ namespace CatapultWars{
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud1.dds", cloud1TextureRes.ReleaseAndGetAddressOf(), m_cloud1Texture.ReleaseAndGetAddressOf())
 			);
+		ComPtr<ID3D11Resource> cloud2TextureRes; 
 		DX::ThrowIfFailed(
-			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.dds", nullptr, m_cloud2Texture.ReleaseAndGetAddressOf())
+			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.dds", cloud2TextureRes.ReleaseAndGetAddressOf(), m_cloud2Texture.ReleaseAndGetAddressOf())
 			);
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\mountain.dds", nullptr, m_mountainTexture.ReleaseAndGetAddressOf())
@@ -62,9 +63,11 @@ namespace CatapultWars{
 		m_hudFont.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHUDFont.spritefont"));
 
 		// Define initial cloud position
-		UINT cloud1TextureWidth, cloud1TextureHeight;
-		DX::GetTextureSize(cloud1TextureRes.Get(), &cloud1TextureWidth, &cloud1TextureHeight);
-		m_cloud1Position = Vector2(224 - cloud1TextureWidth, 32);
+		
+		DX::GetTextureSize(cloud1TextureRes.Get(), &m_cloud1TextureWidth, &m_cloud1TextureHeight);
+		DX::GetTextureSize(cloud2TextureRes.Get(), &m_cloud2TextureWidth, &m_cloud2TextureHeight);
+
+		m_cloud1Position = Vector2(224 - m_cloud1TextureWidth, 32);
 		m_cloud2Position = Vector2(64, 90);
 
 		// Define initial HUD positions
@@ -83,6 +86,8 @@ namespace CatapultWars{
 
 		m_player->Enemy = m_computer;
 		m_computer->Enemy = m_player;
+
+		m_viewportWidth = 800;
 
 		Start();
 	}
@@ -163,9 +168,22 @@ namespace CatapultWars{
 		UpdateClouds(elapsed);
 	}
 
-	void CatapultGame::UpdateClouds(float elapsed)
+	void CatapultGame::UpdateClouds(float elapsedTime)
 	{
+		// Move the clouds according to the wind
+		int windDirection = m_wind.x > 0 ? 1 : -1;
 
+		m_cloud1Position += Vector2(24.0f, 0.0f) * elapsedTime * windDirection * m_wind.y;
+		if (m_cloud1Position.x > m_viewportWidth)
+			m_cloud1Position.x = -(int)m_cloud1TextureWidth * 2.0f;
+		else if (m_cloud1Position.x < -(int)m_cloud1TextureWidth * 2.0f)
+			m_cloud1Position.x = m_viewportWidth;
+
+		m_cloud2Position += Vector2(16.0f, 0.0f) * elapsedTime * windDirection * m_wind.y;
+		if (m_cloud2Position.x > m_viewportWidth)
+			m_cloud2Position.x = -(int)m_cloud2TextureWidth * 2.0f;
+		else if (m_cloud2Position.x < -(int)m_cloud2TextureWidth * 2.0f)
+			m_cloud2Position.x = m_viewportWidth;
 	}
 
 	void CatapultGame::Render()

@@ -55,6 +55,10 @@ namespace CatapultWars {
 		const int		m_minWind;
 		const int		m_maxWind;
 		bool			m_isDragging;
+		int				m_viewportWidth;
+		int				m_viewportHeight;
+		UINT m_cloud1TextureWidth, m_cloud1TextureHeight;
+		UINT m_cloud2TextureWidth, m_cloud2TextureHeight;
 	};
 
 }
