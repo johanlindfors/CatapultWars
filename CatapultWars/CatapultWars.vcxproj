@@ -152,6 +152,7 @@
     <Image Include="Assets\Tiles\IconicTileSmall.png" />
   </ItemGroup>
   <ItemGroup>
+    <Xml Include="Assets\Textures\Catapults\AnimationsDef.xml" />
     <Xml Include="WMAppManifest.xml">
       <SubType>Designer</SubType>
     </Xml>

@@ -246,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="WMAppManifest.xml" />
+    <Xml Include="Assets\Textures\Catapults\AnimationsDef.xml">
+      <Filter>Assets\Textures\Catapults</Filter>
+    </Xml>
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\Sounds\BoulderHit.wav">

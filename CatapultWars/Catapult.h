@@ -78,7 +78,7 @@ namespace CatapultWars {
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
-		void ParseXmlAndCreateAnimations();
+		void ParseXmlAndCreateAnimations(ID3D11Device* device);
 		void StartFiringFromLastAimPosition();
 		void DrawIdleCatapult();
 		void Hit();

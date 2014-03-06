@@ -20,11 +20,11 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	m_currentState = CatapultState::Idle;
 	m_stallUpdateCycles = 0;
 
-	ParseXmlAndCreateAnimations();
+	ParseXmlAndCreateAnimations(device);
 
 	DX::ThrowIfFailed(
 		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
-	);
+		);
 
 	Vector2 projectileStartPosition;
 	if (m_isAI)
@@ -32,18 +32,27 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	//m_projectile = new Projectile(m_spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
-	//m_projectile->Initialize(device);
+	m_projectile = new Projectile(m_spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
+	m_projectile->Initialize(device);
 
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::ParseXmlAndCreateAnimations()
+void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
 {
 	//// Load multiple animations form XML definition
 	//XDocument doc = XDocument.Load("Content/Textures/Catapults/AnimationsDef.xml");
 	//XName name = XName.Get("Definition");
 	//var definitions = doc.Document.Descendants(name);
+	ComPtr<ID3D11ShaderResourceView> texture;
+	DX::ThrowIfFailed(
+		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.dds", nullptr, texture.ReleaseAndGetAddressOf())
+		);
+	POINT frameSize = { 75, 60 };
+	POINT sheetSize = { 15, 2 };
+	auto animation = new Animation(texture.Get(), frameSize, sheetSize);
+	m_animations[L"Fire"] = animation;
+
 
 	//// Loop over all definitions in XML
 	//foreach(var animationDefinition in definitions)
@@ -121,8 +130,8 @@ void Catapult::Update(float timeTotal, float timeDelta)
 			if (m_isAI == true)
 			{
 				m_animations[L"Aim"]->PlayFromFrameIndex(0);
-m_stallUpdateCycles = 20;
-startStall = false;
+				m_stallUpdateCycles = 20;
+				startStall = false;
 			}
 		}
 
