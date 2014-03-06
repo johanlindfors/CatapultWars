@@ -1,5 +1,4 @@
 #pragma once
-#include "SpriteBatch.h"
 #include "property.hpp"
 
 using namespace std;
