@@ -77,11 +77,11 @@ namespace CatapultWars{
 
 		// Initialize human & AI players
 		m_player = ref new Human();
-		m_player->Initialize(device);
+		m_player->Initialize(device, m_spriteBatch);
 		m_player->Name = L"Player";
 
 		m_computer = ref new AI();
-		m_computer->Initialize(device);
+		m_computer->Initialize(device, m_spriteBatch);
 		m_computer->Name = L"Phone";
 
 		m_player->Enemy = m_computer;
@@ -206,8 +206,15 @@ namespace CatapultWars{
 		m_spriteBatch->Begin();
 
 		DrawBackground();
+		DrawComputer();
 
 		m_spriteBatch->End();
+	}
+
+	void CatapultGame::DrawComputer()
+	{
+		if (!m_gameOver)
+			m_player->Draw();
 	}
 
 	void CatapultGame::DrawBackground()

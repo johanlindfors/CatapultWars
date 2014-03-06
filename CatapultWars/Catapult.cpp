@@ -13,7 +13,7 @@ m_gravity(500)
 	m_isAI = isAi;
 }
 
-void Catapult::Initialize(ID3D11Device* device)
+void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
 {
 	IsActive = true;
 	AnimationRunning = false;
@@ -21,6 +21,10 @@ void Catapult::Initialize(ID3D11Device* device)
 	m_stallUpdateCycles = 0;
 
 	ParseXmlAndCreateAnimations();
+
+	DX::ThrowIfFailed(
+		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+	);
 
 	Vector2 projectileStartPosition;
 	if (m_isAI)
@@ -30,6 +34,8 @@ void Catapult::Initialize(ID3D11Device* device)
 
 	//m_projectile = new Projectile(m_spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
 	//m_projectile->Initialize(device);
+
+	m_spriteBatch = spriteBatch;
 }
 
 void Catapult::ParseXmlAndCreateAnimations()
@@ -370,5 +376,5 @@ bool Catapult::CheckHit()
 
 void Catapult::DrawIdleCatapult()
 {
-
+	m_spriteBatch->Draw(m_idleTexture.Get(), m_catapultPosition, nullptr, Colors::White, 0.0f, Vector2(0, 0), 1.0f, m_spriteEffects, 0);
 }

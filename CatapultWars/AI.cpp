@@ -11,11 +11,11 @@ AI::AI()
 	// (game, screenSpriteBatch,
 }
 
-void AI::Initialize(ID3D11Device* device)
+void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
 {	
-	Catapult->Initialize(device);
+	Catapult->Initialize(device, spriteBatch);
 
-	Player::Initialize(device);
+	Player::Initialize(device, spriteBatch);
 }
 
 void AI::Update(float timeTotal, float timeDelta)

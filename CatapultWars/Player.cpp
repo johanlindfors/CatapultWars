@@ -9,7 +9,7 @@ Player::Player()
 
 }
 
-void Player::Initialize(ID3D11Device* device)
+void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
 {
 	m_score = 0;
 }

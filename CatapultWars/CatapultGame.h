@@ -24,6 +24,7 @@ namespace CatapultWars {
 
 	private:
 		void DrawBackground();
+		void DrawComputer();
 		void Start();
 		void UpdateClouds(float elapsed);
 		std::shared_ptr<SpriteBatch> m_spriteBatch;
