@@ -38,20 +38,50 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
+void Catapult::CreateAnimation(ID3D11Device* device, wchar_t* key, wchar_t* textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
 {
-	//// Load multiple animations form XML definition
-	//XDocument doc = XDocument.Load("Content/Textures/Catapults/AnimationsDef.xml");
-	//XName name = XName.Get("Definition");
-	//var definitions = doc.Document.Descendants(name);
 	ComPtr<ID3D11ShaderResourceView> texture;
 	DX::ThrowIfFailed(
 		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.dds", nullptr, texture.ReleaseAndGetAddressOf())
 		);
-	POINT frameSize = { 75, 60 };
-	POINT sheetSize = { 15, 2 };
+	POINT frameSize = { frameWidth, frameHeight };
+	POINT sheetSize = { sheetColumns, sheetRows };
 	auto animation = new Animation(texture.Get(), frameSize, sheetSize);
-	m_animations[L"Fire"] = animation;
+	m_animations[key] = animation;
+	m_splitFrames[key] = splitFrame;
+}
+
+void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
+{
+	if (m_isAI){
+		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.dds",
+			75, 60, 15, 2, 20, 0, 0);
+		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Red\\redPullpack\\redCatapult_Pullback.dds",
+			75, 60, 18, 1, 0, 0, 0);
+		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Red\\redDestroyed\\redCatapult_destroyed.dds",
+			122, 62, 15, 2, 20, -11, 0);
+		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.dds",
+			90, 80, 15, 2, 0, -50, 0);
+		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.dds",
+			128, 128, 15, 2, 20, -30, -64);
+	}
+	else {
+		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Blue\\blueFire\\blueCatapult_fire.dds",
+			75, 60, 15, 2, 20, 0, 0);
+		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Blue\\bluePullpack\\blueCatapult_Pullback.dds",
+			75, 60, 18, 1, 0, 0, 0);
+		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Blue\\blueDestroyed\\blueCatapult_destroyed.dds",
+			122, 62, 15, 2, 20, -40, 0);
+		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.dds",
+			90, 80, 15, 2, 0, -50, 0);
+		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.dds",
+			128, 128, 15, 2, 20, 0, -64);
+	}
+	//// Load multiple animations form XML definition
+	//XDocument doc = XDocument.Load("Content/Textures/Catapults/AnimationsDef.xml");
+	//XName name = XName.Get("Definition");
+	//var definitions = doc.Document.Descendants(name);
+
 
 
 	//// Loop over all definitions in XML

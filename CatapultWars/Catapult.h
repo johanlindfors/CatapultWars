@@ -84,6 +84,7 @@ namespace CatapultWars {
 		void Hit();
 		void Fire(float velocity);
 		bool CheckHit();
+		void CreateAnimation(ID3D11Device* device, wchar_t* key, wchar_t* textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
 
 		shared_ptr<SpriteBatch>							m_spriteBatch;
 	};
