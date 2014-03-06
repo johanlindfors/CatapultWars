@@ -31,6 +31,7 @@ namespace CatapultWars {
 		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
 		void Update(float timeTotal, float timeDelta);
 		void Draw();
+		void Fire(float velocity);
 
 		bool			AnimationRunning;
 		wchar_t*		Name;
@@ -66,7 +67,7 @@ namespace CatapultWars {
 		const float										m_gravity;
 		CatapultState									m_lastUpdateState;
 		int												m_stallUpdateCycles;
-		CatapultState									m_currentState;
+		//CatapultState									m_currentState;
 		float											m_wind;
 		Player^											m_enemy;
 		Player^											m_self;
@@ -82,7 +83,6 @@ namespace CatapultWars {
 		void StartFiringFromLastAimPosition();
 		void DrawIdleCatapult();
 		void Hit();
-		void Fire(float velocity);
 		bool CheckHit();
 		void CreateAnimation(ID3D11Device* device, wchar_t* key, wchar_t* textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
 

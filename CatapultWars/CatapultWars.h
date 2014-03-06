@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include "CatapultGame.h"
+#include <unordered_map>
 
 ref class CatapultWarsBase sealed : public Windows::ApplicationModel::Core::IFrameworkView
 {
@@ -30,6 +31,9 @@ private:
 	CatapultWars::CatapultGame^ m_game;
 	bool m_windowClosed;
 	bool m_windowVisible;
+	std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_pointerIds;
+	std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_oldPoints;
+	void DragWithOneFinger(Windows::UI::Core::PointerEventArgs^ args);
 };
 
 ref class Direct3DApplicationSource sealed : Windows::ApplicationModel::Core::IFrameworkViewSource

@@ -9,6 +9,12 @@ Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, PO
 	FrameSize = size;
 	m_sheetSize = frameSheetSize;
 	Offset = Vector2(0, 0);
+
+	FrameCount = m_sheetSize.x * m_sheetSize.y;
+
+	FrameIndex.setContainer(this);
+	FrameIndex.setter(&Animation::setFrameIndex);
+	FrameIndex.getter(&Animation::getFrameIndex);
 }
 
 Animation::~Animation()

@@ -19,16 +19,35 @@ namespace CatapultWars {
 		Catapult->Initialize(device, spriteBatch);
 
 		Player::Initialize(device, spriteBatch);
+
+		m_spriteBatch = spriteBatch;
 	}
 
-	void Human::HandleInput()
+	void Human::HandleInput(int x, int y)
 	{
+		Catapult->CurrentState = CatapultState::Aiming; 
+		m_delta = Vector2(x, y);
+		auto deltaLength = m_delta.Length();
+		Catapult->ShotStrength =  deltaLength / m_maxDragDelta;
+		float baseScale = 0.001f;
+		m_arrowScale = baseScale * deltaLength;
+		IsDragging = true;
+	}
 
+	void Human::HandleRelease()
+	{
+		Catapult->ShotVelocity = MinShotStrength + Catapult->ShotStrength *
+			(MaxShotStrength - MinShotStrength);
+		Catapult->Fire(Catapult->ShotVelocity);
+		Catapult->CurrentState = CatapultState::Firing;
+		m_delta = Vector2(0, 0);
+
+		ResetDragState();
 	}
 
 	void Human::Update(float timeTotal, float timeDelta)
 	{
-
+		Player::Update(timeTotal, timeDelta);
 	}
 
 	void Human::Draw()
@@ -41,7 +60,8 @@ namespace CatapultWars {
 
 	void Human::DrawDragArrow(float arrowScale)
 	{
-		//m_spriteBatch
+		m_spriteBatch->Draw(m_arrow.Get(), m_catapultPosition + Vector2(0, -40),
+			nullptr, Colors::Blue, 0, Vector2(0, 0), Vector2(m_arrowScale, 0.1f), SpriteEffects::SpriteEffects_None, 0);
 	}
 
 	void Human::ResetDragState()

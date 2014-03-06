@@ -4,6 +4,9 @@
 #include <ppl.h>
 #include <ppltasks.h>
 
+#include <string.h>
+#include <sstream>
+
 namespace DX
 {
 	inline void ThrowIfFailed(HRESULT hr)
@@ -81,5 +84,12 @@ namespace DX
 			if (height) *height = 0;
 			break;
 		}
+	}
+
+	inline void LogString(wchar_t* text, int value){
+		std::ostringstream sstream;
+		sstream << text << " " << value << "\n";
+		std::string s = sstream.str();
+		OutputDebugStringA(s.c_str());
 	}
 }

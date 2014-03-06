@@ -21,6 +21,8 @@ namespace CatapultWars {
 
 		// Method for updating time-dependent objects.
 		void Update(float timeTotal, float timeDelta);
+		void HandleInput(int x, int y);
+		void IsTouchDown(bool isTouchDown);
 
 	private:
 		void DrawBackground();

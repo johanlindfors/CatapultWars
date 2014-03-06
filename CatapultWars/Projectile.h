@@ -9,7 +9,7 @@ namespace CatapultWars {
 	class Projectile
 	{
 	public:
-		Projectile(shared_ptr<SpriteBatch> spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity);
+		Projectile(shared_ptr<SpriteBatch>& spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity);
 		void Initialize(ID3D11Device* device);
 		void Draw();
 		void Fire(float velocityX, float velocityY);

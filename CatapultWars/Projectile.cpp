@@ -5,7 +5,7 @@
 
 using namespace CatapultWars;
 
-Projectile::Projectile(shared_ptr<SpriteBatch> spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
+Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
 {	
 	m_spriteBatch = spriteBatch;
 	ProjectileStartPosition = startPosition;
@@ -13,6 +13,7 @@ Projectile::Projectile(shared_ptr<SpriteBatch> spriteBatch, wchar_t* textureName
 	m_isAI = isAI;
 	m_hitOffset = groundHitOffset;
 	m_gravity = gravity;
+	m_projectileRotation = 0;
 }
 
 void Projectile::Initialize(ID3D11Device* device)
@@ -23,6 +24,9 @@ void Projectile::Initialize(ID3D11Device* device)
 		);
 		
 	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
+
+	ProjectileTextureWidth = m_textureWidth;
+	ProjectileTextureHeight = m_textureHeight;
 }
 
 void Projectile::Draw()
@@ -46,7 +50,7 @@ bool Projectile::UpdateProjectileFlightData(float timeTotal, float timeDelta, fl
 		(direction * m_projectileVelocity.x * m_flightTime) +
 		0.5f * (8 * wind * (float)pow(m_flightTime, 2));
 
-	ProjectilePosition.y = ProjectileStartPosition.y +
+	ProjectilePosition.y = ProjectileStartPosition.y -
 		(m_projectileVelocity.y * m_flightTime) +
 		0.5f * (gravity * (float)pow(m_flightTime, 2));
 
@@ -66,8 +70,6 @@ bool Projectile::UpdateProjectileFlightData(float timeTotal, float timeDelta, fl
 		groundHit = false;
 	}
 	return groundHit;
-	
-	return false;
 }
 
 void Projectile::Fire(float velocityX, float velocityY)

@@ -2,6 +2,8 @@
 #include "CatapultWars.h"
 #include "BasicTimer.h"
 
+
+
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Core;
 using namespace Windows::ApplicationModel::Activation;
@@ -92,17 +94,43 @@ void CatapultWarsBase::OnWindowClosed(CoreWindow^ sender, CoreWindowEventArgs^ a
 
 void CatapultWarsBase::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ args)
 {
-	// Insert your code here.
+	m_pointerIds.emplace(args->CurrentPoint->PointerId, args->CurrentPoint);
+	m_oldPoints.emplace(args->CurrentPoint->PointerId, args->CurrentPoint);
+
+	m_game->IsTouchDown(true);
 }
 
 void CatapultWarsBase::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
 {
-	// Insert your code here.
+	if (m_pointerIds.size() == 1)
+	{
+		DragWithOneFinger(args);
+	}
+}
+
+void CatapultWarsBase::DragWithOneFinger(PointerEventArgs^ args)
+{
+	UINT changedPointId = args->CurrentPoint->PointerId;
+	
+	auto oldPoint = m_oldPoints[changedPointId];
+	m_pointerIds[changedPointId] = args->CurrentPoint;
+
+	m_game->HandleInput(
+		(args->CurrentPoint->Position.X - oldPoint->Position.X), 
+		(args->CurrentPoint->Position.Y - oldPoint->Position.Y));
+
+	//ostringstream sstream;
+	//sstream << "Moved at: " << "X: " << (args->CurrentPoint->Position.X - oldPoint->Position.X) << " Y: " << (args->CurrentPoint->Position.Y - oldPoint->Position.Y) << "\n";
+	//string s = sstream.str();
+	//OutputDebugStringA(s.c_str());
 }
 
 void CatapultWarsBase::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
 {
-	// Insert your code here.
+	m_pointerIds.erase(args->CurrentPoint->PointerId);
+	m_oldPoints.erase(args->CurrentPoint->PointerId);
+
+	m_game->IsTouchDown(false);
 }
 
 void CatapultWarsBase::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^ args)

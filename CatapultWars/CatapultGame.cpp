@@ -101,6 +101,27 @@ namespace CatapultWars{
 		m_computer->Catapult->CurrentState = CatapultState::Reset;
 	}
 
+	void CatapultGame::HandleInput(int x, int y)
+	{
+		if (m_isHumanTurn &&
+			(m_player->Catapult->CurrentState == CatapultState::Idle ||
+			 m_player->Catapult->CurrentState == CatapultState::Aiming))
+		{
+			m_player->HandleInput(x,y);
+		}
+	}
+
+	void CatapultGame::IsTouchDown(bool isTouchDown)
+	{
+		m_isDragging = isTouchDown;
+		if (m_isHumanTurn && !isTouchDown &&
+			(m_player->Catapult->CurrentState == CatapultState::Idle ||
+			m_player->Catapult->CurrentState == CatapultState::Aiming))
+		{
+			m_player->HandleRelease();
+		}
+	}
+
 	void CatapultGame::Update(float timeTotal, float timeDelta)
 	{
 		float elapsed = timeDelta;
@@ -255,7 +276,7 @@ namespace CatapultWars{
 			Vector2 size = m_hudFont->MeasureString(text->Data());
 			Vector2 windarrowScale = Vector2(m_wind.y / 10, 1);
 			m_spriteBatch->Draw(m_windArrowTexture.Get(),
-				m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0,0),
+				m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0, 0),
 				windarrowScale, m_wind.x > 0 ? SpriteEffects::SpriteEffects_None : SpriteEffects::SpriteEffects_FlipHorizontally, 0);
 
 			DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, size.y), Colors::Black);
@@ -279,7 +300,7 @@ namespace CatapultWars{
 				size = m_hudFont->MeasureString(text->Data());
 			}
 
-			DrawString(m_hudFont,text,
+			DrawString(m_hudFont, text,
 				Vector2(
 				m_viewportWidth / 2 - size.x / 2,
 				m_viewportHeight - size.y),
