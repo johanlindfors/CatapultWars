@@ -25,10 +25,14 @@ namespace CatapultWars {
 	private:
 		void DrawBackground();
 		void DrawComputer();
+		void DrawPlayer();
 		void Start();
+		void DrawHud();
+		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color);
+		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale);
 		void UpdateClouds(float elapsed);
 		std::shared_ptr<SpriteBatch> m_spriteBatch;
-		std::unique_ptr<SpriteFont> m_hudFont;
+		std::shared_ptr<SpriteFont> m_hudFont;
 
 		ComPtr<ID3D11ShaderResourceView> m_skyTexture;
 		ComPtr<ID3D11ShaderResourceView> m_foregroundTexture;

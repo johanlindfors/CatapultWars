@@ -36,7 +36,7 @@ namespace CatapultWars{
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud1.dds", cloud1TextureRes.ReleaseAndGetAddressOf(), m_cloud1Texture.ReleaseAndGetAddressOf())
 			);
-		ComPtr<ID3D11Resource> cloud2TextureRes; 
+		ComPtr<ID3D11Resource> cloud2TextureRes;
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.dds", cloud2TextureRes.ReleaseAndGetAddressOf(), m_cloud2Texture.ReleaseAndGetAddressOf())
 			);
@@ -63,7 +63,7 @@ namespace CatapultWars{
 		m_hudFont.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHUDFont.spritefont"));
 
 		// Define initial cloud position
-		
+
 		DX::GetTextureSize(cloud1TextureRes.Get(), &m_cloud1TextureWidth, &m_cloud1TextureHeight);
 		DX::GetTextureSize(cloud2TextureRes.Get(), &m_cloud2TextureWidth, &m_cloud2TextureHeight);
 
@@ -88,6 +88,7 @@ namespace CatapultWars{
 		m_computer->Enemy = m_player;
 
 		m_viewportWidth = 800;
+		m_viewportHeight = 480;
 
 		Start();
 	}
@@ -207,14 +208,107 @@ namespace CatapultWars{
 
 		DrawBackground();
 		DrawComputer();
+		DrawPlayer();
+		DrawHud();
 
 		m_spriteBatch->End();
+	}
+
+	void CatapultGame::DrawHud()
+	{
+		if (m_gameOver)
+		{
+			ComPtr<ID3D11ShaderResourceView> texture;
+			if (m_player->Score > m_computer->Score)
+			{
+				texture = m_victoryTexture;
+			}
+			else
+			{
+				texture = m_defeatTexture;
+			}
+
+			m_spriteBatch->Draw(texture.Get(), Vector2(m_viewportWidth / 2, m_viewportHeight / 2), Colors::White);
+
+			/*ScreenManager.SpriteBatch.Draw(
+				texture,
+				new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2 - texture.Width / 2,
+				ScreenManager.Game.GraphicsDevice.Viewport.Height / 2 - texture.Height / 2),
+				Color.White);*/
+		}
+		else
+		{
+			// Draw Player Hud
+			m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_playerHUDPosition, Colors::White);
+			m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_playerHUDPosition + Vector2(33, 35), Colors::White);
+			DrawString(m_hudFont, m_player->Score.ToString(), m_playerHUDPosition + Vector2(123, 35), Colors::White);
+			DrawString(m_hudFont, m_player->Name, m_playerHUDPosition + Vector2(40, 1), Colors::Blue);
+
+			// Draw Computer Hud
+			m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_computerHUDPosition, Colors::White);
+			m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_computerHUDPosition + Vector2(33, 35), Colors::White);
+			DrawString(m_hudFont, m_computer->Score.ToString(), m_computerHUDPosition + Vector2(123, 35), Colors::White);
+			DrawString(m_hudFont, m_computer->Name, m_computerHUDPosition + Vector2(40, 1), Colors::Red);
+
+			// Draw Wind direction
+			Platform::String^ text = "WIND";
+			Vector2 size = m_hudFont->MeasureString(text->Data());
+			Vector2 windarrowScale = Vector2(m_wind.y / 10, 1);
+			m_spriteBatch->Draw(m_windArrowTexture.Get(),
+				m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0,0),
+				windarrowScale, m_wind.x > 0 ? SpriteEffects::SpriteEffects_None : SpriteEffects::SpriteEffects_FlipHorizontally, 0);
+
+			DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, size.y), Colors::Black);
+			if (m_wind.y == 0)
+			{
+				text = "NONE";
+				DrawString(m_hudFont, text, m_windArrowPosition, Colors::Black);
+			}
+
+			if (m_isHumanTurn)
+			{
+				// Prepare human prompt message
+				text = !m_isDragging ?
+					"Drag Anywhere to Fire" : "Release to Fire!";
+				size = m_hudFont->MeasureString(text->Data());
+			}
+			else
+			{
+				// Prepare AI message
+				text = "I'll get you yet!";
+				size = m_hudFont->MeasureString(text->Data());
+			}
+
+			DrawString(m_hudFont,text,
+				Vector2(
+				m_viewportWidth / 2 - size.x / 2,
+				m_viewportHeight - size.y),
+				Colors::Green);
+		}
 	}
 
 	void CatapultGame::DrawComputer()
 	{
 		if (!m_gameOver)
+			m_computer->Draw();
+	}
+
+	void CatapultGame::DrawPlayer()
+	{
+		if (!m_gameOver)
 			m_player->Draw();
+	}
+
+	void CatapultGame::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color)
+	{
+		font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+		font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	}
+
+	void CatapultGame::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale)
+	{
+		font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+		font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
 	}
 
 	void CatapultGame::DrawBackground()
