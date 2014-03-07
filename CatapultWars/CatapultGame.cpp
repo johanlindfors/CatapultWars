@@ -43,11 +43,13 @@ namespace CatapultWars{
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\mountain.dds", nullptr, m_mountainTexture.ReleaseAndGetAddressOf())
 			);
+		ComPtr<ID3D11Resource> defeatTextureRes; 
 		DX::ThrowIfFailed(
-			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\defeat.dds", nullptr, m_defeatTexture.ReleaseAndGetAddressOf())
+			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\defeat.dds", defeatTextureRes.ReleaseAndGetAddressOf(), m_defeatTexture.ReleaseAndGetAddressOf())
 			);
+		ComPtr<ID3D11Resource> victoryTextureRes;
 		DX::ThrowIfFailed(
-			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\victory.dds", nullptr, m_victoryTexture.ReleaseAndGetAddressOf())
+			CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\victory.dds", victoryTextureRes.ReleaseAndGetAddressOf(), m_victoryTexture.ReleaseAndGetAddressOf())
 			);
 		DX::ThrowIfFailed(
 			CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\hudBackground.dds", nullptr, m_hudBackgroundTexture.ReleaseAndGetAddressOf())
@@ -66,6 +68,8 @@ namespace CatapultWars{
 
 		DX::GetTextureSize(cloud1TextureRes.Get(), &m_cloud1TextureWidth, &m_cloud1TextureHeight);
 		DX::GetTextureSize(cloud2TextureRes.Get(), &m_cloud2TextureWidth, &m_cloud2TextureHeight);
+		DX::GetTextureSize(defeatTextureRes.Get(), &m_defeatTextureWidth, &m_defeatTextureHeight);
+		DX::GetTextureSize(victoryTextureRes.Get(), &m_victoryTextureWidth, &m_victoryTextureHeight);
 
 		m_cloud1Position = Vector2(224 - m_cloud1TextureWidth, 32);
 		m_cloud2Position = Vector2(64, 90);
@@ -239,18 +243,16 @@ namespace CatapultWars{
 	{
 		if (m_gameOver)
 		{
-			ComPtr<ID3D11ShaderResourceView> texture;
 			if (m_player->Score > m_computer->Score)
 			{
-				texture = m_victoryTexture;
+				m_spriteBatch->Draw(m_victoryTexture.Get(), Vector2(m_viewportWidth / 2 - m_victoryTextureWidth/2, m_viewportHeight / 2 - m_victoryTextureHeight/2), Colors::White);
 			}
 			else
 			{
-				texture = m_defeatTexture;
+				m_spriteBatch->Draw(m_defeatTexture.Get(), Vector2(m_viewportWidth / 2 - m_defeatTextureWidth / 2, m_viewportHeight / 2 - m_defeatTextureHeight / 2), Colors::White);
 			}
 
-			m_spriteBatch->Draw(texture.Get(), Vector2(m_viewportWidth / 2, m_viewportHeight / 2), Colors::White);
-
+			
 			/*ScreenManager.SpriteBatch.Draw(
 				texture,
 				new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2 - texture.Width / 2,

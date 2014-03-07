@@ -71,11 +71,6 @@ void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vect
 	int bottom = top + FrameSize.y;
 
 	RECT sourceRectangle = { left, top, right, bottom };
-	//spriteBatch->Draw(
-	//	m_animatedCharacter.Get(), 
-	//	position + Offset,
-	//	&sourceRectangle,
-	//	Colors::White, 0.0f, Vector2(0, 0), scale, spriteEffects, 0.0f);
 	spriteBatch->Draw(
 		m_animatedCharacter.Get(),
 		position + Offset,

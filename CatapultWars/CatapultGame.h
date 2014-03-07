@@ -66,6 +66,8 @@ namespace CatapultWars {
 		int				m_viewportHeight;
 		UINT m_cloud1TextureWidth, m_cloud1TextureHeight;
 		UINT m_cloud2TextureWidth, m_cloud2TextureHeight;
+		UINT m_defeatTextureWidth, m_defeatTextureHeight;
+		UINT m_victoryTextureWidth, m_victoryTextureHeight;
 	};
 
 }

@@ -301,7 +301,6 @@ void Catapult::UpdateAimAccordingToShotStrength()
 	auto aimAnimation = m_animations[L"Aim"];
 	int frameToDisplay = aimAnimation->FrameCount * ShotStrength;
 	aimAnimation->FrameIndex = frameToDisplay;
-	//DX::LogString(L"FrameIndex", frameToDisplay);
 }
 
 void Catapult::StartFiringFromLastAimPosition()
