@@ -335,7 +335,7 @@ void Catapult::Draw()
 		DrawIdleCatapult();
 
 		// Projectile Hit animation
-		m_animations[L"fireMiss"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
+		m_animations[L"fireMiss"]->Draw(m_spriteBatch, m_projectile->ProjectileHitPosition, m_spriteEffects);
 		break;
 	case CatapultState::Hit:
 		// Catapult hit animation

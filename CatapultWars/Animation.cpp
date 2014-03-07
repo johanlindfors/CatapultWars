@@ -65,12 +65,19 @@ void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Spri
 
 void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vector2 scale, SpriteEffects spriteEffects)
 {
-	RECT sourceRectangle = { FrameSize.x * m_currentFrame.x,
-		   					 FrameSize.y * m_currentFrame.y,
-		   					 FrameSize.x,
-		   		   			 FrameSize.y };
+	int left = FrameSize.x * m_currentFrame.x;
+	int top = FrameSize.y * m_currentFrame.y;
+	int right = left + FrameSize.x;
+	int bottom = top + FrameSize.y;
+
+	RECT sourceRectangle = { left, top, right, bottom };
+	//spriteBatch->Draw(
+	//	m_animatedCharacter.Get(), 
+	//	position + Offset,
+	//	&sourceRectangle,
+	//	Colors::White, 0.0f, Vector2(0, 0), scale, spriteEffects, 0.0f);
 	spriteBatch->Draw(
-		m_animatedCharacter.Get(), 
+		m_animatedCharacter.Get(),
 		position + Offset,
 		&sourceRectangle,
 		Colors::White, 0.0f, Vector2(0, 0), scale, spriteEffects, 0.0f);
