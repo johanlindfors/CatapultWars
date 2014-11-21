@@ -27,7 +27,7 @@
 
 #include "pch.h"
 
-#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP)
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP) || (_WIN32_WINNT > _WIN32_WINNT_WIN8)
 
 // VS 2010's stdint.h conflicts with intsafe.h
 #pragma warning(push)
@@ -77,6 +77,9 @@ static size_t BitsPerPixel( _In_ DXGI_FORMAT fmt )
     case DXGI_FORMAT_D32_FLOAT_S8X24_UINT:
     case DXGI_FORMAT_R32_FLOAT_X8X24_TYPELESS:
     case DXGI_FORMAT_X32_TYPELESS_G8X24_UINT:
+    case DXGI_FORMAT_Y416:
+    case DXGI_FORMAT_Y210:
+    case DXGI_FORMAT_Y216:
         return 64;
 
     case DXGI_FORMAT_R10G10B10A2_TYPELESS:
@@ -114,7 +117,14 @@ static size_t BitsPerPixel( _In_ DXGI_FORMAT fmt )
     case DXGI_FORMAT_B8G8R8A8_UNORM_SRGB:
     case DXGI_FORMAT_B8G8R8X8_TYPELESS:
     case DXGI_FORMAT_B8G8R8X8_UNORM_SRGB:
+    case DXGI_FORMAT_AYUV:
+    case DXGI_FORMAT_Y410:
+    case DXGI_FORMAT_YUY2:
         return 32;
+
+    case DXGI_FORMAT_P010:
+    case DXGI_FORMAT_P016:
+        return 24;
 
     case DXGI_FORMAT_R8G8_TYPELESS:
     case DXGI_FORMAT_R8G8_UNORM:
@@ -130,8 +140,14 @@ static size_t BitsPerPixel( _In_ DXGI_FORMAT fmt )
     case DXGI_FORMAT_R16_SINT:
     case DXGI_FORMAT_B5G6R5_UNORM:
     case DXGI_FORMAT_B5G5R5A1_UNORM:
+    case DXGI_FORMAT_A8P8:
     case DXGI_FORMAT_B4G4R4A4_UNORM:
         return 16;
+
+    case DXGI_FORMAT_NV12:
+    case DXGI_FORMAT_420_OPAQUE:
+    case DXGI_FORMAT_NV11:
+        return 12;
 
     case DXGI_FORMAT_R8_TYPELESS:
     case DXGI_FORMAT_R8_UNORM:
@@ -139,6 +155,9 @@ static size_t BitsPerPixel( _In_ DXGI_FORMAT fmt )
     case DXGI_FORMAT_R8_SNORM:
     case DXGI_FORMAT_R8_SINT:
     case DXGI_FORMAT_A8_UNORM:
+    case DXGI_FORMAT_AI44:
+    case DXGI_FORMAT_IA44:
+    case DXGI_FORMAT_P8:
         return 8;
 
     case DXGI_FORMAT_R1_UNORM:
@@ -168,6 +187,19 @@ static size_t BitsPerPixel( _In_ DXGI_FORMAT fmt )
     case DXGI_FORMAT_BC7_UNORM:
     case DXGI_FORMAT_BC7_UNORM_SRGB:
         return 8;
+
+#if defined(_XBOX_ONE) && defined(_TITLE)
+
+    case DXGI_FORMAT_R10G10B10_7E3_A2_FLOAT:
+    case DXGI_FORMAT_R10G10B10_6E4_A2_FLOAT:
+        return 32;
+
+    case DXGI_FORMAT_D16_UNORM_S8_UINT:
+    case DXGI_FORMAT_R16_UNORM_X8_TYPELESS:
+    case DXGI_FORMAT_X16_TYPELESS_G8_UINT:
+        return 24;
+
+#endif // _XBOX_ONE && _TITLE
 
     default:
         return 0;
@@ -226,8 +258,9 @@ static void GetSurfaceInfo( _In_ size_t width,
     size_t numRows = 0;
 
     bool bc = false;
-    bool packed  = false;
-    size_t bcnumBytesPerBlock = 0;
+    bool packed = false;
+    bool planar = false;
+    size_t bpe = 0;
     switch (fmt)
     {
     case DXGI_FORMAT_BC1_TYPELESS:
@@ -237,7 +270,7 @@ static void GetSurfaceInfo( _In_ size_t width,
     case DXGI_FORMAT_BC4_UNORM:
     case DXGI_FORMAT_BC4_SNORM:
         bc=true;
-        bcnumBytesPerBlock = 8;
+        bpe = 8;
         break;
 
     case DXGI_FORMAT_BC2_TYPELESS:
@@ -256,13 +289,44 @@ static void GetSurfaceInfo( _In_ size_t width,
     case DXGI_FORMAT_BC7_UNORM:
     case DXGI_FORMAT_BC7_UNORM_SRGB:
         bc = true;
-        bcnumBytesPerBlock = 16;
+        bpe = 16;
         break;
 
     case DXGI_FORMAT_R8G8_B8G8_UNORM:
     case DXGI_FORMAT_G8R8_G8B8_UNORM:
+    case DXGI_FORMAT_YUY2:
         packed = true;
+        bpe = 4;
         break;
+
+    case DXGI_FORMAT_Y210:
+    case DXGI_FORMAT_Y216:
+        packed = true;
+        bpe = 8;
+        break;
+
+    case DXGI_FORMAT_NV12:
+    case DXGI_FORMAT_420_OPAQUE:
+        planar = true;
+        bpe = 2;
+        break;
+
+    case DXGI_FORMAT_P010:
+    case DXGI_FORMAT_P016:
+        planar = true;
+        bpe = 4;
+        break;
+
+#if defined(_XBOX_ONE) && defined(_TITLE)
+
+    case DXGI_FORMAT_D16_UNORM_S8_UINT:
+    case DXGI_FORMAT_R16_UNORM_X8_TYPELESS:
+    case DXGI_FORMAT_X16_TYPELESS_G8_UINT:
+        planar = true;
+        bpe = 4;
+        break;
+
+#endif
     }
 
     if (bc)
@@ -277,22 +341,36 @@ static void GetSurfaceInfo( _In_ size_t width,
         {
             numBlocksHigh = std::max<size_t>( 1, (height + 3) / 4 );
         }
-        rowBytes = numBlocksWide * bcnumBytesPerBlock;
+        rowBytes = numBlocksWide * bpe;
         numRows = numBlocksHigh;
+        numBytes = rowBytes * numBlocksHigh;
     }
     else if (packed)
     {
-        rowBytes = ( ( width + 1 ) >> 1 ) * 4;
+        rowBytes = ( ( width + 1 ) >> 1 ) * bpe;
         numRows = height;
+        numBytes = rowBytes * height;
+    }
+    else if ( fmt == DXGI_FORMAT_NV11 )
+    {
+        rowBytes = ( ( width + 3 ) >> 2 ) * 4;
+        numRows = height * 2; // Direct3D makes this simplifying assumption, although it is larger than the 4:1:1 data
+        numBytes = rowBytes * numRows;
+    }
+    else if (planar)
+    {
+        rowBytes = ( ( width + 1 ) >> 1 ) * bpe;
+        numBytes = ( rowBytes * height ) + ( ( rowBytes * height + 1 ) >> 1 );
+        numRows = height + ( ( height + 1 ) >> 1 );
     }
     else
     {
         size_t bpp = BitsPerPixel( fmt );
         rowBytes = ( width * bpp + 7 ) / 8; // round up to nearest byte
         numRows = height;
+        numBytes = rowBytes * height;
     }
 
-    numBytes = rowBytes * numRows;
     if (outNumBytes)
     {
         *outNumBytes = numBytes;
@@ -432,6 +510,30 @@ static HRESULT CaptureTexture( _In_ ID3D11DeviceContext* pContext,
         pContext->CopyResource( pStaging.Get(), pSource );
     }
 
+#if defined(_XBOX_ONE) && defined(_TITLE)
+
+    if ( d3dDevice->GetCreationFlags() & D3D11_CREATE_DEVICE_IMMEDIATE_CONTEXT_FAST_SEMANTICS )
+    {
+        ComPtr<ID3D11DeviceX> d3dDeviceX;
+        hr = d3dDevice.As( &d3dDeviceX );
+        if ( FAILED(hr) )
+            return hr;
+
+        ComPtr<ID3D11DeviceContextX> d3dContextX;
+        hr = pContext->QueryInterface( __uuidof(ID3D11DeviceContextX), reinterpret_cast<void**>( d3dContextX.GetAddressOf() ) );
+        if ( FAILED(hr) )
+            return hr;
+
+        UINT64 copyFence = d3dContextX->InsertFence(0);
+        
+        while ( d3dDeviceX->IsFencePending( copyFence ) )
+        {
+            SwitchToThread();
+        }
+    }
+
+#endif
+
     return S_OK;
 }
 
@@ -465,7 +567,7 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
 
     *reinterpret_cast<uint32_t*>(&fileHeader[0]) = DDS_MAGIC;
 
-    auto header = reinterpret_cast<DDS_HEADER*>( reinterpret_cast<uint8_t*>(&fileHeader[0]) + sizeof(uint32_t) );
+    auto header = reinterpret_cast<DDS_HEADER*>( &fileHeader[0] + sizeof(uint32_t) );
     size_t headerSize = sizeof(uint32_t) + sizeof(DDS_HEADER);
     memset( header, 0, sizeof(DDS_HEADER) );
     header->size = sizeof( DDS_HEADER );
@@ -498,7 +600,8 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
     case DXGI_FORMAT_B5G5R5A1_UNORM:        memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_A1R5G5B5, sizeof(DDS_PIXELFORMAT) );    break;
     case DXGI_FORMAT_B8G8R8A8_UNORM:        memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_A8R8G8B8, sizeof(DDS_PIXELFORMAT) );    break; // DXGI 1.1
     case DXGI_FORMAT_B8G8R8X8_UNORM:        memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_X8R8G8B8, sizeof(DDS_PIXELFORMAT) );    break; // DXGI 1.1
-    case DXGI_FORMAT_B4G4R4A4_UNORM:        memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_A4R4G4B4, sizeof(DDS_PIXELFORMAT) );    break;
+    case DXGI_FORMAT_YUY2:                  memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_YUY2, sizeof(DDS_PIXELFORMAT) );        break; // DXGI 1.2
+    case DXGI_FORMAT_B4G4R4A4_UNORM:        memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_A4R4G4B4, sizeof(DDS_PIXELFORMAT) );    break; // DXGI 1.2
 
     // Legacy D3DX formats using D3DFMT enum value as FourCC
     case DXGI_FORMAT_R32G32B32A32_FLOAT:    header->ddspf.size = sizeof(DDS_PIXELFORMAT); header->ddspf.flags = DDS_FOURCC; header->ddspf.fourCC = 116; break; // D3DFMT_A32B32G32R32F
@@ -509,6 +612,12 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
     case DXGI_FORMAT_R16G16_FLOAT:          header->ddspf.size = sizeof(DDS_PIXELFORMAT); header->ddspf.flags = DDS_FOURCC; header->ddspf.fourCC = 112; break; // D3DFMT_G16R16F
     case DXGI_FORMAT_R32_FLOAT:             header->ddspf.size = sizeof(DDS_PIXELFORMAT); header->ddspf.flags = DDS_FOURCC; header->ddspf.fourCC = 114; break; // D3DFMT_R32F
     case DXGI_FORMAT_R16_FLOAT:             header->ddspf.size = sizeof(DDS_PIXELFORMAT); header->ddspf.flags = DDS_FOURCC; header->ddspf.fourCC = 111; break; // D3DFMT_R16F
+
+    case DXGI_FORMAT_AI44:
+    case DXGI_FORMAT_IA44:
+    case DXGI_FORMAT_P8:
+    case DXGI_FORMAT_A8P8:
+        return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
 
     default:
         memcpy_s( &header->ddspf, sizeof(header->ddspf), &DDSPF_DX10, sizeof(DDS_PIXELFORMAT) );
@@ -537,7 +646,7 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
     }
 
     // Setup pixels
-    std::unique_ptr<uint8_t> pixels( new (std::nothrow) uint8_t[ slicePitch ] );
+    std::unique_ptr<uint8_t[]> pixels( new (std::nothrow) uint8_t[ slicePitch ] );
     if (!pixels)
         return E_OUTOFMEMORY;
 
@@ -555,9 +664,9 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
 
     uint8_t* dptr = pixels.get();
 
+    size_t msize = std::min<size_t>( rowPitch, mapped.RowPitch );
     for( size_t h = 0; h < rowCount; ++h )
     {
-        size_t msize = std::min<size_t>( rowPitch, mapped.RowPitch );
         memcpy_s( dptr, rowPitch, sptr, msize );
         sptr += mapped.RowPitch;
         dptr += rowPitch;
@@ -583,7 +692,7 @@ HRESULT DirectX::SaveDDSTextureToFile( _In_ ID3D11DeviceContext* pContext,
 }
 
 //--------------------------------------------------------------------------------------
-#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP)
+#if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP) || (_WIN32_WINNT > _WIN32_WINNT_WIN8)
 
 namespace DirectX
 {
@@ -789,6 +898,34 @@ HRESULT DirectX::SaveWICTextureToFile( _In_ ID3D11DeviceContext* pContext,
                 (void)metawriter->SetMetadataByName( L"/sRGB/RenderingIntent", &value );
             }
         }
+#if defined(_XBOX_ONE) && defined(_TITLE)
+        else if ( memcmp( &guidContainerFormat, &GUID_ContainerFormatJpeg, sizeof(GUID) ) == 0 )
+        {
+            // Set Software name
+            (void)metawriter->SetMetadataByName( L"/app1/ifd/{ushort=305}", &value );
+
+            if ( sRGB )
+            {
+                // Set EXIF Colorspace of sRGB
+                value.vt = VT_UI2;
+                value.uiVal = 1;
+                (void)metawriter->SetMetadataByName( L"/app1/ifd/exif/{ushort=40961}", &value );
+            }
+        }
+        else if ( memcmp( &guidContainerFormat, &GUID_ContainerFormatTiff, sizeof(GUID) ) == 0 )
+        {
+            // Set Software name
+            (void)metawriter->SetMetadataByName( L"/ifd/{ushort=305}", &value );
+
+            if ( sRGB )
+            {
+                // Set EXIF Colorspace of sRGB
+                value.vt = VT_UI2;
+                value.uiVal = 1;
+                (void)metawriter->SetMetadataByName( L"/ifd/exif/{ushort=40961}", &value );
+            }
+        }
+#else
         else
         {
             // Set Software name
@@ -796,12 +933,13 @@ HRESULT DirectX::SaveWICTextureToFile( _In_ ID3D11DeviceContext* pContext,
 
             if ( sRGB )
             {
-                // Set JPEG EXIF Colorspace of sRGB
+                // Set EXIF Colorspace of sRGB
                 value.vt = VT_UI2;
                 value.uiVal = 1;
                 (void)metawriter->SetMetadataByName( L"System.Image.ColorSpace", &value );
             }
         }
+#endif
     }
 
     D3D11_MAPPED_SUBRESOURCE mapped;
@@ -830,6 +968,13 @@ HRESULT DirectX::SaveWICTextureToFile( _In_ ID3D11DeviceContext* pContext,
             return hr;
         }
 
+        BOOL canConvert = FALSE;
+        hr = FC->CanConvert( pfGuid, targetGuid, &canConvert );
+        if ( FAILED(hr) || !canConvert )
+        {
+            return E_UNEXPECTED;
+        }
+
         hr = FC->Initialize( source.Get(), targetGuid, WICBitmapDitherTypeNone, 0, 0, WICBitmapPaletteTypeCustom );
         if ( FAILED(hr) )
         {
@@ -837,7 +982,7 @@ HRESULT DirectX::SaveWICTextureToFile( _In_ ID3D11DeviceContext* pContext,
             return hr;
         }
 
-        WICRect rect = { 0, 0, desc.Width, desc.Height };
+        WICRect rect = { 0, 0, static_cast<INT>( desc.Width ), static_cast<INT>( desc.Height ) };
         hr = frame->WriteSource( FC.Get(), &rect );
         if ( FAILED(hr) )
         {
@@ -866,4 +1011,4 @@ HRESULT DirectX::SaveWICTextureToFile( _In_ ID3D11DeviceContext* pContext,
     return S_OK;
 }
 
-#endif // !WINAPI_FAMILY || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP)
+#endif // !WINAPI_FAMILY || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP) || (_WIN32_WINNT > _WIN32_WINNT_WIN8)

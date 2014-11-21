@@ -18,6 +18,7 @@
 #include <vector>
 
 #include "SpriteFont.h"
+#include "DirectXHelpers.h"
 #include "BinaryReader.h"
 
 using namespace DirectX;
@@ -202,7 +203,9 @@ void SpriteFont::Impl::ForEachGlyph(_In_z_ wchar_t const* text, TAction action)
                 if (x < 0)
                     x = 0;
 
-                if (!iswspace(character))
+                if ( !iswspace(character)
+                     || ( ( glyph->Subrect.right - glyph->Subrect.left ) > 1 )
+                     || ( ( glyph->Subrect.bottom - glyph->Subrect.top ) > 1 ) )
                 {
                     action(glyph, x, y);
                 }
@@ -330,7 +333,7 @@ void XM_CALLCONV SpriteFont::DrawString(_In_ SpriteBatch* spriteBatch, _In_z_ wc
 }
 
 
-XMVECTOR SpriteFont::MeasureString(_In_z_ wchar_t const* text) const
+XMVECTOR XM_CALLCONV SpriteFont::MeasureString(_In_z_ wchar_t const* text) const
 {
     XMVECTOR result = XMVectorZero();
 

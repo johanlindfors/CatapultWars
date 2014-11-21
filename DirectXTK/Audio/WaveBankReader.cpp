@@ -447,7 +447,7 @@ public:
     HRESULT Open( _In_z_ const wchar_t* szFileName );
     void Close();
 
-    HRESULT GetFormat( _In_ uint32_t index, _Out_ WAVEFORMATEX* pFormat, _In_ size_t maxsize ) const;
+    HRESULT GetFormat( _In_ uint32_t index, _Out_writes_bytes_(maxsize) WAVEFORMATEX* pFormat, _In_ size_t maxsize ) const;
 
     HRESULT GetWaveData( _In_ uint32_t index, _Outptr_ const uint8_t** pData, _Out_ uint32_t& dataSize ) const;
 
@@ -518,7 +518,7 @@ HRESULT WaveBankReader::Impl::Open( const wchar_t* szFileName )
     }
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-    CREATEFILE2_EXTENDED_PARAMETERS params = { sizeof(params), 0 };
+    CREATEFILE2_EXTENDED_PARAMETERS params = { sizeof(CREATEFILE2_EXTENDED_PARAMETERS), 0 };
     params.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
     params.dwFileFlags = FILE_FLAG_OVERLAPPED | FILE_FLAG_SEQUENTIAL_SCAN;
     ScopedHandle hFile( safe_handle( CreateFile2( szFileName,
@@ -821,15 +821,15 @@ HRESULT WaveBankReader::Impl::Open( const wchar_t* szFileName )
         hFile.reset();
 
 #if (_WIN32_WINNT >= _WIN32_WINNT_WIN8)
-        CREATEFILE2_EXTENDED_PARAMETERS params = { sizeof(params), 0 };
-        params.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
-        params.dwFileFlags = FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING;
-        params.dwSecurityQosFlags = SECURITY_IMPERSONATION;
+        CREATEFILE2_EXTENDED_PARAMETERS params2 = { sizeof(CREATEFILE2_EXTENDED_PARAMETERS), 0 };
+        params2.dwFileAttributes = FILE_ATTRIBUTE_NORMAL;
+        params2.dwFileFlags = FILE_FLAG_OVERLAPPED | FILE_FLAG_NO_BUFFERING;
+        params2.dwSecurityQosFlags = SECURITY_IMPERSONATION;
         m_async = CreateFile2( szFileName,
                                GENERIC_READ,
                                FILE_SHARE_READ,
                                OPEN_EXISTING,
-                               &params );
+                               &params2 );
 #else
         m_async = CreateFileW( szFileName,
                                GENERIC_READ,
@@ -971,7 +971,11 @@ HRESULT WaveBankReader::Impl::GetFormat( uint32_t index, WAVEFORMATEX* pFormat, 
                 return HRESULT_FROM_WIN32( ERROR_MORE_DATA );
 
             pFormat->wFormatTag = WAVE_FORMAT_PCM;
-            pFormat->cbSize = 0;
+
+            if ( maxsize >= sizeof(WAVEFORMATEX) )
+            {
+                pFormat->cbSize = 0;
+            }
             break;
 
         case MINIWAVEFORMAT::TAG_ADPCM:

@@ -17,9 +17,6 @@
 
 #include <exception>
 
-#if defined(_DEBUG) || defined(PROFILE)
-#pragma comment(lib,"dxguid.lib")
-#endif
 
 namespace DirectX
 {
@@ -33,19 +30,6 @@ namespace DirectX
     }
 
 
-    // Helper sets a D3D resource name string (used by PIX and debug layer leak reporting).
-    template<UINT TNameLength>
-    inline void SetDebugObjectName(_In_ ID3D11DeviceChild* resource, _In_z_ const char (&name)[TNameLength])
-    {
-        #if !defined(NO_D3D11_DEBUG_NAME) && ( defined(_DEBUG) || defined(PROFILE) )
-            resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
-        #else
-            UNREFERENCED_PARAMETER(resource);
-            UNREFERENCED_PARAMETER(name);
-        #endif
-    }
-
-
     // Helper for output debug tracing
     inline void DebugTrace( _In_z_ _Printf_format_string_ const char* format, ... )
     {
@@ -53,7 +37,7 @@ namespace DirectX
         va_list args;
         va_start( args, format );
 
-        char buff[1024];
+        char buff[1024]={0};
         vsprintf_s( buff, format, args );
         OutputDebugStringA( buff );
 #else
@@ -71,7 +55,7 @@ namespace DirectX
 }
 
 
-#if defined(_MSC_VER) && (_MSC_VER < 1610)
+#if (defined(_MSC_VER) && (_MSC_VER < 1610)) || defined(DIRECTX_EMULATE_MUTEX)
 
 // Emulate the C++0x mutex and lock_guard types when building with Visual Studio versions < 2012.
 namespace std

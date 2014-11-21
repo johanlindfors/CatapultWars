@@ -13,7 +13,7 @@
 
 #pragma once
 
-#if defined(_XBOX_ONE) && defined(_TITLE) && MONOLITHIC
+#if defined(_XBOX_ONE) && defined(_TITLE)
 #include <d3d11_x.h>
 #else
 #include <d3d11_1.h>
@@ -24,7 +24,7 @@
 
 namespace DirectX
 {
-    #if (DIRECTXMATH_VERSION < 305) && !defined(XM_CALLCONV)
+    #if (DIRECTX_MATH_VERSION < 305) && !defined(XM_CALLCONV)
     #define XM_CALLCONV __fastcall
     typedef const XMVECTOR& HXMVECTOR;
     typedef const XMMATRIX& FXMMATRIX;
@@ -270,8 +270,8 @@ namespace DirectX
             SetColor( color );
         }
 
-        void SetColor( XMFLOAT4 const& color ) { SetColor( XMLoadFloat4( &color ) ); }
-        void XM_CALLCONV SetColor( FXMVECTOR color );
+        void __cdecl SetColor( XMFLOAT4 const& icolor ) { SetColor( XMLoadFloat4( &icolor ) ); }
+        void XM_CALLCONV SetColor( FXMVECTOR icolor );
 
         static const int InputElementCount = 5;
         static const D3D11_INPUT_ELEMENT_DESC InputElements[InputElementCount];
@@ -320,10 +320,10 @@ namespace DirectX
             SetBlendWeights( weights );
         }
 
-        void SetBlendIndices( XMUINT4 const& indices );
+        void __cdecl SetBlendIndices( XMUINT4 const& iindices );
 
-        void SetBlendWeights( XMFLOAT4 const& weights ) { SetBlendWeights( XMLoadFloat4( &weights ) ); }
-        void XM_CALLCONV SetBlendWeights( FXMVECTOR weights );
+        void __cdecl SetBlendWeights( XMFLOAT4 const& iweights ) { SetBlendWeights( XMLoadFloat4( &iweights ) ); }
+        void XM_CALLCONV SetBlendWeights( FXMVECTOR iweights );
 
         static const int InputElementCount = 7;
         static const D3D11_INPUT_ELEMENT_DESC InputElements[InputElementCount];

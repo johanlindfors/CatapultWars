@@ -270,9 +270,23 @@ public:
         mEngineFlags( AudioEngine_Default ),
         mCategory( AudioCategory_GameEffects ),
         mVoiceInstances( 0 )
+#if (_WIN32_WINNT < _WIN32_WINNT_WIN8)
+        ,mDLL(nullptr)
+#endif
     {
         memset( &mX3DAudio, 0, X3DAUDIO_HANDLE_BYTESIZE );
     };
+
+#if (_WIN32_WINNT < _WIN32_WINNT_WIN8)
+    ~Impl()
+    {
+        if (mDLL)
+        {
+            FreeLibrary(mDLL);
+            mDLL = nullptr;
+        }
+    }
+#endif
 
     HRESULT Initialize( AUDIO_ENGINE_FLAGS flags, _In_opt_ const WAVEFORMATEX* wfx, _In_opt_z_ const wchar_t* deviceId, AUDIO_STREAM_CATEGORY category );
 
@@ -332,6 +346,10 @@ private:
     size_t                              mVoiceInstances;
     VoiceCallback                       mVoiceCallback;
     EngineCallback                      mEngineCallback;
+
+#if (_WIN32_WINNT < _WIN32_WINNT_WIN8)
+    HMODULE                             mDLL;
+#endif
 };
 
 
@@ -380,8 +398,27 @@ HRESULT AudioEngine::Impl::Reset( const WAVEFORMATEX* wfx, const wchar_t* device
 #if (_WIN32_WINNT < _WIN32_WINNT_WIN8)
     if ( mEngineFlags & AudioEngine_Debug )
     {
+        if ( !mDLL )
+        {
+            mDLL = LoadLibraryEx( L"XAudioD2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */ );
+            if ( !mDLL )
+            {
+                DebugTrace( "ERROR: XAudio 2.7 debug version not installed on system (install the DirectX SDK Developer Runtime)\n" );
+                return HRESULT_FROM_WIN32( ERROR_NOT_FOUND );
+            }
+        }
+
         eflags |= XAUDIO2_DEBUG_ENGINE;
-        OutputDebugStringA( "INFO: XAudio 2.7 debugging enabled\n" );
+        DebugTrace( "INFO: XAudio 2.7 debugging enabled\n" );
+    }
+    else if ( !mDLL )
+    {
+        mDLL = LoadLibraryEx( L"XAudio2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */ );
+        if ( !mDLL )
+        {
+            DebugTrace( "ERROR: XAudio 2.7 not installed on system (install the DirectX End-user Runtimes (June 2010)\n" );
+            return HRESULT_FROM_WIN32( ERROR_NOT_FOUND );
+        }
     }
 #endif
 
@@ -389,7 +426,7 @@ HRESULT AudioEngine::Impl::Reset( const WAVEFORMATEX* wfx, const wchar_t* device
     if( FAILED( hr ) )
     {
 #if (_WIN32_WINNT < _WIN32_WINNT_WIN8)
-        DebugTrace( "ERROR: XAudio 2.7 not found (have you called CoInitialize? Do you have the Developer Runtime installed?)\n" );
+        DebugTrace( "ERROR: XAudio 2.7 not found (have you called CoInitialize?)\n" );
 #endif
         return hr;
     }
@@ -406,7 +443,7 @@ HRESULT AudioEngine::Impl::Reset( const WAVEFORMATEX* wfx, const wchar_t* device
         debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
         debug.BreakMask = XAUDIO2_LOG_ERRORS;
         xaudio2->SetDebugConfiguration( &debug, 0 );
-        OutputDebugStringA( "INFO: XAudio 2.8 debugging enabled\n" );
+        DebugTrace( "INFO: XAudio 2.8 debugging enabled\n" );
     }
 #endif
 
@@ -1018,7 +1055,7 @@ void AudioEngine::Impl::AllocateVoice( const WAVEFORMATEX* wfx, SOUND_EFFECT_INS
             sendDescriptors[0].Flags = sendDescriptors[1].Flags = (flags & SoundEffectInstance_ReverbUseFilters) ? XAUDIO2_SEND_USEFILTER : 0;
             sendDescriptors[0].pOutputVoice = mMasterVoice;
             sendDescriptors[1].pOutputVoice = mReverbVoice;
-            const XAUDIO2_VOICE_SENDS sendList = { mReverbVoice ? 2 : 1, sendDescriptors };
+            const XAUDIO2_VOICE_SENDS sendList = { mReverbVoice ? 2U : 1U, sendDescriptors };
 
 #ifdef VERBOSE_TRACE
             DebugTrace( "INFO: Allocate voice 3D: Format Tag %u, %u channels, %u-bit, %u blkalign, %u Hz\n", wfx->wFormatTag, 
@@ -1266,7 +1303,7 @@ void AudioEngine::Resume()
 
 void AudioEngine::SetReverb( AUDIO_ENGINE_REVERB reverb )
 {
-    if ( reverb >= Reverb_MAX )
+    if ( reverb < 0 || reverb >= Reverb_MAX )
         throw std::out_of_range( "AudioEngine::SetReverb" );
 
     if ( reverb == Reverb_Off )

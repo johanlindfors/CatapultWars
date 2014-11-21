@@ -275,13 +275,13 @@ namespace CatapultWars{
 
 			// Draw Wind direction
 			Platform::String^ text = "WIND";
-			Vector2 size = m_hudFont->MeasureString(text->Data());
+			auto size = m_hudFont->MeasureString(text->Data());
 			Vector2 windarrowScale = Vector2(m_wind.y / 10, 1);
 			m_spriteBatch->Draw(m_windArrowTexture.Get(),
 				m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0, 0),
 				windarrowScale, m_wind.x > 0 ? SpriteEffects::SpriteEffects_None : SpriteEffects::SpriteEffects_FlipHorizontally, 0);
 
-			DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, size.y), Colors::Black);
+			DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, XMVectorGetY(size)), Colors::Black);
 			if (m_wind.y == 0)
 			{
 				text = "NONE";
@@ -304,8 +304,8 @@ namespace CatapultWars{
 
 			DrawString(m_hudFont, text,
 				Vector2(
-				m_viewportWidth / 2 - size.x / 2,
-				m_viewportHeight - size.y),
+				m_viewportWidth / 2 - XMVectorGetX(size) / 2,
+				m_viewportHeight - XMVectorGetY(size)),
 				Colors::Green);
 		}
 	}

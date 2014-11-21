@@ -18,6 +18,7 @@
 #include "Effects.h"
 #include "VertexTypes.h"
 
+#include "DirectXHelpers.h"
 #include "PlatformHelpers.h"
 #include "BinaryReader.h"
 
@@ -158,6 +159,14 @@ namespace VSD3DStarter
     #pragma pack(pop)
 
 }; // namespace
+
+static_assert( sizeof(VSD3DStarter::Material) == 132, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::SubMesh) == 20, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::SkinningVertex)== 32, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::MeshExtents)== 40, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::Bone) == 196, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::Clip) == 12, "CMO Mesh structure size incorrect" );
+static_assert( sizeof(VSD3DStarter::Keyframe)== 72, "CMO Mesh structure size incorrect" );
 
 //--------------------------------------------------------------------------------------
 struct MaterialRecordCMO
@@ -587,7 +596,7 @@ std::unique_ptr<Model> DirectX::Model::CreateFromCMO( ID3D11Device* d3dDevice, c
             }
         }
 #else
-        bSkeleton;
+        UNREFERENCED_PARAMETER(bSkeleton);
 #endif
 
         bool enableSkinning = ( *nSkinVBs ) != 0;
@@ -755,7 +764,7 @@ std::unique_ptr<Model> DirectX::Model::CreateFromCMO( ID3D11Device* d3dDevice, c
 
                 m.effect = fxFactoryDGSL->CreateDGSLEffect( info, nullptr );
 
-                auto dgslEffect = reinterpret_cast<DGSLEffect*>( m.effect.get() );
+                auto dgslEffect = static_cast<DGSLEffect*>( m.effect.get() );
                 dgslEffect->SetUVTransform( XMLoadFloat4x4( &m.pMaterial->UVTransform ) );
             }
             else
