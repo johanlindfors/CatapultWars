@@ -3,6 +3,7 @@
 #include "..\Common\DeviceResources.h"
 #include "ShaderStructures.h"
 #include "..\Common\StepTimer.h"
+#include "SpriteBatch.h"
 
 namespace CatapultWars
 {
@@ -45,6 +46,9 @@ namespace CatapultWars
 		bool	m_loadingComplete;
 		float	m_degreesPerSecond;
 		bool	m_tracking;
+
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_pTextureView;
+		std::unique_ptr<DirectX::SpriteBatch> m_pSpriteBatch;
 	};
 }
 

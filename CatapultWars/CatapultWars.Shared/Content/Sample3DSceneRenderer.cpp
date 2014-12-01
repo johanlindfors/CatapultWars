@@ -2,6 +2,7 @@
 #include "Sample3DSceneRenderer.h"
 
 #include "..\Common\DirectXHelper.h"
+#include "WICTextureLoader.h"
 
 using namespace CatapultWars;
 
@@ -175,6 +176,10 @@ void Sample3DSceneRenderer::Render()
 		0,
 		0
 		);
+
+	m_pSpriteBatch->Begin();
+	m_pSpriteBatch->Draw(m_pTextureView.Get(), XMFLOAT2(0, 0));
+	m_pSpriteBatch->End();
 }
 
 void Sample3DSceneRenderer::CreateDeviceDependentResources()
@@ -301,6 +306,16 @@ void Sample3DSceneRenderer::CreateDeviceDependentResources()
 				&m_indexBuffer
 				)
 			);
+
+		DX::ThrowIfFailed(CreateWICTextureFromFile(
+			m_deviceResources->GetD3DDevice(),
+			m_deviceResources->GetD3DDeviceContext(),
+			L"Assets\\Logo.png",
+			0,
+			&m_pTextureView));
+
+		m_pSpriteBatch = std::unique_ptr<DirectX::SpriteBatch>(new DirectX::SpriteBatch(m_deviceResources->GetD3DDeviceContext()));
+
 	});
 
 	// Once the cube is loaded, the object is ready to be rendered.
