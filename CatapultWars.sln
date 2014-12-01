@@ -11,8 +11,19 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.Windows", "Cat
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.WindowsPhone", "CatapultWars\CatapultWars.WindowsPhone\CatapultWars.WindowsPhone.vcxproj", "{E485A391-7278-4C1C-AFF2-D5429091A1F2}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Shared", "DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems", "{6EFB7964-FE7D-4489-BBB0-860255357855}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Windows", "DirectXTK\DirectXTK.Windows\DirectXTK.Windows.vcxproj", "{6B88A2CC-D2CC-424A-BB00-0B28882CF683}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.WindowsPhone", "DirectXTK\DirectXTK.WindowsPhone\DirectXTK.WindowsPhone.vcxproj", "{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{6b88a2cc-d2cc-424a-bb00-0b28882cf683}*SharedItemsImports = 4
+		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}*SharedItemsImports = 4
+		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{6efb7964-fe7d-4489-bbb0-860255357855}*SharedItemsImports = 9
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{a37babba-492c-4671-940b-c81ce05715b1}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{e485a391-7278-4c1c-aff2-d5429091a1f2}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{2993eeae-b74e-424c-8a70-c44268091ce2}*SharedItemsImports = 9
@@ -58,6 +69,28 @@ Global
 		{E485A391-7278-4C1C-AFF2-D5429091A1F2}.Release|Win32.Build.0 = Release|Win32
 		{E485A391-7278-4C1C-AFF2-D5429091A1F2}.Release|Win32.Deploy.0 = Release|Win32
 		{E485A391-7278-4C1C-AFF2-D5429091A1F2}.Release|x64.ActiveCfg = Release|Win32
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|ARM.ActiveCfg = Debug|ARM
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|ARM.Build.0 = Debug|ARM
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|Win32.Build.0 = Debug|Win32
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|x64.ActiveCfg = Debug|x64
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Debug|x64.Build.0 = Debug|x64
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|ARM.ActiveCfg = Release|ARM
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|ARM.Build.0 = Release|ARM
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|Win32.ActiveCfg = Release|Win32
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|Win32.Build.0 = Release|Win32
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|x64.ActiveCfg = Release|x64
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683}.Release|x64.Build.0 = Release|x64
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Debug|ARM.Build.0 = Debug|ARM
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Debug|Win32.Build.0 = Debug|Win32
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Debug|x64.ActiveCfg = Debug|Win32
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|ARM.ActiveCfg = Release|ARM
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|ARM.Build.0 = Release|ARM
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|Win32.ActiveCfg = Release|Win32
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|Win32.Build.0 = Release|Win32
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,5 +99,8 @@ Global
 		{2993EEAE-B74E-424C-8A70-C44268091CE2} = {F488D40F-23BF-4ECF-A4AD-835AE7658C2E}
 		{A37BABBA-492C-4671-940B-C81CE05715B1} = {F488D40F-23BF-4ECF-A4AD-835AE7658C2E}
 		{E485A391-7278-4C1C-AFF2-D5429091A1F2} = {F488D40F-23BF-4ECF-A4AD-835AE7658C2E}
+		{6EFB7964-FE7D-4489-BBB0-860255357855} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
+		{6B88A2CC-D2CC-424A-BB00-0B28882CF683} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
+		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
 	EndGlobalSection
 EndGlobal
