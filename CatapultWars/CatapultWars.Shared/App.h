@@ -39,11 +39,18 @@ protected:
 #endif
 		void OnDisplayContentsInvalidated(Windows::Graphics::Display::DisplayInformation^ sender, Platform::Object^ args);
 
+		void OnPointerPressed(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
+		void OnPointerMoved(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
+		void OnPointerReleased(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::PointerEventArgs^ args);
+
 	private:
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 		std::unique_ptr<CatapultWarsMain> m_main;
 		bool m_windowClosed;
 		bool m_windowVisible;
+		std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_pointerIds;
+		std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_oldPoints;
+		void DragWithOneFinger(Windows::UI::Core::PointerEventArgs^ args);
 	};
 }
 

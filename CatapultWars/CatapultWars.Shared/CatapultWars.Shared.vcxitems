@@ -14,10 +14,22 @@
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="$(MSBuildThisFileDirectory)AI.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Animation.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)AudioManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Human.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Player.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AI.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Animation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)AudioManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Catapult.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CatapultWarsMain.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Human.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -28,6 +40,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Common\StepTimer.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Content\SampleFpsTextRenderer.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Content\SampleFpsTextRenderer.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Player.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)Projectile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)property.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />
@@ -60,9 +75,15 @@
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\windArrow.DDS" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\HUDFont.spritefont" />
-    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\MenuFont.spritefont" />
-    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\TestHudFont.spritefont" />
+    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\HUDFont.spritefont">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\MenuFont.spritefont">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\TestHudFont.spritefont">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Media Include="$(MSBuildThisFileDirectory)Assets\Sounds\BoulderHit.wav" />

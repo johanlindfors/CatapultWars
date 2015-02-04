@@ -85,6 +85,16 @@ void App::SetWindow(CoreWindow^ window)
 	pointerVisualizationSettings->IsBarrelButtonFeedbackEnabled = false;
 #endif
 
+	window->PointerPressed +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerPressed);
+
+	window->PointerMoved +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerMoved);
+
+	window->PointerReleased +=
+		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerReleased);
+
+
 	m_deviceResources->SetWindow(window);
 }
 
@@ -203,3 +213,44 @@ void App::OnOrientationChanged(DisplayInformation^ sender, Object^ args)
 	m_main->CreateWindowSizeDependentResources();
 }
 #endif
+
+void App::OnPointerPressed(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	m_pointerIds.emplace(args->CurrentPoint->PointerId, args->CurrentPoint);
+	m_oldPoints.emplace(args->CurrentPoint->PointerId, args->CurrentPoint);
+
+	m_main->IsTouchDown(true);
+}
+
+void App::OnPointerMoved(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	if (m_pointerIds.size() == 1)
+	{
+		DragWithOneFinger(args);
+	}
+}
+
+void App::DragWithOneFinger(PointerEventArgs^ args)
+{
+	UINT changedPointId = args->CurrentPoint->PointerId;
+
+	auto oldPoint = m_oldPoints[changedPointId];
+	m_pointerIds[changedPointId] = args->CurrentPoint;
+
+	m_main->HandleInput(
+		(args->CurrentPoint->Position.X - oldPoint->Position.X),
+		(args->CurrentPoint->Position.Y - oldPoint->Position.Y));
+
+	//ostringstream sstream;
+	//sstream << "Moved at: " << "X: " << (args->CurrentPoint->Position.X - oldPoint->Position.X) << " Y: " << (args->CurrentPoint->Position.Y - oldPoint->Position.Y) << "\n";
+	//string s = sstream.str();
+	//OutputDebugStringA(s.c_str());
+}
+
+void App::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
+{
+	m_pointerIds.erase(args->CurrentPoint->PointerId);
+	m_oldPoints.erase(args->CurrentPoint->PointerId);
+
+	m_main->IsTouchDown(false);
+}

@@ -14,3 +14,10 @@
 #include <concrt.h>
 #include <collection.h>
 #include <ppltasks.h>
+
+#include "Common\DirectXHelper.h"
+#include "SpriteBatch.h"
+#include "SpriteFont.h"
+#include "SimpleMath.h"
+#include "Catapult.h"
+#include "Player.h"
