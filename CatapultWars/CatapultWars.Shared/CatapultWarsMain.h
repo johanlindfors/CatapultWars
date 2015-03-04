@@ -6,11 +6,6 @@
 #include "Human.h"
 #include "AI.h"
 
-using namespace DirectX;
-using namespace DirectX::SimpleMath;
-using namespace Microsoft::WRL;
-
-// Renders Direct2D and 3D content on the screen.
 namespace CatapultWars
 {
 	class CatapultWarsMain : public DX::IDeviceNotify
@@ -37,22 +32,22 @@ namespace CatapultWars
 		std::shared_ptr<SpriteBatch>			m_spriteBatch;
 		std::shared_ptr<SpriteFont>				m_hudFont;
 
-		ComPtr<ID3D11ShaderResourceView>		m_skyTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_foregroundTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_cloud1Texture;
-		ComPtr<ID3D11ShaderResourceView>		m_cloud2Texture;
-		ComPtr<ID3D11ShaderResourceView>		m_mountainTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_hudBackgroundTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_ammoTypeTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_windArrowTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_defeatTexture;
-		ComPtr<ID3D11ShaderResourceView>		m_victoryTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_skyTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_foregroundTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_cloud1Texture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_cloud2Texture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_mountainTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_hudBackgroundTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_ammoTypeTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_windArrowTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_defeatTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_victoryTexture;
 
-		Vector2			m_cloud1Position;
-		Vector2			m_cloud2Position;
-		Vector2			m_playerHUDPosition;
-		Vector2			m_computerHUDPosition;
-		Vector2			m_windArrowPosition;
+		DirectX::SimpleMath::Vector2			m_cloud1Position;
+		DirectX::SimpleMath::Vector2			m_cloud2Position;
+		DirectX::SimpleMath::Vector2			m_playerHUDPosition;
+		DirectX::SimpleMath::Vector2			m_computerHUDPosition;
+		DirectX::SimpleMath::Vector2			m_windArrowPosition;
 
 		Human^			m_player;
 		AI^				m_computer;

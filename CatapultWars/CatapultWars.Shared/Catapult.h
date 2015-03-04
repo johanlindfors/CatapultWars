@@ -1,12 +1,8 @@
 #pragma once
 
-#include "Projectile.h"
-#include "Animation.h"
+#include <Projectile.h>
+#include <Animation.h>
 #include <unordered_map>
-
-using namespace Microsoft::WRL;
-using namespace DirectX;
-using namespace std;
 
 namespace CatapultWars {
 
@@ -21,32 +17,31 @@ namespace CatapultWars {
 		Stalling = 0x40
 	};
 
-	class Animation;
+	ref class Animation;
 	ref class Player;
 
 	ref class Catapult sealed
 	{
 	internal:
-		Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
+		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
 		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
 		void Update();
 		void Draw();
 		void Fire(float velocity);
 
-		bool			AnimationRunning;
-		wchar_t*		Name;
-		bool			IsActive;
-		CatapultState	CurrentState;
-		float			ShotStrength;
-		float			ShotVelocity;
-		bool			GameOver;
+		bool				AnimationRunning;
+		Platform::String^	Name;
+		bool				IsActive;
+		CatapultState		CurrentState;
+		float				ShotStrength;
+		float				ShotVelocity;
+		bool				GameOver;
 
 		property Vector2 Position {
 			Vector2 get() { return m_catapultPosition; }
 		}
 		
-		property float Wind
-		{
+		property float Wind {
 			void set(float wind) { m_wind = wind; }
 		}
 		
@@ -62,7 +57,7 @@ namespace CatapultWars {
 		ComPtr<ID3D11ShaderResourceView>				m_idleTexture;		
 		SpriteEffects									m_spriteEffects;
 		Projectile*										m_projectile;
-		wchar_t*										m_idleTextureName;
+		Platform::String^								m_idleTextureName;
 		bool											m_isAI;
 		const float										m_gravity;
 		CatapultState									m_lastUpdateState;
@@ -74,8 +69,8 @@ namespace CatapultWars {
 		Vector2											m_catapultPosition;
 		const int										m_winScore;
 
-		std::unordered_map<wchar_t*, Animation*>		m_animations;
-		std::unordered_map<wchar_t*, int>				m_splitFrames;
+		std::unordered_map<Platform::String^, Animation^>		m_animations;
+		std::unordered_map<Platform::String^, int>				m_splitFrames;
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
@@ -84,7 +79,7 @@ namespace CatapultWars {
 		void DrawIdleCatapult();
 		void Hit();
 		bool CheckHit();
-		void CreateAnimation(ID3D11Device* device, wchar_t* key, wchar_t* textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
+		void CreateAnimation(ID3D11Device* device, Platform::String^ key, Platform::String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
 
 		shared_ptr<SpriteBatch>							m_spriteBatch;
 	};

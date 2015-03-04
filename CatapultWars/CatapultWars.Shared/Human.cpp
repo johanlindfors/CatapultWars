@@ -2,10 +2,10 @@
 #include "Human.h"
 
 namespace CatapultWars {
-	Human::Human() :
-		m_maxDragDelta(Vector2(480, 800).Length())
+	Human::Human()
+		: m_maxDragDelta(Vector2(480, 800).Length())
+		, m_catapultPosition(Vector2(140,332))
 	{
-		m_catapultPosition = Vector2(140, 332);
 
 		Catapult = ref new CatapultWars::Catapult(
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.dds",

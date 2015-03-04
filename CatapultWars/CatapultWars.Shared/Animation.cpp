@@ -11,10 +11,6 @@ Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, PO
 	Offset = Vector2(0, 0);
 
 	FrameCount = m_sheetSize.x * m_sheetSize.y;
-
-	FrameIndex.setContainer(this);
-	FrameIndex.setter(&Animation::setFrameIndex);
-	FrameIndex.getter(&Animation::getFrameIndex);
 }
 
 Animation::~Animation()
@@ -76,5 +72,4 @@ void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vect
 		position + Offset,
 		&sourceRectangle,
 		Colors::White, 0.0f, Vector2(0, 0), scale, spriteEffects, 0.0f);
-
 }

@@ -4,8 +4,9 @@
 #include "DDSTextureLoader.h"
 
 using namespace CatapultWars;
+using namespace Platform;
 
-Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
+Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
 {	
 	m_spriteBatch = spriteBatch;
 	ProjectileStartPosition = startPosition;
@@ -20,7 +21,7 @@ void Projectile::Initialize(ID3D11Device* device)
 {
 	ComPtr<ID3D11Resource> res;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_textureName, res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
 		);
 		
 	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);

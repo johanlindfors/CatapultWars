@@ -122,7 +122,7 @@ void CatapultWarsMain::Start()
 	m_wind = Vector2(0, 0);
 	m_isHumanTurn = false;
 	m_changeTurn = true;
-	//	m_computer->Catapult->CurrentState = CatapultState::Reset;
+	m_computer->Catapult->CurrentState = CatapultState::Reset;
 }
 
 // Updates the application state once per frame.
@@ -397,5 +397,4 @@ void CatapultWarsMain::UpdateClouds()
 		m_cloud2Position.x = -(int)m_cloud2TextureWidth * 2.0f;
 	else if (m_cloud2Position.x < -(int)m_cloud2TextureWidth * 2.0f)
 		m_cloud2Position.x = m_viewportWidth;
-
 }

@@ -2,8 +2,9 @@
 #include "Catapult.h"
 
 using namespace CatapultWars;
+using namespace Platform;
 
-Catapult::Catapult(wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
+Catapult::Catapult(String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
 m_winScore(5),
 m_gravity(500)
 {
@@ -23,7 +24,7 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	ParseXmlAndCreateAnimations(device);
 
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
 	Vector2 projectileStartPosition;
@@ -38,15 +39,15 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::CreateAnimation(ID3D11Device* device, wchar_t* key, wchar_t* textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
+void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
 {
 	ComPtr<ID3D11ShaderResourceView> texture;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, textureFilename, nullptr, texture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
 		);
 	POINT frameSize = { frameWidth, frameHeight };
 	POINT sheetSize = { sheetColumns, sheetRows };
-	auto animation = new Animation(texture.Get(), frameSize, sheetSize);
+	auto animation = ref new Animation(texture.Get(), frameSize, sheetSize);
 	m_animations[key] = animation;
 	m_splitFrames[key] = splitFrame;
 }
