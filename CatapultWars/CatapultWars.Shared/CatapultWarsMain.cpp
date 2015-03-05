@@ -43,6 +43,8 @@ void CatapultWarsMain::CreateWindowSizeDependentResources()
 	m_spriteBatch.reset(new SpriteBatch(context));
 #if (WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
 	m_spriteBatch->SetRotation(DXGI_MODE_ROTATION_ROTATE90);
+#else
+	m_spriteBatch->SetRotation(m_deviceResources->ComputeDisplayRotation());
 #endif
 	DX::ThrowIfFailed(
 		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\sky.dds", nullptr, m_skyTexture.ReleaseAndGetAddressOf())

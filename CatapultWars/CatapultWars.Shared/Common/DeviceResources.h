@@ -23,6 +23,7 @@ namespace DX
 		void RegisterDeviceNotify(IDeviceNotify* deviceNotify);
 		void Trim();
 		void Present();
+		DXGI_MODE_ROTATION ComputeDisplayRotation();
 
 		// Device Accessors.
 		Windows::Foundation::Size GetOutputSize() const					{ return m_outputSize; }
@@ -51,8 +52,7 @@ namespace DX
 		void CreateDeviceIndependentResources();
 		void CreateDeviceResources();
 		void CreateWindowSizeDependentResources();
-		DXGI_MODE_ROTATION ComputeDisplayRotation();
-
+		
 		// Direct3D objects.
 		Microsoft::WRL::ComPtr<ID3D11Device2>			m_d3dDevice;
 		Microsoft::WRL::ComPtr<ID3D11DeviceContext2>	m_d3dContext;
