@@ -18,7 +18,7 @@ void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBa
 	Player::Initialize(device, spriteBatch);
 }
 
-void AI::Update()
+void AI::Update(double elapsedSeconds)
 {
 	if (Catapult->CurrentState == CatapultState::Aiming &&
 		!Catapult->AnimationRunning)
@@ -29,7 +29,7 @@ void AI::Update()
 		Catapult->ShotStrength = (shotVelocity / MaxShotStrength);
 		Catapult->ShotVelocity = shotVelocity;
 	}
-	Player::Update();
+	Player::Update(elapsedSeconds);
 }
 
 void AI::Draw()

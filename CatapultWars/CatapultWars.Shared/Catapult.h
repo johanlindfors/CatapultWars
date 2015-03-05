@@ -25,7 +25,7 @@ namespace CatapultWars {
 	internal:
 		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
 		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
-		void Update();
+		void Update(double elapsedSeconds);
 		void Draw();
 		void Fire(float velocity);
 

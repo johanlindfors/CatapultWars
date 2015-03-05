@@ -8,7 +8,7 @@ namespace CatapultWars {
 		void Initialize(ID3D11Device* device);
 		void Draw();
 		void Fire(float velocityX, float velocityY);
-		bool UpdateProjectileFlightData(float wind, float gravity);
+		bool UpdateProjectileFlightData(double elapsedSeconds, float wind, float gravity);
 
 		DirectX::SimpleMath::Vector2						ProjectilePosition;
 		DirectX::SimpleMath::Vector2						ProjectileStartPosition;

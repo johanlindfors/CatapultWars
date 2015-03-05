@@ -45,9 +45,9 @@ namespace CatapultWars {
 		ResetDragState();
 	}
 
-	void Human::Update()
+	void Human::Update(double elapsedSeconds)
 	{
-		Player::Update();
+		Player::Update(elapsedSeconds);
 	}
 
 	void Human::Draw()

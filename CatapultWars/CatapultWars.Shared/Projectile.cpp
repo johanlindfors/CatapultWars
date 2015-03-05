@@ -36,11 +36,10 @@ void Projectile::Draw()
 	m_spriteBatch->Draw(ProjectileTexture.Get(), ProjectilePosition, nullptr, Colors::White, m_projectileRotation, Vector2(m_textureWidth / 2, m_textureHeight / 2), 1.0f, SpriteEffects::SpriteEffects_None, 0.0f);
 }
 
-bool Projectile::UpdateProjectileFlightData(float wind, float gravity)
+bool Projectile::UpdateProjectileFlightData(double elapsedSeconds, float wind, float gravity)
 {
 	bool groundHit = false;
-	//flightTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
-	m_flightTime += 1;
+	m_flightTime += elapsedSeconds;
 
 	int direction = m_isAI ? -1 : 1;
 

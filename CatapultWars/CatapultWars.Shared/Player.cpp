@@ -14,9 +14,9 @@ void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spri
 	m_score = 0;
 }
 
-void Player::Update()
+void Player::Update(double elapsedSeconds)
 {
-	Catapult->Update();
+	Catapult->Update(elapsedSeconds);
 }
 
 void Player::Draw()

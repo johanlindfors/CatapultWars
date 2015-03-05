@@ -22,10 +22,8 @@ m_maxWind(2)
 
 	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
 	// e.g. for 60 FPS fixed timestep update logic, call:
-	/*
 	m_timer.SetFixedTimeStep(true);
 	m_timer.SetTargetElapsedSeconds(1.0 / 60);
-	*/
 
 	CreateWindowSizeDependentResources();
 }
@@ -187,12 +185,14 @@ void CatapultWarsMain::Update()
 			m_changeTurn = false;
 		}
 
+		double elapsedSeconds = m_timer.GetElapsedSeconds();
+
 		// Update the players
-		m_player->Update();
-		m_computer->Update();
+		m_player->Update(elapsedSeconds);
+		m_computer->Update(elapsedSeconds);
 
 		// Updates the clouds position
-		UpdateClouds();
+		UpdateClouds(elapsedSeconds);
 
 		m_fpsTextRenderer->Update(m_timer);
 	});
@@ -381,18 +381,18 @@ void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, Platform::St
 	font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
 }
 
-void CatapultWarsMain::UpdateClouds()
+void CatapultWarsMain::UpdateClouds(double elapsedTime)
 {
 	// Move the clouds according to the wind
 	int windDirection = m_wind.x > 0 ? 1 : -1;
 
-	m_cloud1Position += Vector2(24.0f, 0.0f) * windDirection * m_wind.y;
+	m_cloud1Position += Vector2(24.0f, 0.0f) * elapsedTime * windDirection * m_wind.y;
 	if (m_cloud1Position.x > m_viewportWidth)
 		m_cloud1Position.x = -(int)m_cloud1TextureWidth * 2.0f;
 	else if (m_cloud1Position.x < -(int)m_cloud1TextureWidth * 2.0f)
 		m_cloud1Position.x = m_viewportWidth;
 
-	m_cloud2Position += Vector2(16.0f, 0.0f) * windDirection * m_wind.y;
+	m_cloud2Position += Vector2(16.0f, 0.0f) * elapsedTime * windDirection * m_wind.y;
 	if (m_cloud2Position.x > m_viewportWidth)
 		m_cloud2Position.x = -(int)m_cloud2TextureWidth * 2.0f;
 	else if (m_cloud2Position.x < -(int)m_cloud2TextureWidth * 2.0f)

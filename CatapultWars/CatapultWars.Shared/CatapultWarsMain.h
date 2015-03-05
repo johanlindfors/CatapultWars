@@ -75,6 +75,6 @@ namespace CatapultWars
 		void DrawHud();
 		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color);
 		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale);
-		void UpdateClouds();
+		void UpdateClouds(double elapsedTime);
 	};
 }

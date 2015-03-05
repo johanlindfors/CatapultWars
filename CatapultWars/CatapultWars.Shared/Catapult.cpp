@@ -136,7 +136,7 @@ void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
 	//}
 }
 
-void Catapult::Update()
+void Catapult::Update(double elapsedSeconds)
 {
 	bool isGroundHit;
 	bool startStall;
@@ -212,7 +212,7 @@ void Catapult::Update()
 		m_animations[L"Fire"]->Update();
 
 		// Update projectile velocity & position in flight
-		isGroundHit = m_projectile->UpdateProjectileFlightData(m_wind, m_gravity);
+		isGroundHit = m_projectile->UpdateProjectileFlightData(elapsedSeconds,m_wind, m_gravity);
 		if (isGroundHit)
 		{
 			postUpdateStateChange = CatapultState::ProjectileHit;
@@ -222,7 +222,7 @@ void Catapult::Update()
 
 	case CatapultState::ProjectileFlying:
 		// Update projectile velocity & position in flight
-		isGroundHit = m_projectile->UpdateProjectileFlightData(m_wind, m_gravity);
+		isGroundHit = m_projectile->UpdateProjectileFlightData(elapsedSeconds, m_wind, m_gravity);
 		if (isGroundHit)
 		{
 			postUpdateStateChange = CatapultState::ProjectileHit;
