@@ -95,7 +95,7 @@ void App::SetWindow(CoreWindow^ window)
 		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerReleased);
 
 
-	m_deviceResources->SetWindow(window);
+	m_deviceResources->SetWindow(window);	
 }
 
 // Initializes scene resources, or loads a previously saved app state.

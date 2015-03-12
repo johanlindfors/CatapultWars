@@ -438,9 +438,12 @@ void DX::DeviceResources::SetWindow(CoreWindow^ window)
 
 	m_window = window;
 	m_logicalSize = Windows::Foundation::Size(window->Bounds.Width, window->Bounds.Height);
+	//m_logicalSize = Windows::Foundation::Size(800, 480);
 	m_nativeOrientation = currentDisplayInformation->NativeOrientation;
 	m_currentOrientation = currentDisplayInformation->CurrentOrientation;
+	
 	m_dpi = currentDisplayInformation->LogicalDpi;
+	//m_dpi = 1;
 	m_d2dContext->SetDpi(m_dpi, m_dpi);
 
 	CreateWindowSizeDependentResources();
