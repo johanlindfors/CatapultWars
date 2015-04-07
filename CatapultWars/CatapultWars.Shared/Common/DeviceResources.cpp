@@ -218,7 +218,10 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	// Calculate the necessary render target size in pixels.
 	m_outputSize.Width = DX::ConvertDipsToPixels(m_logicalSize.Width, m_dpi);
 	m_outputSize.Height = DX::ConvertDipsToPixels(m_logicalSize.Height, m_dpi);
-	
+
+	m_outputSize.Width = m_logicalSize.Width;
+	m_outputSize.Height = m_logicalSize.Height;
+
 	// Prevent zero size DirectX content from being created.
 	m_outputSize.Width = max(m_outputSize.Width, 1);
 	m_outputSize.Height = max(m_outputSize.Height, 1);
@@ -226,7 +229,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	// The width and height of the swap chain must be based on the window's
 	// natively-oriented width and height. If the window is not in the native
 	// orientation, the dimensions must be reversed.
-	DXGI_MODE_ROTATION displayRotation = ComputeDisplayRotation();
+	DXGI_MODE_ROTATION displayRotation = DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_IDENTITY;// ComputeDisplayRotation();
 
 	bool swapDimensions = displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270;
 	m_d3dRenderTargetSize.Width = swapDimensions ? m_outputSize.Height : m_outputSize.Width;
@@ -272,7 +275,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		swapChainDesc.BufferCount = 2; // Use double-buffering to minimize latency.
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL; // All Windows Store apps must use this SwapEffect.
 		swapChainDesc.Flags = 0;
-		swapChainDesc.Scaling = DXGI_SCALING_NONE;
+		swapChainDesc.Scaling = DXGI_SCALING_STRETCH;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
 		// This sequence obtains the DXGI factory that was used to create the Direct3D device above.
@@ -437,13 +440,16 @@ void DX::DeviceResources::SetWindow(CoreWindow^ window)
 	DisplayInformation^ currentDisplayInformation = DisplayInformation::GetForCurrentView();
 
 	m_window = window;
-	m_logicalSize = Windows::Foundation::Size(window->Bounds.Width, window->Bounds.Height);
-	//m_logicalSize = Windows::Foundation::Size(800, 480);
+	//m_logicalSize = Windows::Foundation::Size(window->Bounds.Width, window->Bounds.Height);
+#if (WINAPI_FAMILY == WINAPI_FAMILY_PHONE_APP)
+	m_logicalSize = Windows::Foundation::Size(480, 800);
+#else
+	m_logicalSize = Windows::Foundation::Size(800, 480);
+#endif
 	m_nativeOrientation = currentDisplayInformation->NativeOrientation;
 	m_currentOrientation = currentDisplayInformation->CurrentOrientation;
 	
 	m_dpi = currentDisplayInformation->LogicalDpi;
-	//m_dpi = 1;
 	m_d2dContext->SetDpi(m_dpi, m_dpi);
 
 	CreateWindowSizeDependentResources();
@@ -452,11 +458,12 @@ void DX::DeviceResources::SetWindow(CoreWindow^ window)
 // This method is called in the event handler for the SizeChanged event.
 void DX::DeviceResources::SetLogicalSize(Windows::Foundation::Size logicalSize)
 {
-	if (m_logicalSize != logicalSize)
-	{
-		m_logicalSize = logicalSize;
-		CreateWindowSizeDependentResources();
-	}
+	//
+	//if (m_logicalSize != logicalSize)
+	//{
+	//	m_logicalSize = logicalSize;
+	//	CreateWindowSizeDependentResources();
+	//}
 }
 
 // This method is called in the event handler for the DpiChanged event.
@@ -477,6 +484,7 @@ void DX::DeviceResources::SetDpi(float dpi)
 // This method is called in the event handler for the OrientationChanged event.
 void DX::DeviceResources::SetCurrentOrientation(DisplayOrientations currentOrientation)
 {
+	currentOrientation = DisplayOrientations::Landscape;
 	if (m_currentOrientation != currentOrientation)
 	{
 		m_currentOrientation = currentOrientation;

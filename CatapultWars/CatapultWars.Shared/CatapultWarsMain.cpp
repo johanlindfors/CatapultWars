@@ -229,9 +229,11 @@ bool CatapultWarsMain::Render() {
 
 	// Render the scene objects.
 	// TODO: Replace this with your app's content rendering functions.
-	float dpi = m_deviceResources->GetScalingFactor();
-	XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
-	m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
+	//float dpi = m_deviceResources->GetScalingFactor();
+	//XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
+	//m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
+	
+	m_spriteBatch->Begin();
 
 	DrawBackground();
 	DrawComputer();

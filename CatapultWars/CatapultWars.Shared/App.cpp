@@ -75,8 +75,8 @@ void App::SetWindow(CoreWindow^ window)
 	currentDisplayInformation->DpiChanged +=
 		ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnDpiChanged);
 
-	currentDisplayInformation->OrientationChanged +=
-		ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnOrientationChanged);
+	//currentDisplayInformation->OrientationChanged +=
+	//	ref new TypedEventHandler<DisplayInformation^, Object^>(this, &App::OnOrientationChanged);
 
 	// Disable all pointer visual feedback for better performance when touching.
 	// This is not supported on Windows Phone applications.

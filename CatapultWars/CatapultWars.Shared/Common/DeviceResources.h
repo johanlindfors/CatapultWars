@@ -28,7 +28,7 @@ namespace DX
 		// Device Accessors.
 		Windows::Foundation::Size GetOutputSize() const					{ return m_outputSize; }
 		Windows::Foundation::Size GetLogicalSize() const				{ return m_logicalSize; }
-		float					  GetScalingFactor() const				{ return m_dpi / 96.0f * 400 / 480; }
+		//float					  GetScalingFactor() const				{ return m_dpi / 96.0f * 400 / 480; }
 
 		// D3D Accessors.
 		ID3D11Device2*			GetD3DDevice() const					{ return m_d3dDevice.Get(); }

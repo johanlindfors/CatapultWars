@@ -48,6 +48,7 @@ void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textur
 	POINT frameSize = { frameWidth, frameHeight };
 	POINT sheetSize = { sheetColumns, sheetRows };
 	auto animation = ref new Animation(texture.Get(), frameSize, sheetSize);
+	animation->Offset = Vector2(offsetX, offsetY);
 	m_animations[key] = animation;
 	m_splitFrames[key] = splitFrame;
 }
