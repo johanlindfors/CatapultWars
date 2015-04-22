@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include <ppltasks.h>	// For create_task
-#include "DDSTextureLoader.h"
+#include <DDSTextureLoader.h>
 
 namespace DX
 {

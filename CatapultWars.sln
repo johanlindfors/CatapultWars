@@ -13,17 +13,17 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.WindowsPhone",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Shared", "DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems", "{6EFB7964-FE7D-4489-BBB0-860255357855}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Shared", "DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems", "{6EFB7964-FE7D-4489-BBB0-860255357855}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Windows", "DirectXTK\DirectXTK.Windows\DirectXTK.Windows.vcxproj", "{6B88A2CC-D2CC-424A-BB00-0B28882CF683}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Windows", "DirectXTK\DirectXTK_Universal_2013.Windows.vcxproj", "{6B88A2CC-D2CC-424A-BB00-0B28882CF683}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.WindowsPhone", "DirectXTK\DirectXTK.WindowsPhone\DirectXTK.WindowsPhone.vcxproj", "{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.WindowsPhone", "DirectXTK\DirectXTK_Universal_2013.WindowsPhone.vcxproj", "{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{6b88a2cc-d2cc-424a-bb00-0b28882cf683}*SharedItemsImports = 4
-		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}*SharedItemsImports = 4
-		DirectXTK\DirectXTK.Shared\DirectXTK.Shared.vcxitems*{6efb7964-fe7d-4489-bbb0-860255357855}*SharedItemsImports = 9
+		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6b88a2cc-d2cc-424a-bb00-0b28882cf683}*SharedItemsImports = 4
+		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}*SharedItemsImports = 4
+		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6efb7964-fe7d-4489-bbb0-860255357855}*SharedItemsImports = 9
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{a37babba-492c-4671-940b-c81ce05715b1}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{e485a391-7278-4c1c-aff2-d5429091a1f2}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{2993eeae-b74e-424c-8a70-c44268091ce2}*SharedItemsImports = 9
