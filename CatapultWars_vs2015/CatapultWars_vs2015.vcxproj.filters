@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Assets">
+      <UniqueIdentifier>dfcb825d-cdc2-4646-9c37-57b4701d2074</UniqueIdentifier>
+      <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>ac9956d7-9a0c-4ba1-853b-6d3bc5d3c093</UniqueIdentifier>
+    </Filter>
+    <Image Include="Assets\Logo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SmallLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\StoreLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\SplashScreen.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\WideLogo.scale-100.png">
+      <Filter>Assets</Filter>
+    </Image>
+    <Filter Include="Common">
+      <UniqueIdentifier>{9e462faa-6326-4440-8a2b-7b996c22d80f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="App.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\AI.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Animation.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\AudioManager.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Catapult.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\CatapultWarsMain.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Human.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Player.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Projectile.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\pch.cpp" />
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Common\DeviceResources.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CatapultWars\CatapultWars.Shared\Content\SampleFpsTextRenderer.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="App.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\AI.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Animation.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\AudioManager.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Catapult.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\CatapultWarsMain.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Human.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Player.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Projectile.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\pch.h" />
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Common\DeviceResources.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Common\DirectXHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Common\StepTimer.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CatapultWars\CatapultWars.Shared\Content\SampleFpsTextRenderer.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="CatapultWars_vs2015_TemporaryKey.pfx" />
+    <None Include="Assets\Fonts\HUDFont.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Fonts\MenuFont.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="Assets\Fonts\TestHudFont.spritefont">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\Textures\Ammo\rock_ammo.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\blank.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\cloud1.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\cloud2.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\defeat.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\gameplay_screen.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\instructions.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\mountain.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\sky.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\title_screen.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Backgrounds\victory.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueDestroyed\blueCatapult_destroyed.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueFire\blueCatapult_fire.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\blueIdle\blueIdle.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Blue\bluePullback\blueCatapult_Pullback.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Fire_Miss\fire_miss.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Hit_Smoke\smoke.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redDestroyed\redCatapult_destroyed.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redFire\redCatapult_fire.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redIdle\redIdle.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Catapults\Red\redPullback\redCatapult_Pullback.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\ammoType.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\Arrow.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\hudBackground.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+    <Image Include="Assets\Textures\HUD\windArrow.DDS">
+      <Filter>Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Assets\Textures\Catapults\AnimationsDef.xml">
+      <Filter>Assets</Filter>
+    </Xml>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="Assets\Sounds\BoulderHit.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\CatapultExplosion.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\CatapultFire.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\Lose.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\RopeStretch.wav">
+      <Filter>Assets</Filter>
+    </Media>
+    <Media Include="Assets\Sounds\Win.wav">
+      <Filter>Assets</Filter>
+    </Media>
+  </ItemGroup>
+</Project>
