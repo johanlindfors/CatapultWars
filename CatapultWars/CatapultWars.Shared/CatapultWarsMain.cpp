@@ -24,6 +24,8 @@ m_maxWind(2) {
 	//m_timer.SetFixedTimeStep(true);
 	//m_timer.SetTargetElapsedSeconds(1.0 / 60);
 
+	m_audioManager.reset(new AudioManager());
+
 	CreateWindowSizeDependentResources();
 }
 
@@ -111,6 +113,8 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_viewportWidth = 800;
 	m_viewportHeight = 480;
 
+	m_audioManager->LoadSound();
+
 	Start();
 }
 
@@ -146,7 +150,7 @@ void CatapultWarsMain::Update() {
 			!(m_player->Catapult->AnimationRunning ||
 			m_computer->Catapult->AnimationRunning)) {
 			m_changeTurn = true;
-
+			m_audioManager->PlaySound();
 			if (m_player->IsActive == true) //Last turn was a human turn?
 			{
 				m_player->IsActive = false;
@@ -184,6 +188,8 @@ void CatapultWarsMain::Update() {
 		UpdateClouds(elapsedSeconds);
 
 		m_fpsTextRenderer->Update(m_timer);
+
+		m_audioManager->Update();
 	});
 }
 

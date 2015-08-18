@@ -37,10 +37,10 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)AI.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Animation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)AudioManager.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Human.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Player.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

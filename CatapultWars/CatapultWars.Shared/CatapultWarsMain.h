@@ -5,6 +5,7 @@
 #include "Content\SampleFpsTextRenderer.h"
 #include "Human.h"
 #include "AI.h"
+#include "AudioManager.h"
 
 namespace CatapultWars
 {
@@ -48,6 +49,8 @@ namespace CatapultWars
 		DirectX::SimpleMath::Vector2			m_playerHUDPosition;
 		DirectX::SimpleMath::Vector2			m_computerHUDPosition;
 		DirectX::SimpleMath::Vector2			m_windArrowPosition;
+
+		std::shared_ptr<AudioManager>			m_audioManager;
 
 		Human^			m_player;
 		AI^				m_computer;
