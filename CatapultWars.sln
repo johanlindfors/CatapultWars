@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CatapultWars", "CatapultWars", "{F488D40F-23BF-4ECF-A4AD-835AE7658C2E}"
 EndProject
@@ -15,14 +15,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Shared", "DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems", "{6EFB7964-FE7D-4489-BBB0-860255357855}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.Windows", "DirectXTK\DirectXTK_Universal_2013.Windows.vcxproj", "{6B88A2CC-D2CC-424A-BB00-0B28882CF683}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Universal_2013.Windows", "DirectXTK\DirectXTK_Universal_2013.Windows.vcxproj", "{6B88A2CC-D2CC-424A-BB00-0B28882CF683}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK.WindowsPhone", "DirectXTK\DirectXTK_Universal_2013.WindowsPhone.vcxproj", "{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Universal_2013.WindowsPhone", "DirectXTK\DirectXTK_Universal_2013.WindowsPhone.vcxproj", "{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK_Universal_2015", "DirectXTK\DirectXTK_Universal_2015.vcxproj", "{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.Universal", "CatapultWars\CatapultWars.Universal\CatapultWars.Universal.vcxproj", "{13E8FAA8-C8EB-4B61-8254-047189D43CAD}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6b88a2cc-d2cc-424a-bb00-0b28882cf683}*SharedItemsImports = 4
 		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}*SharedItemsImports = 4
+		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{13e8faa8-c8eb-4b61-8254-047189d43cad}*SharedItemsImports = 4
 		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6efb7964-fe7d-4489-bbb0-860255357855}*SharedItemsImports = 9
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{a37babba-492c-4671-940b-c81ce05715b1}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{e485a391-7278-4c1c-aff2-d5429091a1f2}*SharedItemsImports = 4
@@ -91,6 +96,36 @@ Global
 		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|Win32.ActiveCfg = Release|Win32
 		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|Win32.Build.0 = Release|Win32
 		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA}.Release|x64.ActiveCfg = Release|Win32
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|ARM.Build.0 = Debug|ARM
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|Win32.Build.0 = Debug|Win32
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|x64.ActiveCfg = Debug|x64
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Debug|x64.Build.0 = Debug|x64
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|ARM.ActiveCfg = Release|ARM
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|ARM.Build.0 = Release|ARM
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|Win32.ActiveCfg = Release|Win32
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|Win32.Build.0 = Release|Win32
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|x64.ActiveCfg = Release|x64
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7}.Release|x64.Build.0 = Release|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|ARM.ActiveCfg = Debug|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|ARM.Build.0 = Debug|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|ARM.Deploy.0 = Debug|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|Win32.Build.0 = Debug|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|Win32.Deploy.0 = Debug|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|x64.ActiveCfg = Debug|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|x64.Build.0 = Debug|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Debug|x64.Deploy.0 = Debug|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|ARM.ActiveCfg = Release|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|ARM.Build.0 = Release|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|ARM.Deploy.0 = Release|ARM
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|Win32.ActiveCfg = Release|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|Win32.Build.0 = Release|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|Win32.Deploy.0 = Release|Win32
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|x64.ActiveCfg = Release|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|x64.Build.0 = Release|x64
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD}.Release|x64.Deploy.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,5 +137,7 @@ Global
 		{6EFB7964-FE7D-4489-BBB0-860255357855} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
 		{6B88A2CC-D2CC-424A-BB00-0B28882CF683} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
 		{A6E9C6B0-15D6-4AEA-8E2B-6E507ADCC4DA} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
+		{F8FDB8ED-6F2A-4017-BAB8-A82D835396B7} = {BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}
+		{13E8FAA8-C8EB-4B61-8254-047189D43CAD} = {F488D40F-23BF-4ECF-A4AD-835AE7658C2E}
 	EndGlobalSection
 EndGlobal
