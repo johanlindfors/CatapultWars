@@ -113,7 +113,7 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_viewportWidth = 800;
 	m_viewportHeight = 480;
 
-	m_audioManager->LoadSound();
+	m_audioManager->LoadSound("filepath","soundName");
 
 	Start();
 }
@@ -150,7 +150,7 @@ void CatapultWarsMain::Update() {
 			!(m_player->Catapult->AnimationRunning ||
 			m_computer->Catapult->AnimationRunning)) {
 			m_changeTurn = true;
-			m_audioManager->PlaySound();
+			m_audioManager->PlaySound("soundname");
 			if (m_player->IsActive == true) //Last turn was a human turn?
 			{
 				m_player->IsActive = false;

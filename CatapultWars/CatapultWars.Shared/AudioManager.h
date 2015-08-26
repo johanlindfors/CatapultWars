@@ -5,13 +5,16 @@ class AudioManager
 {
 public:
 	AudioManager();
+	~AudioManager() {}
 
-	void Update();
-	void LoadSound();
-	void PlaySound();
+	bool Update();
+	void LoadSound(const char* fileName, const char* assetName);
+	void PlaySound(const char* assetName);
 
 private:
-	std::unique_ptr<DirectX::AudioEngine> audEngine;
-	std::unique_ptr<DirectX::SoundEffect> soundEffect;
+	std::unique_ptr<DirectX::AudioEngine> m_audioEngine;
+	std::unique_ptr<DirectX::SoundEffect> m_soundEffect;
+
+	
 };
 

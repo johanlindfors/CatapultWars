@@ -9,25 +9,26 @@ AudioManager::AudioManager()
 #ifdef _DEBUG
 	eflags = eflags | AudioEngine_Debug;
 #endif
-	audEngine.reset(new AudioEngine(eflags));
-
+	m_audioEngine.reset(new AudioEngine(eflags));
 }
 
-void AudioManager::Update() {
-	if (!audEngine->Update())
+bool AudioManager::Update() {
+	bool result = m_audioEngine->Update();
+	if (!result)
 	{
 		// No audio device is active
-		if (audEngine->IsCriticalError())
+		if (m_audioEngine->IsCriticalError())
 		{
 			
 		}
 	}
+	return result;
 }
 
-void AudioManager::LoadSound() {
-	soundEffect.reset(new SoundEffect(audEngine.get(), L"Assets\\Sounds\\Win.wav"));
+void AudioManager::LoadSound(const char* fileName, const char* assetName) {
+	m_soundEffect.reset(new SoundEffect(m_audioEngine.get(), L"Assets\\Sounds\\Win.wav"));
 }
 
-void AudioManager::PlaySound() {
-	soundEffect->Play();
+void AudioManager::PlaySound(const char* assetName) {
+	m_soundEffect->Play();
 }
