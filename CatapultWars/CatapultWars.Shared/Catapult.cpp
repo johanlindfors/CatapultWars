@@ -14,12 +14,13 @@ m_gravity(500)
 	m_isAI = isAi;
 }
 
-void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
+void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 {
 	IsActive = true;
 	AnimationRunning = false;
 	CurrentState = CatapultState::Idle;
 	m_stallUpdateCycles = 0;
+	m_audioManager = audioManager;
 
 	ParseXmlAndCreateAnimations(device);
 
@@ -156,7 +157,7 @@ void Catapult::Update(double elapsedSeconds)
 	case CatapultState::Aiming:
 		if (m_lastUpdateState != CatapultState::Aiming)
 		{
-			//AudioManager::PlaySound(L"ropeStretch", true);
+			m_audioManager->PlaySound("RopeStretch",true);
 
 			AnimationRunning = true;
 			if (m_isAI == true)
@@ -192,8 +193,8 @@ void Catapult::Update(double elapsedSeconds)
 		// Progress Fire animation
 		if (m_lastUpdateState != CatapultState::Firing)
 		{
-			//AudioManager::StopSound(L"ropeStretch");
-			//AudioManager::PlaySound(L"catapultFire");
+			m_audioManager->StopSound("RopeStretch");
+			m_audioManager->PlaySound("CatapultFire");
 			StartFiringFromLastAimPosition();
 		}
 
@@ -237,7 +238,7 @@ void Catapult::Update(double elapsedSeconds)
 			if (m_lastUpdateState != CatapultState::ProjectileHit)
 			{
 				//VibrateController.Default.Start(TimeSpan.FromMilliseconds(100));
-				//AudioManager::PlaySound(L"boulderHit");
+				m_audioManager->PlaySound("BoulderHit");
 			}
 
 			// Hit animation finished playing
@@ -398,7 +399,7 @@ bool Catapult::CheckHit()
 	// Check self hit
 	if (sphere.Intersects(selfBox) && CurrentState != CatapultState::Hit)
 	{
-		//AudioManager.PlaySound("catapultExplosion");
+		m_audioManager->PlaySound("CatapultExplosion");
 
 		// Launch hit animation sequence on self
 		Hit();
@@ -410,7 +411,7 @@ bool Catapult::CheckHit()
 		&& m_enemy->Catapult->CurrentState != CatapultState::Hit
 		&& m_enemy->Catapult->CurrentState != CatapultState::Reset)
 	{
-		//AudioManager.PlaySound("catapultExplosion");
+		m_audioManager->PlaySound("CatapultExplosion");
 
 		// Launch enemy hit animaton
 		m_enemy->Catapult->Hit();

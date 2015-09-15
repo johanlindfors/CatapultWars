@@ -32,6 +32,7 @@ m_maxWind(2) {
 CatapultWarsMain::~CatapultWarsMain() {
 	// Deregister device notification
 	m_deviceResources->RegisterDeviceNotify(nullptr);
+	m_audioManager.reset();
 }
 
 // Updates application state when the window size changes (e.g. device orientation change)
@@ -100,11 +101,11 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 
 	// Initialize human & AI players
 	m_player = ref new Human();
-	m_player->Initialize(device, m_spriteBatch);
+	m_player->Initialize(device, m_spriteBatch, m_audioManager);
 	m_player->Name = L"Player";
 
 	m_computer = ref new AI();
-	m_computer->Initialize(device, m_spriteBatch);
+	m_computer->Initialize(device, m_spriteBatch, m_audioManager);
 	m_computer->Name = L"Phone";
 
 	m_player->Enemy = m_computer;
@@ -113,7 +114,7 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_viewportWidth = 800;
 	m_viewportHeight = 480;
 
-	m_audioManager->LoadSound("filepath","soundName");
+	m_audioManager->LoadSounds();
 
 	Start();
 }
@@ -135,9 +136,9 @@ void CatapultWarsMain::Update() {
 			m_gameOver = true;
 
 			if (m_player->Score > m_computer->Score) {
-				//AudioManager.PlaySound("gameOver_Win");
+				m_audioManager->PlaySound("Win");
 			} else {
-				//AudioManager.PlaySound("gameOver_Lose");
+				m_audioManager->PlaySound("Lose");
 			}
 
 			return;
@@ -150,7 +151,6 @@ void CatapultWarsMain::Update() {
 			!(m_player->Catapult->AnimationRunning ||
 			m_computer->Catapult->AnimationRunning)) {
 			m_changeTurn = true;
-			m_audioManager->PlaySound("soundname");
 			if (m_player->IsActive == true) //Last turn was a human turn?
 			{
 				m_player->IsActive = false;
@@ -189,7 +189,10 @@ void CatapultWarsMain::Update() {
 
 		m_fpsTextRenderer->Update(m_timer);
 
-		m_audioManager->Update();
+		bool result = m_audioManager->Update();
+		if (!result) {
+			OutputDebugString(L"Something went wrong with the audio device!");
+		}
 	});
 }
 
@@ -287,13 +290,6 @@ void CatapultWarsMain::DrawHud() {
 		} else {
 			m_spriteBatch->Draw(m_defeatTexture.Get(), Vector2(m_viewportWidth / 2 - m_defeatTextureWidth / 2, m_viewportHeight / 2 - m_defeatTextureHeight / 2), Colors::White);
 		}
-
-
-		/*ScreenManager.SpriteBatch.Draw(
-			texture,
-			new Vector2(ScreenManager.Game.GraphicsDevice.Viewport.Width / 2 - texture.Width / 2,
-			ScreenManager.Game.GraphicsDevice.Viewport.Height / 2 - texture.Height / 2),
-			Color.White);*/
 	} else {
 		// Draw Player Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_playerHUDPosition, Colors::White);

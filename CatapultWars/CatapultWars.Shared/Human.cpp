@@ -12,13 +12,13 @@ namespace CatapultWars {
 			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
 	}
 
-	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
+	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 	{
 		DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.dds", nullptr, m_arrow.ReleaseAndGetAddressOf()));
 
-		Catapult->Initialize(device, spriteBatch);
+		Catapult->Initialize(device, spriteBatch, audioManager);
 
-		Player::Initialize(device, spriteBatch);
+		Player::Initialize(device, spriteBatch, audioManager);
 
 		m_spriteBatch = spriteBatch;
 	}

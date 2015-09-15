@@ -11,11 +11,11 @@ AI::AI()
 	// (game, screenSpriteBatch,
 }
 
-void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
+void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 {	
-	Catapult->Initialize(device, spriteBatch);
+	Catapult->Initialize(device, spriteBatch, audioManager);
 
-	Player::Initialize(device, spriteBatch);
+	Player::Initialize(device, spriteBatch, audioManager);
 }
 
 void AI::Update(double elapsedSeconds)

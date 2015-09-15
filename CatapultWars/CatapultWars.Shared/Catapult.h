@@ -2,6 +2,7 @@
 
 #include <Projectile.h>
 #include <Animation.h>
+#include <AudioManager.h>
 #include <unordered_map>
 
 namespace CatapultWars {
@@ -24,7 +25,7 @@ namespace CatapultWars {
 	{
 	internal:
 		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
-		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
+		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
 		void Update(double elapsedSeconds);
 		void Draw();
 		void Fire(float velocity);
@@ -82,6 +83,7 @@ namespace CatapultWars {
 		void CreateAnimation(ID3D11Device* device, Platform::String^ key, Platform::String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
 
 		shared_ptr<SpriteBatch>							m_spriteBatch;
+		shared_ptr<AudioManager>						m_audioManager;
 	};
 
 }

@@ -9,7 +9,7 @@ Player::Player()
 
 }
 
-void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
+void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 {
 	m_score = 0;
 }
