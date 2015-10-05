@@ -48,14 +48,14 @@ namespace ScreenRotation
 };
 
 // Constructor for DeviceResources.
-DX::DeviceResources::DeviceResources() : 
+DX::DeviceResources::DeviceResources() :
 	m_screenViewport(),
-	m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_1),
+	m_d3dFeatureLevel(D3D_FEATURE_LEVEL_9_3),
 	m_d3dRenderTargetSize(),
 	m_outputSize(),
 	m_logicalSize(),
 	m_nativeOrientation(DisplayOrientations::None),
-	m_currentOrientation(DisplayOrientations::None),
+	m_currentOrientation(DisplayOrientations::Landscape),
 	m_dpi(-1.0f),
 	m_deviceNotify(nullptr)
 {
@@ -229,7 +229,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	// The width and height of the swap chain must be based on the window's
 	// natively-oriented width and height. If the window is not in the native
 	// orientation, the dimensions must be reversed.
-	DXGI_MODE_ROTATION displayRotation = DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_IDENTITY;// ComputeDisplayRotation();
+	DXGI_MODE_ROTATION displayRotation =  ComputeDisplayRotation();
 
 	bool swapDimensions = displayRotation == DXGI_MODE_ROTATION_ROTATE90 || displayRotation == DXGI_MODE_ROTATION_ROTATE270;
 	m_d3dRenderTargetSize.Width = swapDimensions ? m_outputSize.Height : m_outputSize.Width;

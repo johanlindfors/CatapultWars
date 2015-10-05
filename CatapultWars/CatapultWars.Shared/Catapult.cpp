@@ -25,7 +25,7 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	ParseXmlAndCreateAnimations(device);
 
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
 	Vector2 projectileStartPosition;
@@ -34,7 +34,7 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
+	m_projectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.png", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
 	m_projectile->Initialize(device);
 
 	m_spriteBatch = spriteBatch;
@@ -44,7 +44,7 @@ void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textur
 {
 	ComPtr<ID3D11ShaderResourceView> texture;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
 		);
 	POINT frameSize = { frameWidth, frameHeight };
 	POINT sheetSize = { sheetColumns, sheetRows };
@@ -57,27 +57,27 @@ void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textur
 void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
 {
 	if (m_isAI){
-		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.dds",
+		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.png",
 			75, 60, 15, 2, 20, 0, 0);
-		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Red\\redPullback\\redCatapult_Pullback.dds",
+		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Red\\redPullback\\redCatapult_Pullback.png",
 			75, 60, 18, 1, 0, 0, 0);
-		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Red\\redDestroyed\\redCatapult_destroyed.dds",
+		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Red\\redDestroyed\\redCatapult_destroyed.png",
 			122, 62, 15, 2, 20, -11, 0);
-		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.dds",
+		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.png",
 			90, 80, 15, 2, 0, -50, 0);
-		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.dds",
+		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.png",
 			128, 128, 15, 2, 20, -30, -64);
 	}
 	else {
-		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Blue\\blueFire\\blueCatapult_fire.dds",
+		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Blue\\blueFire\\blueCatapult_fire.png",
 			75, 60, 15, 2, 20, 0, 0);
-		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Blue\\bluePullback\\blueCatapult_Pullback.dds",
+		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Blue\\bluePullback\\blueCatapult_Pullback.png",
 			75, 60, 18, 1, 0, 0, 0);
-		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Blue\\blueDestroyed\\blueCatapult_destroyed.dds",
+		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Blue\\blueDestroyed\\blueCatapult_destroyed.png",
 			122, 62, 15, 2, 20, -40, 0);
-		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.dds",
+		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.png",
 			90, 80, 15, 2, 0, -50, 0);
-		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.dds",
+		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.png",
 			128, 128, 15, 2, 20, 0, -64);
 	}
 	//// Load multiple animations form XML definition

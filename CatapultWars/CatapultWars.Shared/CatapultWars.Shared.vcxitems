@@ -48,30 +48,61 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Ammo\rock_ammo.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Ammo\rock_ammo.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Ammo\split_ammo.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\blank.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\blank.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\cloud1.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\cloud1.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\cloud2.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\cloud2.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\defeat.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\defeat.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\gameplay_screen.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\gameplay_screen.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\instructions.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\instructions.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\mountain.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\mountain.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\sky.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\sky.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\title_screen.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\title_screen.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\victory.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Backgrounds\victory.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueDestroyed\blueCatapult_destroyed.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueDestroyed\blueCatapult_destroyed.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueFire\blueCatapult_fire.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueFire\blueCatapult_fire.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueIdle\blueIdle.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\blueIdle\blueIdle.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\bluePullback\blueCatapult_Pullback.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Blue\bluePullback\blueCatapult_Pullback.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Fire_Miss\fire_miss.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Fire_Miss\fire_miss.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Hit_Smoke\smoke.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Hit_Smoke\smoke.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redDestroyed\redCatapult_destroyed.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redDestroyed\redCatapult_destroyed.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redFire\redCatapult_fire.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redFire\redCatapult_fire.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redIdle\redIdle.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redIdle\redIdle.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redPullback\redCatapult_Pullback.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\Red\redPullback\redCatapult_Pullback.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Crate\box.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\Crate\box_explode.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\ammoType.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\ammoType.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\ammoTypeNormal.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\ammoTypeSplit.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\Arrow.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\Arrow.png" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\guideDot.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\hudBackground.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\hudBackground.png" />
     <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\windArrow.DDS" />
+    <Image Include="$(MSBuildThisFileDirectory)Assets\Textures\HUD\windArrow.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory)Assets\Fonts\HUDFont.spritefont">
@@ -94,5 +125,6 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="$(MSBuildThisFileDirectory)Assets\Textures\Catapults\AnimationsDef.xml" />
+    <Xml Include="$(MSBuildThisFileDirectory)Assets\Textures\Crate\AnimationsDef.xml" />
   </ItemGroup>
 </Project>

@@ -21,7 +21,7 @@ void Projectile::Initialize(ID3D11Device* device)
 {
 	ComPtr<ID3D11Resource> res;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
 		);
 		
 	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);

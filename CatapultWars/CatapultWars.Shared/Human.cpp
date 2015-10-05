@@ -8,13 +8,13 @@ namespace CatapultWars {
 	{
 
 		Catapult = ref new CatapultWars::Catapult(
-			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.dds",
+			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png",
 			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
 	}
 
 	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 	{
-		DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.dds", nullptr, m_arrow.ReleaseAndGetAddressOf()));
+		DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.png", nullptr, m_arrow.ReleaseAndGetAddressOf()));
 
 		Catapult->Initialize(device, spriteBatch, audioManager);
 

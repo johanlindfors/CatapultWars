@@ -47,38 +47,38 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_spriteBatch->SetRotation(m_deviceResources->ComputeDisplayRotation());
 #endif
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\sky.dds", nullptr, m_skyTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\sky.png", nullptr, m_skyTexture.ReleaseAndGetAddressOf())
 		);
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\gameplay_screen.dds", nullptr, m_foregroundTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\gameplay_screen.png", nullptr, m_foregroundTexture.ReleaseAndGetAddressOf())
 		);
 	ComPtr<ID3D11Resource> cloud1TextureRes;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud1.dds", cloud1TextureRes.ReleaseAndGetAddressOf(), m_cloud1Texture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud1.png", cloud1TextureRes.ReleaseAndGetAddressOf(), m_cloud1Texture.ReleaseAndGetAddressOf())
 		);
 	ComPtr<ID3D11Resource> cloud2TextureRes;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.dds", cloud2TextureRes.ReleaseAndGetAddressOf(), m_cloud2Texture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.png", cloud2TextureRes.ReleaseAndGetAddressOf(), m_cloud2Texture.ReleaseAndGetAddressOf())
 		);
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\mountain.dds", nullptr, m_mountainTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\mountain.png", nullptr, m_mountainTexture.ReleaseAndGetAddressOf())
 		);
 	ComPtr<ID3D11Resource> defeatTextureRes;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\defeat.dds", defeatTextureRes.ReleaseAndGetAddressOf(), m_defeatTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\defeat.png", defeatTextureRes.ReleaseAndGetAddressOf(), m_defeatTexture.ReleaseAndGetAddressOf())
 		);
 	ComPtr<ID3D11Resource> victoryTextureRes;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\victory.dds", victoryTextureRes.ReleaseAndGetAddressOf(), m_victoryTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\victory.png", victoryTextureRes.ReleaseAndGetAddressOf(), m_victoryTexture.ReleaseAndGetAddressOf())
 		);
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\hudBackground.dds", nullptr, m_hudBackgroundTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\hudBackground.png", nullptr, m_hudBackgroundTexture.ReleaseAndGetAddressOf())
 		);
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\windArrow.dds", nullptr, m_windArrowTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\windArrow.png", nullptr, m_windArrowTexture.ReleaseAndGetAddressOf())
 		);
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\ammoType.dds", nullptr, m_ammoTypeTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\ammoType.png", nullptr, m_ammoTypeTexture.ReleaseAndGetAddressOf())
 		);
 
 	// Load font
@@ -242,7 +242,9 @@ bool CatapultWarsMain::Render() {
 	//XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
 	//m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
 	
-	m_spriteBatch->Begin();
+    
+	CommonStates states(m_deviceResources->GetD3DDevice());
+	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, states.NonPremultiplied());
 
 	DrawBackground();
 	DrawComputer();

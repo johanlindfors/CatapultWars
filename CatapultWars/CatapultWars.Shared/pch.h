@@ -23,3 +23,5 @@
 #include "Player.h"
 #include "Audio.h"
 #include "AudioManager.h"
+#include "WICTextureLoader.h"
+#include "CommonStates.h"

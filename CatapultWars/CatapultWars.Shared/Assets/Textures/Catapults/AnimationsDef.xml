@@ -26,7 +26,7 @@
 
     <Definition FrameWidth="128" FrameHeight="128"
            SheetRows="2" SheetColumns="15"
-           Speed="30" OffsetX="0" OffsetY="-64"
+           Speed="30" OffsetX="-64" OffsetY="-64"
            SheetName="Textures/Catapults/Hit_Smoke/smoke"
            Alias="hitSmoke" IsAI="false"/>
 

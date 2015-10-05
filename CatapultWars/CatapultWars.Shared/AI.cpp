@@ -6,7 +6,7 @@ using namespace CatapultWars;
 AI::AI()
 {
 	Catapult = ref new CatapultWars::Catapult(
-		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.dds",
+		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.png",
 		Vector2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
 	// (game, screenSpriteBatch,
 }
