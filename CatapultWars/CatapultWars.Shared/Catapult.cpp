@@ -258,7 +258,7 @@ void Catapult::Update(double elapsedSeconds)
 		}
 		break;
 
-	case CatapultState::Hit:
+	case CatapultState::HitKill:
 		if ((m_animations[L"Destroyed"]->IsActive == false) &&
 			(m_animations[L"hitSmoke"]->IsActive == false))
 		{
@@ -339,7 +339,7 @@ void Catapult::Draw()
 		// Projectile Hit animation
 		m_animations[L"fireMiss"]->Draw(m_spriteBatch, m_projectile->ProjectileHitPosition, m_spriteEffects);
 		break;
-	case CatapultState::Hit:
+	case CatapultState::HitKill:
 		// Catapult hit animation
 		m_animations[L"Destroyed"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
 
@@ -359,7 +359,7 @@ void Catapult::Hit()
 	AnimationRunning = true;
 	m_animations[L"Destroyed"]->PlayFromFrameIndex(0);
 	m_animations[L"hitSmoke"]->PlayFromFrameIndex(0);
-	CurrentState = CatapultState::Hit;
+	CurrentState = CatapultState::HitKill;
 }
 
 void Catapult::Fire(float velocity)
@@ -397,7 +397,7 @@ bool Catapult::CheckHit()
 	BoundingBox enemyBox = BoundingBox(catapultCenter, extents);
 
 	// Check self hit
-	if (sphere.Intersects(selfBox) && CurrentState != CatapultState::Hit)
+	if (sphere.Intersects(selfBox) && CurrentState != CatapultState::HitKill)
 	{
 		m_audioManager->PlaySound("CatapultExplosion");
 
@@ -408,7 +408,7 @@ bool Catapult::CheckHit()
 	}
 	// Check if enemy was hit
 	else if (sphere.Intersects(enemyBox)
-		&& m_enemy->Catapult->CurrentState != CatapultState::Hit
+		&& m_enemy->Catapult->CurrentState != CatapultState::HitKill
 		&& m_enemy->Catapult->CurrentState != CatapultState::Reset)
 	{
 		m_audioManager->PlaySound("CatapultExplosion");

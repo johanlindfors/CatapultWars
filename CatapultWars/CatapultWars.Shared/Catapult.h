@@ -13,10 +13,20 @@ namespace CatapultWars {
 		Firing = 0x2,
 		ProjectileFlying = 0x4,
 		ProjectileHit = 0x8,
-		Hit = 0x10,
-		Reset = 0x20,
-		Stalling = 0x40
+		HitKill = 0x10,
+		HitDamage = 0x20,
+		Reset = 0x40,
+		Stalling = 0x80,
+		ProjectilesFalling = 0x100
 	};
+
+	//enum HitCheckResult {
+	//	Nothing = 0x0,
+	//	SelfCatapult = 0x1,
+	//	EnemyCatapult = 0x2,
+	//	SelfCrate = 0x4,
+	//	EnemyCrate = 0x8
+	//};
 
 	ref class Animation;
 	ref class Player;
@@ -69,6 +79,7 @@ namespace CatapultWars {
 		Player^											m_self;
 		Vector2											m_catapultPosition;
 		const int										m_winScore;
+		const int										m_MaxActiveProjectiles = 3;
 
 		std::unordered_map<Platform::String^, Animation^>		m_animations;
 		std::unordered_map<Platform::String^, int>				m_splitFrames;
