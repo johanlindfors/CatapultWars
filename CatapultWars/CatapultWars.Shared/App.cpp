@@ -15,6 +15,8 @@ using namespace Windows::System;
 using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 
+using namespace ApplicationInsights::CX;
+
 // The main function is only used to initialize our IFrameworkView class.
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^)
@@ -52,6 +54,9 @@ void App::Initialize(CoreApplicationView^ applicationView)
 	// At this point we have access to the device. 
 	// We can create the device-dependent resources.
 	m_deviceResources = std::make_shared<DX::DeviceResources>();
+
+	// this will do automatic session tracking and automatic page view collection
+	m_session = ref new ApplicationInsights::CX::SessionTracking(); 
 }
 
 // Called when the CoreWindow object is created (or re-created).
@@ -110,6 +115,14 @@ void App::Load(Platform::String^ entryPoint)
 // This method is called after the window becomes active.
 void App::Run()
 {
+	String^ iKey = L"4e69b654-9cac-49d4-8fa0-361bec35f4b4";
+	//m_session->Initialize(nullptr, nullptr, iKey);
+
+	TelemetryClient^ tc = ref new TelemetryClient(iKey);
+	tc->TrackTrace(L"This is my first game trace");
+	tc->TrackEvent(L"Game launched");
+	tc->TrackMetric(L"Game Metric", 5.03);
+
 	while (!m_windowClosed)
 	{
 		if (m_windowVisible)

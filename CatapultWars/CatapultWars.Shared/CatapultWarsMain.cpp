@@ -176,6 +176,10 @@ void CatapultWarsMain::Update() {
 			m_player->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
 			m_computer->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
 			m_changeTurn = false;
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(L"4e69b654-9cac-49d4-8fa0-361bec35f4b4");
+//			tc->TrackTrace(L"This is my first game trace");
+			tc->TrackEvent(L"New turn");
+//			tc->TrackMetric(L"Game Metric", 5.03);
 		}
 
 		double elapsedSeconds = m_timer.GetElapsedSeconds();

@@ -23,8 +23,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Animation.h" />
-    <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AudioManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Catapult.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CatapultWarsMain.h" />

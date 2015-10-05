@@ -51,6 +51,8 @@ protected:
 		std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_pointerIds;
 		std::unordered_map<unsigned int, Windows::UI::Input::PointerPoint^> m_oldPoints;
 		void DragWithOneFinger(Windows::UI::Core::PointerEventArgs^ args);
+
+		ApplicationInsights::CX::SessionTracking^ m_session;
 	};
 }
 

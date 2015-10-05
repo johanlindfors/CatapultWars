@@ -35,5 +35,13 @@
   <ItemGroup>
     <None Include="CatapultWars.Universal_TemporaryKey.pfx" />
     <None Include="Package.StoreAssociation.xml" />
+    <None Include="packages.config" />
+    <None Include="..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\Win32\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\CatapultWars.Shared\app.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CatapultWars.Shared\app.h" />
   </ItemGroup>
 </Project>
