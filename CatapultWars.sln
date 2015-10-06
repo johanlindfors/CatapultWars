@@ -25,12 +25,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.Universal", "C
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6b88a2cc-d2cc-424a-bb00-0b28882cf683}*SharedItemsImports = 4
-		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{13e8faa8-c8eb-4b61-8254-047189d43cad}*SharedItemsImports = 4
 		DirectXTK\DirectXTK_Universal_2013.Shared.vcxitems*{6efb7964-fe7d-4489-bbb0-860255357855}*SharedItemsImports = 9
-		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{a37babba-492c-4671-940b-c81ce05715b1}*SharedItemsImports = 4
-		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{e485a391-7278-4c1c-aff2-d5429091a1f2}*SharedItemsImports = 4
 		CatapultWars\CatapultWars.Shared\CatapultWars.Shared.vcxitems*{2993eeae-b74e-424c-8a70-c44268091ce2}*SharedItemsImports = 9
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

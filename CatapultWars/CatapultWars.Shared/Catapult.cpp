@@ -237,6 +237,7 @@ void Catapult::Update(double elapsedSeconds)
 		{
 			if (m_lastUpdateState != CatapultState::ProjectileHit)
 			{
+				ApplicationInsights::TrackEvent(L"Miss");
 				//VibrateController.Default.Start(TimeSpan.FromMilliseconds(100));
 				m_audioManager->PlaySound("BoulderHit");
 			}
@@ -250,6 +251,8 @@ void Catapult::Update(double elapsedSeconds)
 			m_animations[L"fireMiss"]->Update();
 		}
 		else {
+			ApplicationInsights::TrackEvent(L"Hit");
+
 			// Catapult hit - start longer vibration on any catapult hit
 			// Remember that the call to "CheckHit" updates the catapult's
 			// state to "Hit"

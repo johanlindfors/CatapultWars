@@ -25,3 +25,5 @@
 #include "AudioManager.h"
 #include "WICTextureLoader.h"
 #include "CommonStates.h"
+
+#include "InsightsHelper.h"

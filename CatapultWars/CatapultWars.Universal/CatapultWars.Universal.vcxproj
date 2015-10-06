@@ -105,7 +105,11 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <PackageCertificateKeyFile>CatapultWars.Universal_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>CatapultWars.Universal_StoreKey.pfx</PackageCertificateKeyFile>
+    <AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+    <AppxBundlePlatforms>x86|x64|arm</AppxBundlePlatforms>
+    <PackageCertificateThumbprint>6897DDF88A7945EDD104DC8F93E5ADD791F50E47</PackageCertificateThumbprint>
+    <AppxBundle>Never</AppxBundle>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;$(IncludePath)</IncludePath>
@@ -115,6 +119,22 @@
     <IncludePath>$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\Win32\release\AppInsights_Win10-UAP;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\ARM\release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_ARM);$(WindowsSDK_LibraryPath_ARM);$(NETFXKitsDir)Lib\um\arm;$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\ARM\release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\x64\release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64;$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\x64\release\AppInsights_Win10-UAP</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">
     <Link>
       <AdditionalDependencies>d2d1.lib; d3d11.lib; dxgi.lib; windowscodecs.lib; dwrite.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -123,7 +143,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -137,7 +157,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -151,7 +171,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc;$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc;$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj /Zm500 %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -165,7 +185,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;$(SolutionDir)DirectXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)packages\ApplicationInsights-CPP.1.0.0-Beta\src\inc;$(SolutionDir)DirectXTK\Inc;%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -179,7 +199,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -193,7 +213,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(IntermediateOutputPath);%(AdditionalIncludeDirectories);$(SolutionDir)packages\ApplicationInsights.1.0.0-Beta\lib\native\$(PlatformName)\release\AppInsights_Win10-UAP;$(SolutionDir)CatapultWars\CatapultWars.Shared;$(SolutionDir)DirectXTK\Inc</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -212,10 +232,19 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\ARM\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">true</DeploymentContent>
+    </None>
     <None Include="..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\Win32\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
     </None>
+    <None Include="..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\x64\Release\AppInsights_Win10-UAP\AppInsights_Win10-UAP.dll">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </None>
+    <None Include="CatapultWars.Universal_StoreKey.pfx" />
     <None Include="CatapultWars.Universal_TemporaryKey.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -229,15 +258,9 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="ApplicationInsights">
-      <HintPath>..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\Win32\Release\ApplicationInsights\ApplicationInsights.winmd</HintPath>
+      <HintPath>..\..\packages\ApplicationInsights-CPP.1.0.0-Beta\lib\native\$(PlatformName)\Release\ApplicationInsights\ApplicationInsights.winmd</HintPath>
       <IsWinMDFile>true</IsWinMDFile>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\CatapultWars.Shared\app.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\CatapultWars.Shared\app.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
