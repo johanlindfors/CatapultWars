@@ -12,32 +12,62 @@
 namespace ApplicationInsights {
 
 	static void TrackEvent(Platform::String^ eventName) {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->TrackEvent(eventName);
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->TrackEvent(eventName);
+		}
+		catch (...) {
+
+		}
 	}
 
 	static void TrackTrace(Platform::String^ message) {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->TrackTrace(message);
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->TrackTrace(message);
+		}
+		catch (...) {
+
+		}
 	}
 
 	static void TrackMetric(Platform::String^ name, double value) {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->TrackMetric(name, value);
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->TrackMetric(name, value);
+		}
+		catch (...) {
+
+		}
 	}
 
 	static void TrackPageView(Platform::String^ pageName) {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->TrackPageView(pageName);
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->TrackPageView(pageName);
+		}
+		catch (...) {
+
+		}
 	}
 
 	static void CloseSession() {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->Flush();
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->Flush();
+		}
+		catch (...) {
+
+		}
 	}
 
 	static void TrackSessionStart() {
-		auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
-		tc->TrackSessionStart();
+		try {
+			auto tc = ref new ApplicationInsights::CX::TelemetryClient(INSTRUMENTATION_KEY);
+			tc->TrackSessionStart();
+		}
+		catch (...) {
+
+		}
 	}
 }
