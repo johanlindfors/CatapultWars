@@ -42,6 +42,8 @@ CatapultWarsMain::~CatapultWarsMain() {
 
 // Updates application state when the window size changes (e.g. device orientation change)
 void CatapultWarsMain::CreateWindowSizeDependentResources() {
+	m_isInitialized = false;
+	
 	auto device = m_deviceResources->GetD3DDevice();
 	auto context = m_deviceResources->GetD3DDeviceContext();
 

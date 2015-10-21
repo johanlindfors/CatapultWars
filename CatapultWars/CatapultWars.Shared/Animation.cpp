@@ -15,11 +15,11 @@ Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, PO
 
 Animation::~Animation()
 {
-	if (m_animatedCharacter != nullptr)
-	{
-		auto toDelete = m_animatedCharacter.ReleaseAndGetAddressOf();
-		delete(toDelete);
-	}
+	//if (m_animatedCharacter)
+	//{
+	//	auto toDelete = m_animatedCharacter.ReleaseAndGetAddressOf();
+	//	delete(toDelete);
+	//}
 }
 
 void Animation::PlayFromFrameIndex(int frameIndex)
