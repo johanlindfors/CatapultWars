@@ -5,13 +5,9 @@ using namespace CatapultWars;
 Player::Player()
 : MinShotStrength(150)
 , MaxShotStrength(400)
+, m_score(0)
 {
 
-}
-
-void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
-{
-	m_score = 0;
 }
 
 void Player::Update(double elapsedSeconds)

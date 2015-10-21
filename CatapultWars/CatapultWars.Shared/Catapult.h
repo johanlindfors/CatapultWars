@@ -4,6 +4,7 @@
 #include <Animation.h>
 #include <AudioManager.h>
 #include <unordered_map>
+#include <ppltasks.h>
 
 namespace CatapultWars {
 
@@ -35,7 +36,7 @@ namespace CatapultWars {
 	{
 	internal:
 		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isHuman, bool isLeftSide);
-		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
+		concurrency::task<void> Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
 		void Update(double elapsedSeconds);
 		void Draw();
 		void Fire(float velocity);
@@ -102,7 +103,7 @@ namespace CatapultWars {
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
-		void ParseXmlAndCreateAnimations(ID3D11Device* device);
+		concurrency::task<void> ParseXmlAndCreateAnimations(ID3D11Device* device);
 		void StartFiringFromLastAimPosition();
 		void DrawIdleCatapult();
 		void Hit();
@@ -111,8 +112,7 @@ namespace CatapultWars {
 
 		shared_ptr<SpriteBatch>							m_spriteBatch;
 		shared_ptr<AudioManager>						m_audioManager;
-	};
 
-	//static String^ xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?><a1></a1>";
-	static String^ xml = "<?xml version=\"1.0\" encoding=\"utf-8\" ?><Animations><!--Player animation definitions--><Definition FrameWidth=\"75\" FrameHeight=\"60\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" SplitFrame=\"20\" SheetName=\"Textures/Catapults/Blue/blueFire/blueCatapult_fire\" Alias=\"Fire\" IsAI=\"false\"/><Definition FrameWidth=\"75\" FrameHeight=\"60\" SheetRows=\"1\" SheetColumns=\"18\" Speed=\"30\" SheetName=\"Textures/Catapults/Blue/bluePullback/blueCatapult_Pullback\" Alias=\"Aim\" IsAI=\"false\"/><Definition FrameWidth=\"122\" FrameHeight=\"62\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-40\" OffsetY=\"0\" SheetName=\"Textures/Catapults/Blue/blueDestroyed/blueCatapult_destroyed\" Alias=\"Destroyed\" IsAI=\"false\"/><Definition FrameWidth=\"90\" FrameHeight=\"80\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-50\" OffsetY=\"0\" SheetName=\"Textures/Catapults/Fire_Miss/fire_miss\" Alias=\"fireMiss\" IsAI=\"false\"/><Definition FrameWidth=\"128\" FrameHeight=\"128\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-64\" OffsetY=\"-64\" SheetName=\"Textures/Catapults/Hit_Smoke/smoke\" Alias=\"hitSmoke\" IsAI=\"false\"/><!--AI animation definitions--><Definition FrameWidth=\"75\" FrameHeight=\"60\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" SplitFrame=\"20\" SheetName=\"Textures/Catapults/Red/redFire/redCatapult_fire\" Alias=\"Fire\" IsAI=\"true\"/><Definition FrameWidth=\"122\" FrameHeight=\"62\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-11\" OffsetY=\"0\" SheetName=\"Textures/Catapults/Red/redDestroyed/redCatapult_destroyed\" Alias=\"Destroyed\" IsAI=\"true\"/><Definition FrameWidth=\"75\" FrameHeight=\"60\" SheetRows=\"1\" SheetColumns=\"18\" Speed=\"30\" SheetName=\"Textures/Catapults/Red/redPullback/redCatapult_Pullback\" Alias=\"Aim\" IsAI=\"true\"/><Definition FrameWidth=\"90\" FrameHeight=\"80\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-50\" OffsetY=\"0\" SheetName=\"Textures/Catapults/Fire_Miss/fire_miss\" Alias=\"fireMiss\" IsAI=\"true\"/><Definition FrameWidth=\"128\" FrameHeight=\"128\" SheetRows=\"2\" SheetColumns=\"15\" Speed=\"30\" OffsetX=\"-30\" OffsetY=\"-64\" SheetName=\"Textures/Catapults/Hit_Smoke/smoke\" Alias=\"hitSmoke\" IsAI=\"true\"/></Animations>";
+		bool											m_isInitialized;
+	};
 }

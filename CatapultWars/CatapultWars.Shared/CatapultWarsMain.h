@@ -67,6 +67,7 @@ namespace CatapultWars
 		UINT m_cloud2TextureWidth, m_cloud2TextureHeight;
 		UINT m_defeatTextureWidth, m_defeatTextureHeight;
 		UINT m_victoryTextureWidth, m_victoryTextureHeight;
+		bool			m_isInitialized;
 
 		// Rendering loop timer.
 		DX::StepTimer m_timer;

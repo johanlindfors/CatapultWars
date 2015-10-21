@@ -12,15 +12,12 @@ namespace CatapultWars {
 			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false, false);
 	}
 
-	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
+	concurrency::task<void> Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 	{
 		DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.png", nullptr, m_arrow.ReleaseAndGetAddressOf()));
-
-		Catapult->Initialize(device, spriteBatch, audioManager);
-
-		Player::Initialize(device, spriteBatch, audioManager);
-
 		m_spriteBatch = spriteBatch;
+
+		return Catapult->Initialize(device, spriteBatch, audioManager);
 	}
 
 	void Human::HandleInput(int x, int y)

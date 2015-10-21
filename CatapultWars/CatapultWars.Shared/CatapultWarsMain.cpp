@@ -9,10 +9,12 @@ using namespace Windows::System::Threading;
 using namespace Concurrency;
 
 // Loads and initializes application assets when the application is loaded.
-CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-m_deviceResources(deviceResources),
-m_minWind(0),
-m_maxWind(2) {
+CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
+	: m_deviceResources(deviceResources)
+	, m_minWind(0)
+	, m_maxWind(2)
+	, m_isInitialized(false)
+{
 	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
 
@@ -104,22 +106,26 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 
 	// Initialize human & AI players
 	m_player = ref new Human();
-	m_player->Initialize(device, m_spriteBatch, m_audioManager);
 	m_player->Name = L"Player";
+	concurrency::create_task(m_player->Initialize(device, m_spriteBatch, m_audioManager))
+		.then([&,device]() {
+	
+		m_computer = ref new AI();
+		m_computer->Name = L"Phone";
+		concurrency::create_task(m_computer->Initialize(device, m_spriteBatch, m_audioManager)).then([&]() {
+		
+			m_player->Enemy = m_computer;
+			m_computer->Enemy = m_player;
 
-	m_computer = ref new AI();
-	m_computer->Initialize(device, m_spriteBatch, m_audioManager);
-	m_computer->Name = L"Phone";
+			m_viewportWidth = 800;
+			m_viewportHeight = 480;
 
-	m_player->Enemy = m_computer;
-	m_computer->Enemy = m_player;
+			m_audioManager->LoadSounds();
 
-	m_viewportWidth = 800;
-	m_viewportHeight = 480;
-
-	m_audioManager->LoadSounds();
-
-	Start();
+			m_isInitialized = true;
+			Start();
+		});
+	});
 }
 
 void CatapultWarsMain::Start() {
@@ -133,6 +139,10 @@ void CatapultWarsMain::Start() {
 
 // Updates the application state once per frame.
 void CatapultWarsMain::Update() {
+	if (!m_isInitialized) {
+		return;
+	}
+
 	// Update scene objects.
 	m_timer.Tick([&]() {
 		// Check it one of the players reached 5 and stop the game

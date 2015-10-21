@@ -2,6 +2,7 @@
 #include "AI.h"
 
 using namespace CatapultWars;
+using namespace concurrency;
 
 AI::AI()
 {
@@ -11,11 +12,9 @@ AI::AI()
 	// (game, screenSpriteBatch,
 }
 
-void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
+task<void> AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 {	
-	Catapult->Initialize(device, spriteBatch, audioManager);
-
-	Player::Initialize(device, spriteBatch, audioManager);
+	return create_task(Catapult->Initialize(device, spriteBatch, audioManager));
 }
 
 void AI::Update(double elapsedSeconds)

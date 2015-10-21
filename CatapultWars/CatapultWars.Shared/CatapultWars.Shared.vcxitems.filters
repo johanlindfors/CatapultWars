@@ -26,6 +26,7 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SupplyCrate.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
@@ -44,6 +45,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SupplyCrate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">

@@ -5,6 +5,7 @@
 
 using namespace CatapultWars;
 using namespace Platform;
+using namespace concurrency;
 
 Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
 {	
@@ -17,17 +18,19 @@ Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName
 	m_projectileRotation = 0;
 }
 
-void Projectile::Initialize(ID3D11Device* device)
+concurrency::task<void> Projectile::Initialize(ID3D11Device* device)
 {
-	ComPtr<ID3D11Resource> res;
-	DX::ThrowIfFailed(
-		CreateWICTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
-		);
-		
-	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
+	return create_task([&,device]() {
+		ComPtr<ID3D11Resource> res;
+		DX::ThrowIfFailed(
+			CreateWICTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
+			);
 
-	ProjectileTextureWidth = m_textureWidth;
-	ProjectileTextureHeight = m_textureHeight;
+		DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
+
+		ProjectileTextureWidth = m_textureWidth;
+		ProjectileTextureHeight = m_textureHeight;
+	});
 }
 
 void Projectile::Draw()

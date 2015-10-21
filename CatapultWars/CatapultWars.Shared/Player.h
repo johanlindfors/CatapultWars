@@ -7,7 +7,7 @@ namespace CatapultWars {
 
 	internal:
 		Player();
-		virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
+		virtual concurrency::task<void> Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager) = 0;
 		virtual void Update(double elapsedSeconds);
 		virtual void Draw();
 

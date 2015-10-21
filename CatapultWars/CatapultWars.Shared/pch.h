@@ -27,3 +27,4 @@
 #include "CommonStates.h"
 
 #include "InsightsHelper.h"
+#include <ppltasks.h>
