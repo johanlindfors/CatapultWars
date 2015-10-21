@@ -13,17 +13,29 @@ namespace CatapultWars {
 		property bool AnimationRunning;
 		property bool IsDestroyed;
 
-		
 	internal:
-		SupplyCrate();
-		void Initialize();
-		
+		SupplyCrate(std::shared_ptr<SpriteBatch>& spriteBatch, String^ idleTextureName, Vector2 catapultCenterPosition, bool isAI);
+		concurrency::task<void> Initialize(ID3D11Device* device);
+		void Update(double elapsedSeconds);
+		void Draw();
+		void Hit();
+
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	Texture;
+
 		property CrateState CurrentState {
 			CrateState get() { return m_currentState; }
 			void set(CrateState state) { m_currentState = state; }
 		}
 
 		property Vector2 Position;
+
+		property int Width {
+			int get() { return (int)m_textureWidth; }
+		}
+
+		property int Height {
+			int get() { return (int)m_textureHeight; }
+		}
 
 	private:
 		bool													m_animationRunning;
@@ -36,7 +48,10 @@ namespace CatapultWars {
 		Vector2													m_catapultCenter;
 		bool													m_isAI;
 		std::unordered_map<Platform::String^, Animation^>		m_animations;
+		String^													m_idleTextureName;
 		ComPtr<ID3D11ShaderResourceView>						m_idleTexture;
 		shared_ptr<SpriteBatch>									m_spriteBatch;
+		UINT													m_textureWidth;
+		UINT													m_textureHeight;
 	};
 }

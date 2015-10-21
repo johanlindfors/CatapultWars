@@ -36,20 +36,23 @@ task<void> Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatc
 	m_stallUpdateCycles = 0;
 	m_audioManager = audioManager;
 
-	return ParseXmlAndCreateAnimations(device).then([&,device]() {
-		DX::ThrowIfFailed(
-			CreateWICTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
-			);
+	m_spriteBatch = spriteBatch;
 
+	DX::ThrowIfFailed(
+		CreateWICTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		);
+
+	return ParseXmlAndCreateAnimations(device).then([&, device]() {
 		m_normalProjectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.png", ProjectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isLeftSide, m_gravity);
-		m_normalProjectile->Initialize(device);
-
 		m_splitProjectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\split_ammo.png", ProjectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isLeftSide, m_gravity);
-		m_splitProjectile->Initialize(device);
-
-		m_spriteBatch = spriteBatch;
-
-		m_isInitialized = true;
+		array<task<void>, 2> tasks =
+		{
+			m_normalProjectile->Initialize(device),
+			m_splitProjectile->Initialize(device)
+		};
+		return when_all(begin(tasks), end(tasks)).then([&]() {
+			m_isInitialized = true;
+		});
 	});
 }
 
