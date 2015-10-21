@@ -9,7 +9,7 @@ namespace CatapultWars {
 
 		Catapult = ref new CatapultWars::Catapult(
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png",
-			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
+			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false, false);
 	}
 
 	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)

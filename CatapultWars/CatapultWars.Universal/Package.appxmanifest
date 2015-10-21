@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="CoderoxAB.UniversalCatapultWars" Publisher="CN=A15B31EC-F295-4C6E-952A-38151B9A88C3" Version="1.1.1.0" />
+  <Identity Name="CoderoxAB.UniversalCatapultWars" Publisher="CN=A15B31EC-F295-4C6E-952A-38151B9A88C3" Version="1.2.0.0" />
   <mp:PhoneIdentity PhoneProductId="ff952373-7f64-49ec-97c5-979db7b184c1" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>Universal Catapult Wars</DisplayName>
