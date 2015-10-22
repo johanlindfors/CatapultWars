@@ -38,6 +38,8 @@ namespace CatapultWars {
 		}
 
 	private:
+		concurrency::task<void>	ParseXmlAndCreateAnimations(ID3D11Device* device);
+
 		bool													m_animationRunning;
 		bool													m_isDestroyed;
 		CrateState												m_lastUpdateState;
@@ -51,6 +53,7 @@ namespace CatapultWars {
 		String^													m_idleTextureName;
 		ComPtr<ID3D11ShaderResourceView>						m_idleTexture;
 		shared_ptr<SpriteBatch>									m_spriteBatch;
+		SpriteEffects											m_spriteEffects;
 		UINT													m_textureWidth;
 		UINT													m_textureHeight;
 	};

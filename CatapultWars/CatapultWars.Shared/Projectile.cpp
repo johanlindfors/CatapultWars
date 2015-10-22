@@ -18,7 +18,7 @@ Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName
 	m_projectileRotation = 0;
 }
 
-concurrency::task<void> Projectile::Initialize(ID3D11Device* device)
+task<void> Projectile::Initialize(ID3D11Device* device)
 {
 	return create_task([&,device]() {
 		ComPtr<ID3D11Resource> res;
