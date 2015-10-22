@@ -3,9 +3,9 @@
 using namespace CatapultWars;
 
 Player::Player()
-: MinShotStrength(150)
-, MaxShotStrength(400)
-, m_score(0)
+	: m_score(0)
+	, m_health(100)
+	, Weapon(WeaponType::Normal)
 {
 
 }

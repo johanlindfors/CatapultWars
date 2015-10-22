@@ -1,15 +1,28 @@
 #include "pch.h"
 #include "Human.h"
+#include <math.h>
 
 namespace CatapultWars {
-	Human::Human()
-		: m_maxDragDelta(Vector2(480, 800).Length())
-		, m_catapultPosition(Vector2(140,332))
-	{
 
+
+	Human::Human(PlayerSide playerSide)
+		: m_maxDragDelta(Vector2(480, 800).Length())
+		, m_spriteEffects(SpriteEffects::SpriteEffects_None)
+	{
+		m_playerSide = playerSide;
+		String^ idleTextureName = "";
+
+		if (playerSide == PlayerSide::Left) {
+			m_catapultPosition = Vector2(140, 332);
+			idleTextureName = L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png";
+		} else {
+			m_catapultPosition = Vector2(600, 332);
+			m_spriteEffects = SpriteEffects::SpriteEffects_FlipHorizontally;
+			idleTextureName = L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\redIdle.png";
+		}
 		Catapult = ref new CatapultWars::Catapult(
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png",
-			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false, false);
+			m_catapultPosition, m_spriteEffects, playerSide == PlayerSide::Left ? false : true, true);
 	}
 
 	concurrency::task<void> Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
@@ -33,10 +46,11 @@ namespace CatapultWars {
 
 	void Human::HandleRelease()
 	{
-		Catapult->ShotVelocity = MinShotStrength + Catapult->ShotStrength *
-			(MaxShotStrength - MinShotStrength);
-		Catapult->Fire(Catapult->ShotVelocity);
+		Catapult->ShotVelocity = MinShotVelocity + Catapult->ShotStrength *
+			(MaxShotVelocity - MinShotVelocity);
+		//Catapult->Fire(Catapult->ShotVelocity, Catapult->ShotAngle);
 		Catapult->CurrentState = CatapultState::Firing;
+		Catapult->ShotAngle = MaxShotAngle;
 		m_delta = Vector2(0, 0);
 
 		ResetDragState();

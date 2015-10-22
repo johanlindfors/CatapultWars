@@ -107,7 +107,7 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_windArrowPosition = Vector2(345, 46);
 
 	// Initialize human & AI players
-	m_player = ref new Human();
+	m_player = ref new Human(PlayerSide::Left);
 	m_player->Name = L"Player";
 	concurrency::create_task(m_player->Initialize(device, m_spriteBatch, m_audioManager))
 		.then([&,device]() {

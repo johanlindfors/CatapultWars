@@ -21,6 +21,7 @@
 #include "SimpleMath.h"
 #include "Catapult.h"
 #include "Player.h"
+#include "SupplyCrate.h"
 #include "Audio.h"
 #include "AudioManager.h"
 #include "WICTextureLoader.h"

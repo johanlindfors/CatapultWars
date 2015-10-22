@@ -7,36 +7,24 @@ namespace CatapultWars {
 		Hit = 0x1
 	};
 
-	ref class SupplyCrate {
+	class SupplyCrate {
 
 	public: 
-		property bool AnimationRunning;
-		property bool IsDestroyed;
+		bool AnimationRunning;
+		bool IsDestroyed;
+		CrateState CurrentState;
+		Vector2 Position;
+		int Width;
+		int Height;
 
-	internal:
 		SupplyCrate(std::shared_ptr<SpriteBatch>& spriteBatch, String^ idleTextureName, Vector2 catapultCenterPosition, bool isAI);
 		concurrency::task<void> Initialize(ID3D11Device* device);
 		void Update(double elapsedSeconds);
 		void Draw();
 		void Hit();
 
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	Texture;
-
-		property CrateState CurrentState {
-			CrateState get() { return m_currentState; }
-			void set(CrateState state) { m_currentState = state; }
-		}
-
-		property Vector2 Position;
-
-		property int Width {
-			int get() { return (int)m_textureWidth; }
-		}
-
-		property int Height {
-			int get() { return (int)m_textureHeight; }
-		}
-
+		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		Texture;
+		
 	private:
 		concurrency::task<void>	ParseXmlAndCreateAnimations(ID3D11Device* device);
 
@@ -46,7 +34,6 @@ namespace CatapultWars {
 		CrateState												m_currentState;
 		const int												m_positionXOffset = -100;
 		const int												m_positionYOffset = 30;
-		String^													m_textureName;
 		Vector2													m_catapultCenter;
 		bool													m_isAI;
 		std::unordered_map<Platform::String^, Animation^>		m_animations;

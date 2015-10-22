@@ -2,6 +2,7 @@
 
 #include <Projectile.h>
 #include <Animation.h>
+#include <SupplyCrate.h>
 #include <AudioManager.h>
 #include <unordered_map>
 #include <ppltasks.h>
@@ -35,11 +36,11 @@ namespace CatapultWars {
 	ref class Catapult sealed
 	{
 	internal:
-		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isHuman, bool isLeftSide);
+		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isLeftSide, bool isHuman);
 		concurrency::task<void> Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
 		void Update(double elapsedSeconds);
 		void Draw();
-		void Fire(float velocity);
+		void Fire(float velocity, float angle);
 
 		bool				AnimationRunning;
 		Platform::String^	Name;
@@ -69,9 +70,18 @@ namespace CatapultWars {
 			float get() { return m_shotStrength; }
 		}
 
+		property float ShotAngle {
+			void set(float angle) { m_shotAngle = angle; }
+			float get() { return m_shotAngle; }
+		}
+
 		property float ShotVelocity {
 			void set(float value) { m_shotVelocity = value; }
 			float get() { return m_shotVelocity; }
+		}
+
+		property SupplyCrate* Crate {
+			SupplyCrate* get() { return m_crate; }
 		}
 
 	private:
@@ -79,6 +89,7 @@ namespace CatapultWars {
 		SpriteEffects									m_spriteEffects;
 		Projectile*										m_normalProjectile;
 		Projectile*										m_splitProjectile;
+		SupplyCrate*									m_crate;
 		Platform::String^								m_idleTextureName;
 		bool											m_isHuman;
 		const float										m_gravity;
@@ -93,22 +104,27 @@ namespace CatapultWars {
 		const int										m_MaxActiveProjectiles = 3;
 		float											m_shotStrength;
 		float											m_shotVelocity;
+		float											m_shotAngle;
 		bool											m_isLeftSide;
 
 		std::unordered_map<Platform::String^, Animation^>		m_animations;
 		std::unordered_map<Platform::String^, int>				m_splitFrames;
-		std::vector<Platform::String^>							m_activeProjectiles;
-		std::vector<Platform::String^>							m_activeProjectilesCopy;
-		std::vector<Platform::String^>							m_destroyedProjectiles;
+		std::vector<Projectile*>							m_activeProjectiles;
+		std::vector<Projectile*>							m_activeProjectilesCopy;
+		std::vector<Projectile*>							m_destroyedProjectiles;
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
 		concurrency::task<void> ParseXmlAndCreateAnimations(ID3D11Device* device);
 		void StartFiringFromLastAimPosition();
 		void DrawIdleCatapult();
-		void Hit();
-		bool CheckHit();
+		void Hit(bool isKilled);
+		HitCheckResult Catapult::CheckHit(Projectile* projectile);
 		void CreateAnimation(ID3D11Device* device, Platform::String^ key, Platform::String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
+
+		void HandleProjectileHit(Projectile* projectile);
+		void PerformNothingHit(Projectile* projectile);
+		void UpdateHealth(Player^ player, BoundingSphere projectile, BoundingBox catapult);
 
 		shared_ptr<SpriteBatch>							m_spriteBatch;
 		shared_ptr<AudioManager>						m_audioManager;

@@ -25,10 +25,15 @@ task<void> SupplyCrate::Initialize(ID3D11Device* device) {
 		create_task([&, device]() {
 			ComPtr<ID3D11Resource> res;
 			DX::ThrowIfFailed(
-				CreateWICTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), Texture.ReleaseAndGetAddressOf())
+				CreateWICTextureFromFile(device, m_idleTextureName->Data(), res.ReleaseAndGetAddressOf(), m_idleTexture.ReleaseAndGetAddressOf())
 				);
 
 			DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
+			Width = (int)m_textureWidth;
+			Height = (int)m_textureHeight;
+
+			int xOffset = m_isAI ? m_positionXOffset : -m_positionXOffset - m_textureWidth;
+			Position = m_catapultCenter + Vector2(xOffset, m_positionYOffset);
 		})
 	};
 
@@ -43,7 +48,7 @@ task<void> SupplyCrate::ParseXmlAndCreateAnimations(ID3D11Device* device) {
 				XmlDocument^ doc = ref new XmlDocument();
 				doc->LoadXml(xml);
 
-				auto path = "descendant::Definition[@IsAI=\"" + (m_isAI ? "true" : "false") + "\"]";
+				String^ path = L"descendant::Definition";
 				auto definitions = doc->SelectNodes(path);
 				for (auto definition : definitions)
 				{
@@ -79,15 +84,6 @@ task<void> SupplyCrate::ParseXmlAndCreateAnimations(ID3D11Device* device) {
 							sheetSize.y = _wtol(attribute->InnerText->Data());
 							continue;
 						}
-						//if (attribute->NodeName == "SplitFrame") {
-						//	m_splitFrames[animationAlias] = _wtol(attribute->InnerText->Data());
-						//	continue;
-						//}
-						//if (attribute->NodeName == "Speed") {
-						//	float speed = _wtol(attribute->InnerText->Data());
-						//	frameInterval.Duration = 1 / speed * 100;
-						//	continue;
-						//}
 						if (attribute->NodeName == "OffsetX") {
 							offset.x = _wtol(attribute->InnerText->Data());
 							continue;
@@ -158,7 +154,7 @@ void SupplyCrate::Draw() {
 			IsDestroyed = true;
 		}
 
-		m_animations[L"explode"]->Update();
+		m_animations[L"explode"]->Draw(m_spriteBatch,Position,SpriteEffects::SpriteEffects_None);
 		break;
 	default:
 		break;
