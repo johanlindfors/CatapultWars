@@ -19,9 +19,11 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)AudioManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GameScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Human.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Player.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)ScreenManager.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SupplyCrate.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AI.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Animation.h" />
@@ -30,8 +32,10 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Catapult.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CatapultWarsMain.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameScreen.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Human.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)InsightsHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -44,6 +48,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Content\SampleFpsTextRenderer.cpp" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Player.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Projectile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)ScreenManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SupplyCrate.h" />
   </ItemGroup>
   <ItemGroup>

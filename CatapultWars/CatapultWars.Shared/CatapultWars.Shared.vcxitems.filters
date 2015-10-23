@@ -27,6 +27,15 @@
     </ClInclude>
     <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SupplyCrate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameScreen.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ScreenManager.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
@@ -46,6 +55,12 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)SupplyCrate.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GameScreen.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ScreenManager.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -116,6 +131,9 @@
     </Filter>
     <Filter Include="Assets\Textures\Catapults\Red\redPullback">
       <UniqueIdentifier>{28ab32f3-f89a-4793-9563-f68e75688420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScreenManager">
+      <UniqueIdentifier>{7f30da3b-fafc-47c5-a05d-c7779bf3a493}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

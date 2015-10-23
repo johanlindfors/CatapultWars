@@ -29,3 +29,7 @@
 
 #include "InsightsHelper.h"
 #include <ppltasks.h>
+
+#include "MathHelper.h"
+#include "GameScreen.h"
+#include "ScreenManager.h"
