@@ -12,6 +12,46 @@ void GameScreen::ExitScreen() {
 	}
 }
 
+void GameScreen::Update(double elapsedSeconds, bool otherScreenHasFocus, bool coveredByOtherScreen) {
+	m_otherScreenHasFocus = otherScreenHasFocus;
+
+	if (IsExiting)
+	{
+		// If the screen is going away to die, it should transition off.
+		State = ScreenState::TransitionOff;
+
+		if (!UpdateTransition(elapsedSeconds, TransitionOffTime, 1))
+		{
+			// When the transition finishes, remove the screen.
+			Manager->RemoveScreen(this);
+		}
+	} else if (coveredByOtherScreen)
+	{
+		// If the screen is covered by another, it should transition off.
+		if (UpdateTransition(elapsedSeconds, TransitionOffTime, 1))
+		{
+			// Still busy transitioning.
+			State = ScreenState::TransitionOff;
+		} else
+		{
+			// Transition finished!
+			State = ScreenState::Hidden;
+		}
+	} else
+	{
+		// Otherwise the screen should transition on and become active.
+		if (UpdateTransition(elapsedSeconds, TransitionOnTime, -1))
+		{
+			// Still busy transitioning.
+			State = ScreenState::TransitionOn;
+		} else
+		{
+			// Transition finished!
+			State = ScreenState::Active;
+		}
+	}
+}
+
 bool GameScreen::UpdateTransition(double gameTime, double time, int direction) {
 	// How much should we move by?
 	float transitionDelta;

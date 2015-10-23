@@ -21,6 +21,8 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GameScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Human.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuEntry.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Player.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)ScreenManager.cpp" />
@@ -36,6 +38,8 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Human.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)InsightsHelper.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuEntry.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuScreen.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>

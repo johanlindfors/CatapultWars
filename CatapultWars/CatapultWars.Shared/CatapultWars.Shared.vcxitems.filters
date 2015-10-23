@@ -36,6 +36,12 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuEntry.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuScreen.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
@@ -59,6 +65,12 @@
       <Filter>ScreenManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)ScreenManager.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuEntry.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuScreen.cpp">
       <Filter>ScreenManager</Filter>
     </ClCompile>
   </ItemGroup>

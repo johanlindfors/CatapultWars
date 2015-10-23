@@ -9,12 +9,12 @@ namespace CatapultWars {
 		Hidden
 	};
 
-	class ScreenManager;
-	class InputState;
+	ref class ScreenManager;
+	ref class InputState;
 	class Stream;
 
-	class GameScreen {
-	public:
+	ref class GameScreen {
+	internal:
 		bool IsPopup;
 		double TransitionOnTime;
 		double TransitionOffTime;
@@ -22,7 +22,7 @@ namespace CatapultWars {
 		float TransitionAlpha;
 		ScreenState State;
 		bool IsExiting;
-		ScreenManager* Manager;
+		ScreenManager^ Manager;
 		bool IsSerializable;
 
 		bool IsActive() {
@@ -31,18 +31,18 @@ namespace CatapultWars {
 
 		void ExitScreen();
 
-		virtual void LoadContent() { }
-		virtual void UnloadContent() { }
-		virtual void Update(double elapsedSeconds);
-		virtual void HandleInput(InputState* input) { }
-		virtual void Draw() { }
-		virtual void Serialize(Stream* stream) { }
-		virtual void Deserialize(Stream* stream) { }
+		virtual void LoadContent() {}
+		virtual void UnloadContent() {}
+		virtual void Update(double elapsedSeconds, bool coveredByOtherScreen, bool otherScreenHasFocus);
+		virtual void HandleInput(InputState^ input) {}
+		virtual void Draw() {}
+		virtual void Serialize(Stream* stream) {}
+		virtual void Deserialize(Stream* stream) {}
 
 
 	private:
 		bool m_otherScreenHasFocus;
-		
+
 		bool UpdateTransition(double gameTime, double time, int direction);
 	};
 }
