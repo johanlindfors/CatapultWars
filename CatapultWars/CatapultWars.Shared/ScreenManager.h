@@ -1,15 +1,17 @@
 #pragma once
 #include "GameScreen.h"
+#include "Common\DeviceResources.h"
 
 namespace CatapultWars {
 
 	ref class ScreenManager {
 	internal:
+		ScreenManager(const std::shared_ptr<DX::DeviceResources>& deviceResources);
 		void Initialize();
 		void LoadContent(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch);
 		void UnloadContent();
 		void Update(double elapsedSeconds);
-		void Draw();
+		void Draw(double elapsedSeconds);
 
 		void TraceScreens();
 		void AddScreen(GameScreen^ screen);
@@ -21,6 +23,14 @@ namespace CatapultWars {
 		void DeserializeState();
 		void DeleteState();
 
+		property SpriteFont* Font {
+			SpriteFont* get() { return m_font.get(); }
+		}
+
+		property DX::DeviceResources* DeviceResources {
+			DX::DeviceResources* get() { return m_deviceResources.get(); }
+		}
+
 	private:
 		std::vector<GameScreen^> m_screens;
 		std::vector<GameScreen^> m_screensToUpdate;
@@ -31,5 +41,7 @@ namespace CatapultWars {
 
 		bool m_isInitialized;
 		bool m_traceEnabled;
+
+		std::shared_ptr<DX::DeviceResources> m_deviceResources;
 	};
 }

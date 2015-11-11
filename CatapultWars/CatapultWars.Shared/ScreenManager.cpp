@@ -1,10 +1,26 @@
 #include "pch.h"
 #include "ScreenManager.h"
+#include "Common\DeviceResources.h"
 
 using namespace CatapultWars;
 
+ScreenManager::ScreenManager(const std::shared_ptr<DX::DeviceResources>& deviceResources)
+	: m_deviceResources(deviceResources)
+{ }
+
 void ScreenManager::Initialize() {
 	m_isInitialized = true;
+
+	auto device = m_deviceResources->GetD3DDevice();
+	auto context = m_deviceResources->GetD3DDeviceContext();
+
+	m_spriteBatch.reset(new SpriteBatch(context));
+#if (WINAPI_FAMILY==WINAPI_FAMILY_PHONE_APP)
+	m_spriteBatch->SetRotation(DXGI_MODE_ROTATION_ROTATE90);
+#else
+	m_spriteBatch->SetRotation(m_deviceResources->ComputeDisplayRotation());
+#endif
+
 }
 
 void ScreenManager::LoadContent(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch) {
@@ -14,10 +30,10 @@ void ScreenManager::LoadContent(ID3D11Device* device, std::shared_ptr<SpriteBatc
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\blank.png", nullptr, m_blankTexture.ReleaseAndGetAddressOf())
 		);
 
-	m_font.reset(new SpriteFont(device, L"Assets\\Fonts\\MenuFont.spritefont"));
+	m_font.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHudFont.spritefont"));
 
 	for (auto screen : m_screens) {
-		screen->LoadContent();
+		screen->LoadContent(device);
 	}
 }
 
@@ -38,6 +54,8 @@ void ScreenManager::Update(double elapsedSeconds) {
 	bool coveredByOtherScreen = false;
 
 	while (m_screensToUpdate.size() > 0) {
+		//auto screen = m_screensToUpdate[0];
+		//m_screensToUpdate.erase(m_screensToUpdate.begin());
 		auto screen = m_screensToUpdate[m_screensToUpdate.size() - 1];
 		m_screensToUpdate.pop_back();
 
@@ -66,10 +84,10 @@ void ScreenManager::Update(double elapsedSeconds) {
 	}
 }
 
-void ScreenManager::Draw() {
+void ScreenManager::Draw(double elapsedSeconds) {
 	for (auto screen : m_screens) {
 		if (screen->State != ScreenState::Hidden) {
-			screen->Draw();
+			screen->Draw(m_spriteBatch, elapsedSeconds);
 		}
 	}
 }
@@ -80,6 +98,7 @@ void ScreenManager::TraceScreens() {
 	for (auto screen : m_screens) {
 		screenNames.push_back(screen->GetType()->ToString());
 	}
+
 	//Debug.WriteLine(string.Join(", ", screenNames.ToArray()));
 }
 
@@ -88,7 +107,7 @@ void ScreenManager::AddScreen(GameScreen^ screen) {
 	screen->IsExiting = false;
 
 	if (m_isInitialized) {
-		screen->LoadContent();
+		screen->LoadContent(m_deviceResources->GetD3DDevice());
 	}
 
 	m_screens.push_back(screen);

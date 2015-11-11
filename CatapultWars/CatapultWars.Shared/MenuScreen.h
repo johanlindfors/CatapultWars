@@ -1,16 +1,19 @@
 #pragma once
+#include "MenuEntry.h"
 #include "GameScreen.h"
 
-ref class MenuEntry;
-
 namespace CatapultWars {
+
+	ref class MenuEntry;
 
 	ref class MenuScreen : GameScreen {
 
 	internal:
 		std::vector<MenuEntry^> MenuEntries;
-		MenuScreen(String^ menuTitle);
+		MenuScreen(ScreenManager^ manager, String^ menuTitle);
 		void Update(double elapsedSeconds, bool coveredByOtherScreen, bool otherScreenHasFocus) override;
+		void Draw(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, double elapsedSeconds) override;
+		void UpdateMenuEntryLocations();
 
 	private:
 		const int m_menuEntryPadding = 25;

@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CatapultWarsMain.h"
 #include "Common\DirectXHelper.h"
+#include "BackgroundScreen.h"
 
 using namespace CatapultWars;
 
@@ -27,6 +28,8 @@ CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& d
 	//m_timer.SetTargetElapsedSeconds(1.0 / 60);
 
 	m_audioManager.reset(new AudioManager());
+
+	m_screenManager = ref new ScreenManager(m_deviceResources);
 
 	CreateWindowSizeDependentResources();
 }
@@ -114,7 +117,7 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	
 		m_computer = ref new AI();
 		m_computer->Name = L"Phone";
-		concurrency::create_task(m_computer->Initialize(device, m_spriteBatch, m_audioManager)).then([&]() {
+		concurrency::create_task(m_computer->Initialize(device, m_spriteBatch, m_audioManager)).then([&,device]() {
 		
 			m_player->Enemy = m_computer;
 			m_computer->Enemy = m_player;
@@ -125,6 +128,13 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 			m_audioManager->LoadSounds();
 
 			m_isInitialized = true;
+
+			m_screenManager->AddScreen(ref new BackgroundScreen(m_screenManager));
+			m_screenManager->AddScreen(ref new MenuScreen(m_screenManager, "main menu"));
+
+			m_screenManager->Initialize();
+
+			m_screenManager->LoadContent(device, m_spriteBatch);
 			Start();
 		});
 	});
@@ -144,6 +154,12 @@ void CatapultWarsMain::Update() {
 	if (!m_isInitialized) {
 		return;
 	}
+
+	m_timer.Tick([&]() {
+		double elapsedSeconds = m_timer.GetElapsedSeconds();
+		m_screenManager->Update(elapsedSeconds);
+	});
+	return;
 
 	// Update scene objects.
 	m_timer.Tick([&]() {
@@ -261,7 +277,9 @@ bool CatapultWarsMain::Render() {
 	//XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
 	//m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
 	
-    
+	m_screenManager->Draw(m_timer.GetElapsedSeconds());
+	return true;
+
 	CommonStates states(m_deviceResources->GetD3DDevice());
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, states.NonPremultiplied());
 

@@ -9,7 +9,8 @@ namespace CatapultWars {
 	internal:
 		MenuEntry(String^ text);
 		virtual void Update(MenuScreen^ screen, bool isSelected, double elapsedSeconds);
-	
+		virtual void Draw(MenuScreen^ screen, bool isSelected, double elapsedSeconds);
+
 		Platform::String^ Text;
 		DirectX::SimpleMath::Vector2 Position;
 

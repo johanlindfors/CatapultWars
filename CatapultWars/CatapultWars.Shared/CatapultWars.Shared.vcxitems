@@ -18,6 +18,7 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Animation.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)AudioManager.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)BackgroundScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)GameScreen.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Human.cpp" />
@@ -31,6 +32,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Animation.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)AudioManager.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)BackgroundScreen.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Catapult.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CatapultWarsMain.h" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />

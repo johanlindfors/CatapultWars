@@ -1,6 +1,14 @@
 #include "pch.h"
+#include "GameScreen.h"
 
 using namespace CatapultWars;
+
+GameScreen::GameScreen(ScreenManager^ manager)
+	: m_screenManager(manager)
+	, TransitionPosition(1.0f)
+{
+
+}
 
 void GameScreen::ExitScreen() {
 	if (TransitionOffTime == 0) {
@@ -15,8 +23,7 @@ void GameScreen::ExitScreen() {
 void GameScreen::Update(double elapsedSeconds, bool otherScreenHasFocus, bool coveredByOtherScreen) {
 	m_otherScreenHasFocus = otherScreenHasFocus;
 
-	if (IsExiting)
-	{
+	if (IsExiting) {
 		// If the screen is going away to die, it should transition off.
 		State = ScreenState::TransitionOff;
 
@@ -25,8 +32,7 @@ void GameScreen::Update(double elapsedSeconds, bool otherScreenHasFocus, bool co
 			// When the transition finishes, remove the screen.
 			Manager->RemoveScreen(this);
 		}
-	} else if (coveredByOtherScreen)
-	{
+	} else if (coveredByOtherScreen) {
 		// If the screen is covered by another, it should transition off.
 		if (UpdateTransition(elapsedSeconds, TransitionOffTime, 1))
 		{
@@ -37,8 +43,7 @@ void GameScreen::Update(double elapsedSeconds, bool otherScreenHasFocus, bool co
 			// Transition finished!
 			State = ScreenState::Hidden;
 		}
-	} else
-	{
+	} else {
 		// Otherwise the screen should transition on and become active.
 		if (UpdateTransition(elapsedSeconds, TransitionOnTime, -1))
 		{
@@ -62,7 +67,7 @@ bool GameScreen::UpdateTransition(double gameTime, double time, int direction) {
 		transitionDelta = (float)(gameTime/time);
 
 	// Update the transition position.
-	TransitionPosition += transitionDelta * direction;
+	TransitionPosition = TransitionPosition + (transitionDelta * direction);
 
 	// Did we reach the end of the transition?
 	if (((direction < 0) && (TransitionPosition <= 0)) ||
