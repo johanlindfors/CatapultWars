@@ -13,9 +13,7 @@ namespace CatapultWars {
 		MenuScreen(ScreenManager^ manager, String^ menuTitle);
 		void Update(double elapsedSeconds, bool coveredByOtherScreen, bool otherScreenHasFocus) override;
 		void Draw(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, double elapsedSeconds) override;
-		void UpdateMenuEntryLocations();
-
-	private:
+		virtual void UpdateMenuEntryLocations();
 		const int m_menuEntryPadding = 25;
 		int m_selectedEntry = 0;
 		String^ m_menuTitle;

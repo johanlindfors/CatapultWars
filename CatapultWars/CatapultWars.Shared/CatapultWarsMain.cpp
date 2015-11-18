@@ -122,15 +122,21 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 			m_player->Enemy = m_computer;
 			m_computer->Enemy = m_player;
 
-			m_viewportWidth = 800;
-			m_viewportHeight = 480;
-
+			auto viewport = m_deviceResources->GetScreenViewport();
+			auto orientation = m_deviceResources->ComputeDisplayRotation();
+			if (orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE90 || orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE270) {
+				m_viewportWidth = viewport.Height;
+				m_viewportHeight = viewport.Width;
+			} else {
+				m_viewportWidth = viewport.Width;
+				m_viewportHeight = viewport.Height;
+			}
 			m_audioManager->LoadSounds();
 
 			m_isInitialized = true;
 
 			m_screenManager->AddScreen(ref new BackgroundScreen(m_screenManager));
-			m_screenManager->AddScreen(ref new MenuScreen(m_screenManager, "main menu"));
+			m_screenManager->AddScreen(ref new MainMenuScreen(m_screenManager));
 
 			m_screenManager->Initialize();
 

@@ -6,6 +6,7 @@ using namespace CatapultWars;
 GameScreen::GameScreen(ScreenManager^ manager)
 	: m_screenManager(manager)
 	, TransitionPosition(1.0f)
+	, State(ScreenState::TransitionOn)
 {
 
 }

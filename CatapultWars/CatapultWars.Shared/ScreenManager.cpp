@@ -9,8 +9,7 @@ ScreenManager::ScreenManager(const std::shared_ptr<DX::DeviceResources>& deviceR
 { }
 
 void ScreenManager::Initialize() {
-	m_isInitialized = true;
-
+	
 	auto device = m_deviceResources->GetD3DDevice();
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
@@ -21,6 +20,7 @@ void ScreenManager::Initialize() {
 	m_spriteBatch->SetRotation(m_deviceResources->ComputeDisplayRotation());
 #endif
 
+	m_isInitialized = true;
 }
 
 void ScreenManager::LoadContent(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch) {
@@ -50,7 +50,7 @@ void ScreenManager::Update(double elapsedSeconds) {
 		m_screensToUpdate.push_back(screen);
 	}
 
-	bool otherScreenHasFocus = false;
+	bool otherScreenHasFocus = true;
 	bool coveredByOtherScreen = false;
 
 	while (m_screensToUpdate.size() > 0) {

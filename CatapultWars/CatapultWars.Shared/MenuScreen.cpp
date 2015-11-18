@@ -2,13 +2,14 @@
 #include "MenuScreen.h"
 
 using namespace CatapultWars;
+using namespace DirectX::SimpleMath;
 
 MenuScreen::MenuScreen(ScreenManager^ manager, String^ menuTitle)
 	: GameScreen(manager)
 	, m_menuTitle(menuTitle)
 {
-	TransitionOnTime = 500;
-	TransitionOffTime = 500;
+	TransitionOnTime = 0.5;
+	TransitionOffTime = 0.5;
 }
 
 /// <summary>
@@ -27,10 +28,18 @@ void MenuScreen::UpdateMenuEntryLocations() {
 	for (auto menuEntry : MenuEntries)
 	{
 		// each entry is to be centered horizontally
-		int viewPortWidth = m_screenManager->DeviceResources->GetScreenViewport().Width;
-		int menuEntryWidth = 100;//m_screenManager->Font->MeasureString(menuEntry->Text->Data());
+		int viewPortWidth = 0;
+		auto viewport = m_screenManager->DeviceResources->GetScreenViewport();
+		auto orientation = m_screenManager->DeviceResources->ComputeDisplayRotation();
+		if (orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE90 || orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE270) {
+			viewPortWidth = viewport.Height;		
+		} else {
+			viewPortWidth = viewport.Width;
+		}
+		
+		auto menuEntryWidth = m_screenManager->Font->MeasureString(menuEntry->Text->Data());
 
-		position.x = viewPortWidth / 2 - menuEntryWidth / 2;
+		position.x = (viewPortWidth / 2) - (menuEntryWidth.m128_f32[0] / 2);
 
 		if (State == ScreenState::TransitionOn)
 			position.x -= transitionOffset * 256;
@@ -75,10 +84,16 @@ void MenuScreen::Draw(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, double
 
 		bool isSelected = IsActive() && (i == m_selectedEntry);
 
-		menuEntry->Draw(this, isSelected, elapsedSeconds);
+		menuEntry->Draw(spriteBatch, this, isSelected, elapsedSeconds);
 	}
 
-	font->DrawString(spriteBatch.get(), m_menuTitle->Data(), Vector2(viewPort.Width/2,80), Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	Vector2 titlePosition(viewPort.Width / 2, 80);
+	Vector2 titleOrigin = font->MeasureString(m_menuTitle->Data());
+	Color titleColor(192.0 / 255.0, 192.0 / 255.0, 192.0 / 255.0);
+	//titleColor *= TransitionAlpha;
+	float titleScale = 1.25f;
+
+	font->DrawString(spriteBatch.get(), m_menuTitle->Data(), titlePosition, titleColor, 0, titleOrigin, titleScale, SpriteEffects::SpriteEffects_None, 0);
 
 	spriteBatch->End();
 }

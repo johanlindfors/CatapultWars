@@ -10,7 +10,9 @@ BackgroundScreen::BackgroundScreen(ScreenManager^ manager)
 	TransitionOffTime = 0.5;
 }
 
-void BackgroundScreen::LoadContent(ID3D11Device* device) {
+void BackgroundScreen::LoadContent(ID3D11Device* mdevice) {
+
+	auto device = m_screenManager->DeviceResources->GetD3DDevice();
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\title_screen.png", nullptr, m_background.ReleaseAndGetAddressOf())
 		);

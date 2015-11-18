@@ -45,6 +45,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)BackgroundScreen.h">
       <Filter>Screens</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MainMenuScreen.h">
+      <Filter>Screens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
@@ -77,6 +80,9 @@
       <Filter>ScreenManager</Filter>
     </ClCompile>
     <ClCompile Include="$(MSBuildThisFileDirectory)BackgroundScreen.cpp">
+      <Filter>Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MainMenuScreen.cpp">
       <Filter>Screens</Filter>
     </ClCompile>
   </ItemGroup>
