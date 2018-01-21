@@ -7,14 +7,17 @@ using namespace CatapultWars;
 using namespace Platform;
 
 Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
-{	
-	m_spriteBatch = spriteBatch;
-	ProjectileStartPosition = startPosition;
-	m_textureName = textureName;
-	m_isAI = isAI;
-	m_hitOffset = groundHitOffset;
-	m_gravity = gravity;
-	m_projectileRotation = 0;
+	: m_spriteBatch(spriteBatch)
+	, ProjectileStartPosition(startPosition)
+	, m_textureName(textureName)
+	, m_isAI(isAI)
+	, m_hitOffset(groundHitOffset)
+	, m_gravity(gravity)
+	, m_projectileRotation(0) 
+{ }
+
+Projectile::~Projectile() {
+	
 }
 
 void Projectile::Initialize(ID3D11Device* device)

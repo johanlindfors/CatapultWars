@@ -2,49 +2,53 @@
 
 namespace CatapultWars {
 
-	ref class Player abstract
+	class Player
 	{
 
-	internal:
-		Player();
-		virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
-		virtual void Update(double elapsedSeconds);
-		virtual void Draw();
+	public:
+		//virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch) = 0;
+		virtual void Update(double elapsedSeconds) = 0;
+		virtual void Draw() = 0;
 
-		property CatapultWars::Catapult^ Catapult
+		std::shared_ptr<CatapultWars::Catapult> GetCatapult() { return m_catapult; }
+		void SetCatapult(std::shared_ptr < CatapultWars::Catapult> catapult) { m_catapult = catapult; }
+		
+		const float		MinShotStrength = 150;
+		const float		MaxShotStrength = 400;
+
+		void SetEnemy(std::shared_ptr<Player> enemy) 
 		{
-			CatapultWars::Catapult^ get() { return m_catapult; }
-			void set(CatapultWars::Catapult^ catapult) { m_catapult = catapult; }
-		}
-		const float		MinShotStrength;
-		const float		MaxShotStrength;
-
-		property Player^ Enemy {
-			void set(Player^ enemy) {
-				this->Catapult->Enemy = enemy;
-				this->Catapult->Self = this;
-			}
+			m_catapult->SetEnemy(enemy);
+			m_catapult->SetSelf(this);
 		}
 
-		property Platform::String^ Name {
-			Platform::String^ get() { return m_name; }
-			void set(Platform::String^ name) { m_name = name; }
+		wchar_t* GetName() {
+			return m_name;
 		}
+		//property Platform::String^ Name {
+		//	Platform::String^ get() { return m_name; }
+		//	void set(Platform::String^ name) { m_name = name; }
+		//}
 
-		property int Score {
-			int get() { return m_score; }
-			void set(int score) { m_score = score; }
-		}
+		//property int Score {
+		//	int get() { return m_score; }
+		//	void set(int score) { m_score = score; }
+		//}
 
-		property bool IsActive {
-			bool get() { return m_isActive; }
-			void set(bool isActive) { m_isActive = isActive; }
-		}
+		//property bool IsActive {
+		//	bool get() { return m_isActive; }
+		//	void set(bool isActive) { m_isActive = isActive; }
+		//}
 
 
 	private:
-		CatapultWars::Catapult^			m_catapult;
-		CatapultWars::Player^			m_enemy;
+		Player() 
+			: m_score(0)
+			, m_isActive(true)
+		{}
+
+		std::shared_ptr<CatapultWars::Catapult>		m_catapult;
+		std::shared_ptr<CatapultWars::Player>		m_enemy;
 		Platform::String^				m_name;
 		int								m_score;
 		bool							m_isActive;

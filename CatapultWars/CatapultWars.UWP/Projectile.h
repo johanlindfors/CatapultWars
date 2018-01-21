@@ -5,6 +5,8 @@ namespace CatapultWars {
 	{
 	public:
 		Projectile(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, Platform::String^ textureName, DirectX::SimpleMath::Vector2 startPosition, float groundHitOffset, bool isAI, float gravity);
+		~Projectile();
+
 		void Initialize(ID3D11Device* device);
 		void Draw();
 		void Fire(float velocityX, float velocityY);
