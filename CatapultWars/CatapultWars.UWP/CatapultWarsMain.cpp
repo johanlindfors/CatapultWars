@@ -97,16 +97,16 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_windArrowPosition = Vector2(345, 46);
 
 	// Initialize human & AI players
-	m_player = ref new Human();
+	m_player = std::make_shared<Human>();
 	m_player->Initialize(device, m_spriteBatch);
-	m_player->Name = L"Player";
+	m_player->SetName(L"Player");
 
-	m_computer = ref new AI();
+	m_computer = std::make_shared<AI>();
 	m_computer->Initialize(device, m_spriteBatch);
-	m_computer->Name = L"Phone";
+	m_computer->SetName(L"Phone");
 
-	m_player->Enemy = m_computer;
-	m_computer->Enemy = m_player;
+	m_player->SetEnemy(m_computer);
+	m_computer->SetEnemy(m_player);
 
 	m_viewportWidth = 800;
 	m_viewportHeight = 480;
@@ -118,7 +118,7 @@ void CatapultWarsMain::Start() {
 	m_wind = Vector2(0, 0);
 	m_isHumanTurn = false;
 	m_changeTurn = true;
-	m_computer->Catapult->CurrentState = CatapultState::Reset;
+	m_computer->GetCatapult()->CurrentState = CatapultState::Reset;
 }
 
 // Updates the application state once per frame.
@@ -126,11 +126,11 @@ void CatapultWarsMain::Update() {
 	// Update scene objects.
 	m_timer.Tick([&]() {
 		// Check it one of the players reached 5 and stop the game
-		if ((m_player->Catapult->GameOver || m_computer->Catapult->GameOver) &&
+		if ((m_player->GetCatapult()->GameOver || m_computer->GetCatapult()->GameOver) &&
 			(m_gameOver == false)) {
 			m_gameOver = true;
 
-			if (m_player->Score > m_computer->Score) {
+			if (m_player->GetScore() > m_computer->GetScore()) {
 				//AudioManager.PlaySound("gameOver_Win");
 			} else {
 				//AudioManager.PlaySound("gameOver_Lose");
@@ -141,26 +141,26 @@ void CatapultWarsMain::Update() {
 
 		// If Reset flag raised and both catapults are not animating - 
 		// active catapult finished the cycle, new turn!
-		if ((m_player->Catapult->CurrentState == CatapultState::Reset ||
-			m_computer->Catapult->CurrentState == CatapultState::Reset) &&
-			!(m_player->Catapult->AnimationRunning ||
-			m_computer->Catapult->AnimationRunning)) {
+		if ((m_player->GetCatapult()->CurrentState == CatapultState::Reset ||
+			m_computer->GetCatapult()->CurrentState == CatapultState::Reset) &&
+			!(m_player->GetCatapult()->AnimationRunning ||
+			m_computer->GetCatapult()->AnimationRunning)) {
 			m_changeTurn = true;
 
-			if (m_player->IsActive == true) //Last turn was a human turn?
+			if (m_player->GetIsActive() == true) //Last turn was a human turn?
 			{
-				m_player->IsActive = false;
-				m_computer->IsActive = true;
+				m_player->SetIsActive(false);
+				m_computer->SetIsActive(true);
 				m_isHumanTurn = false;
-				m_player->Catapult->CurrentState = CatapultState::Idle;
-				m_computer->Catapult->CurrentState = CatapultState::Aiming;
+				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
+				m_computer->GetCatapult()->CurrentState = CatapultState::Aiming;
 			} else //It was an AI turn
 			{
-				m_player->IsActive = true;
-				m_computer->IsActive = false;
+				m_player->SetIsActive(true);
+				m_computer->SetIsActive(false);
 				m_isHumanTurn = true;
-				m_computer->Catapult->CurrentState = CatapultState::Idle;
-				m_player->Catapult->CurrentState = CatapultState::Idle;
+				m_computer->GetCatapult()->CurrentState = CatapultState::Idle;
+				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
 			}
 		}
 
@@ -169,8 +169,8 @@ void CatapultWarsMain::Update() {
 			m_wind = Vector2(rand() % 4 - 1, rand() % (m_maxWind + 1) + m_minWind);
 
 			// Set new wind value to the players and 
-			m_player->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
-			m_computer->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
+			m_player->GetCatapult()->SetWind(m_wind.x > 0 ? m_wind.y : -m_wind.y);
+			m_computer->GetCatapult()->SetWind(m_wind.x > 0 ? m_wind.y : -m_wind.y);
 			m_changeTurn = false;
 		}
 
@@ -183,14 +183,14 @@ void CatapultWarsMain::Update() {
 		// Updates the clouds position
 		UpdateClouds(elapsedSeconds);
 
-		m_fpsTextRenderer->Update(m_timer);
+		//m_fpsTextRenderer->Update(m_timer);
 	});
 }
 
 void CatapultWarsMain::HandleInput(int x, int y) {
 	if (m_isHumanTurn &&
-		(m_player->Catapult->CurrentState == CatapultState::Idle ||
-		m_player->Catapult->CurrentState == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
+		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleInput(x, y);
 	}
 }
@@ -198,8 +198,8 @@ void CatapultWarsMain::HandleInput(int x, int y) {
 void CatapultWarsMain::IsTouchDown(bool isTouchDown) {
 	m_isDragging = isTouchDown;
 	if (m_isHumanTurn && !isTouchDown &&
-		(m_player->Catapult->CurrentState == CatapultState::Idle ||
-		m_player->Catapult->CurrentState == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
+		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleRelease();
 	}
 }
@@ -242,7 +242,7 @@ bool CatapultWarsMain::Render() {
 
 	m_spriteBatch->End();
 
-	m_fpsTextRenderer->Render();
+	//m_fpsTextRenderer->Render();
 
 	return true;
 }
@@ -276,7 +276,7 @@ void CatapultWarsMain::DrawBackground() {
 
 void CatapultWarsMain::DrawHud() {
 	if (m_gameOver) {
-		if (m_player->Score > m_computer->Score) {
+		if (m_player->GetScore() > m_computer->GetScore()) {
 			m_spriteBatch->Draw(m_victoryTexture.Get(), Vector2(m_viewportWidth / 2 - m_victoryTextureWidth / 2, m_viewportHeight / 2 - m_victoryTextureHeight / 2), Colors::White);
 		} else {
 			m_spriteBatch->Draw(m_defeatTexture.Get(), Vector2(m_viewportWidth / 2 - m_defeatTextureWidth / 2, m_viewportHeight / 2 - m_defeatTextureHeight / 2), Colors::White);
@@ -292,18 +292,18 @@ void CatapultWarsMain::DrawHud() {
 		// Draw Player Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_playerHUDPosition, Colors::White);
 		m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_playerHUDPosition + Vector2(33, 35), Colors::White);
-		DrawString(m_hudFont, m_player->Score.ToString(), m_playerHUDPosition + Vector2(123, 35), Colors::White);
-		DrawString(m_hudFont, m_player->Name, m_playerHUDPosition + Vector2(40, 1), Colors::Blue);
+		DrawString(m_hudFont, m_player->GetScore().ToString()->Data(), m_playerHUDPosition + Vector2(123, 35), Colors::White);
+		DrawString(m_hudFont, m_player->GetName(), m_playerHUDPosition + Vector2(40, 1), Colors::Blue);
 
 		// Draw Computer Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_computerHUDPosition, Colors::White);
 		m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_computerHUDPosition + Vector2(33, 35), Colors::White);
-		DrawString(m_hudFont, m_computer->Score.ToString(), m_computerHUDPosition + Vector2(123, 35), Colors::White);
-		DrawString(m_hudFont, m_computer->Name, m_computerHUDPosition + Vector2(40, 1), Colors::Red);
+		DrawString(m_hudFont, m_computer->GetScore().ToString()->Data(), m_computerHUDPosition + Vector2(123, 35), Colors::White);
+		DrawString(m_hudFont, m_computer->GetName(), m_computerHUDPosition + Vector2(40, 1), Colors::Red);
 
 		// Draw Wind direction
-		Platform::String^ text = "WIND";
-		auto size = m_hudFont->MeasureString(text->Data());
+		wchar_t* text = L"WIND";
+		auto size = m_hudFont->MeasureString(text);
 		Vector2 windarrowScale = Vector2(m_wind.y / 10, 1);
 		m_spriteBatch->Draw(m_windArrowTexture.Get(),
 			m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0, 0),
@@ -311,19 +311,19 @@ void CatapultWarsMain::DrawHud() {
 
 		DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, XMVectorGetY(size)), Colors::Black);
 		if (m_wind.y == 0) {
-			text = "NONE";
+			text = L"NONE";
 			DrawString(m_hudFont, text, m_windArrowPosition, Colors::Black);
 		}
 
 		if (m_isHumanTurn) {
 			// Prepare human prompt message
 			text = !m_isDragging ?
-				"Drag Anywhere to Fire" : "Release to Fire!";
-			size = m_hudFont->MeasureString(text->Data());
+				L"Drag Anywhere to Fire" : L"Release to Fire!";
+			size = m_hudFont->MeasureString(text);
 		} else {
 			// Prepare AI message
-			text = "I'll get you yet!";
-			size = m_hudFont->MeasureString(text->Data());
+			text = L"I'll get you yet!";
+			size = m_hudFont->MeasureString(text);
 		}
 
 		DrawString(m_hudFont, text,
@@ -344,14 +344,14 @@ void CatapultWarsMain::DrawPlayer() {
 		m_player->Draw();
 }
 
-void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color) {
-	font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
-	font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color) {
+	font->DrawString(m_spriteBatch.get(), text, position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	font->DrawString(m_spriteBatch.get(), text, position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
 }
 
-void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale) {
-	font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
-	font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
+void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color, float fontScale) {
+	font->DrawString(m_spriteBatch.get(), text, position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	font->DrawString(m_spriteBatch.get(), text, position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
 }
 
 void CatapultWarsMain::UpdateClouds(double elapsedTime) {

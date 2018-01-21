@@ -4,11 +4,11 @@
 using namespace CatapultWars;
 using namespace Platform;
 
-Catapult::Catapult(String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
-m_winScore(5),
-m_gravity(500)
+Catapult::Catapult(const wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) 
+	: m_winScore(5)
+	, m_gravity(500)
+	, m_idleTextureName(idleTexture)
 {
-	m_idleTextureName = idleTexture;
 	m_catapultPosition = position;
 	m_spriteEffects = spriteEffect;
 	m_isAI = isAi;
@@ -24,7 +24,7 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	ParseXmlAndCreateAnimations(device);
 
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
 	Vector2 projectileStartPosition;
@@ -33,24 +33,24 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
+	m_projectile.reset(new CatapultWars::Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity));
 	m_projectile->Initialize(device);
 
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
+void Catapult::CreateAnimation(ID3D11Device* device, std::wstring key, std::wstring textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
 {
 	ComPtr<ID3D11ShaderResourceView> texture;
 	DX::ThrowIfFailed(
-		CreateDDSTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, textureFilename.c_str(), nullptr, texture.ReleaseAndGetAddressOf())
 		);
 	POINT frameSize = { frameWidth, frameHeight };
 	POINT sheetSize = { sheetColumns, sheetRows };
-	auto animation = ref new Animation(texture.Get(), frameSize, sheetSize);
+	auto animation = std::make_shared<Animation>(texture.Get(), frameSize, sheetSize);
 	animation->Offset = Vector2(offsetX, offsetY);
-	m_animations[key] = animation;
-	m_splitFrames[key] = splitFrame;
+	m_animations.emplace(key, animation);
+	m_splitFrames.emplace(key, splitFrame);
 }
 
 void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
@@ -201,7 +201,7 @@ void Catapult::Update(double elapsedSeconds)
 
 		// If in the "split" point of the animation start
 		// projectile fire sequence
-		if (m_animations[L"Fire"]->FrameIndex == m_splitFrames[L"Fire"])
+		if (m_animations[L"Fire"]->GetFrameIndex() == m_splitFrames[L"Fire"])
 		{
 			postUpdateStateChange = (CatapultState)(CurrentState | CatapultState::ProjectileFlying);
 			m_projectile->ProjectilePosition = m_projectile->ProjectileStartPosition;
@@ -261,7 +261,7 @@ void Catapult::Update(double elapsedSeconds)
 		if ((m_animations[L"Destroyed"]->IsActive == false) &&
 			(m_animations[L"hitSmoke"]->IsActive == false))
 		{
-			if (m_enemy->Score >= m_winScore)
+			if (m_enemy->GetScore() >= m_winScore)
 			{
 				GameOver = true;
 				break;
@@ -292,7 +292,7 @@ void Catapult::Update(double elapsedSeconds)
 
 bool Catapult::AimReachedShotStrength()
 {
-	int frameIndex = m_animations[L"Aim"]->FrameIndex;
+	int frameIndex = m_animations[L"Aim"]->GetFrameIndex();
 	int frameCount = m_animations[L"Aim"]->FrameCount;
 	int frameShot = frameCount * ShotStrength - 1;
 	return(frameIndex == frameShot);
@@ -302,13 +302,13 @@ void Catapult::UpdateAimAccordingToShotStrength()
 {
 	auto aimAnimation = m_animations[L"Aim"];
 	int frameToDisplay = aimAnimation->FrameCount * ShotStrength;
-	aimAnimation->FrameIndex = frameToDisplay;
+	aimAnimation->SetFrameIndex(frameToDisplay);
 }
 
 void Catapult::StartFiringFromLastAimPosition()
 {
 	int startFrame = m_animations[L"Aim"]->FrameCount -
-		m_animations[L"Aim"]->FrameIndex;
+		m_animations[L"Aim"]->GetFrameIndex();
 	m_animations[L"Fire"]->PlayFromFrameIndex(startFrame);
 }
 
@@ -387,8 +387,8 @@ bool Catapult::CheckHit()
 
 	// Check enemy - create a bounding box around the enemy
 	catapultCenter = XMFLOAT3(
-		m_enemy->Catapult->Position.x + (m_animations[L"Fire"]->FrameSize.x / 2),
-		m_enemy->Catapult->Position.y + (m_animations[L"Fire"]->FrameSize.y / 2), 0);
+		m_enemy->GetCatapult()->GetPosition().x + (m_animations[L"Fire"]->FrameSize.x / 2),
+		m_enemy->GetCatapult()->GetPosition().y + (m_animations[L"Fire"]->FrameSize.y / 2), 0);
 	extents = XMFLOAT3(
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,
@@ -402,19 +402,19 @@ bool Catapult::CheckHit()
 
 		// Launch hit animation sequence on self
 		Hit();
-		m_enemy->Score = m_enemy->Score + 1;
+		m_enemy->SetScore(m_enemy->GetScore() + 1);
 		bRes = true;
 	}
 	// Check if enemy was hit
 	else if (sphere.Intersects(enemyBox)
-		&& m_enemy->Catapult->CurrentState != CatapultState::Hit
-		&& m_enemy->Catapult->CurrentState != CatapultState::Reset)
+		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Hit
+		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Reset)
 	{
 		//AudioManager.PlaySound("catapultExplosion");
 
 		// Launch enemy hit animaton
-		m_enemy->Catapult->Hit();
-		m_self->Score = m_self->Score + 1;
+		m_enemy->GetCatapult()->Hit();
+		m_self->SetScore(m_self->GetScore() + 1);
 		bRes = true;
 		CurrentState = CatapultState::Reset;
 	}

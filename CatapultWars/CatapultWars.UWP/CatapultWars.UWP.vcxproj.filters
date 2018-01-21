@@ -122,10 +122,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CatapultWars.UWP_TemporaryKey.pfx" />
-    <None Include="packages.config" />
     <None Include="Assets\Fonts\HUDFont.spritefont" />
     <None Include="Assets\Fonts\MenuFont.spritefont" />
     <None Include="Assets\Fonts\TestHudFont.spritefont" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Media Include="Assets\Sounds\BoulderHit.wav" />

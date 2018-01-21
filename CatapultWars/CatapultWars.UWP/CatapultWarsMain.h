@@ -49,8 +49,8 @@ namespace CatapultWars
 		DirectX::SimpleMath::Vector2			m_computerHUDPosition;
 		DirectX::SimpleMath::Vector2			m_windArrowPosition;
 
-		Human^			m_player;
-		AI^				m_computer;
+		std::shared_ptr<Human>			m_player;
+		std::shared_ptr<AI>				m_computer;
 		Vector2			m_wind;
 		bool			m_changeTurn;
 		bool			m_isHumanTurn;
@@ -73,8 +73,8 @@ namespace CatapultWars
 		void DrawPlayer();
 		void Start();
 		void DrawHud();
-		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color);
-		void DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale);
+		void DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color);
+		void DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color, float fontScale);
 		void UpdateClouds(double elapsedTime);
 	};
 }

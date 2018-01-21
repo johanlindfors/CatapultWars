@@ -7,16 +7,16 @@ namespace CatapultWars {
 		, m_catapultPosition(Vector2(140,332))
 	{
 
-		Catapult = ref new CatapultWars::Catapult(
+		SetCatapult(std::make_shared<CatapultWars::Catapult>(
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.dds",
-			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
+			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false));
 	}
 
 	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
 	{
 		DX::ThrowIfFailed(CreateDDSTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.dds", nullptr, m_arrow.ReleaseAndGetAddressOf()));
 
-		Catapult->Initialize(device, spriteBatch);
+		GetCatapult()->Initialize(device, spriteBatch);
 
 		Player::Initialize(device, spriteBatch);
 
@@ -25,10 +25,10 @@ namespace CatapultWars {
 
 	void Human::HandleInput(int x, int y)
 	{
-		Catapult->CurrentState = CatapultState::Aiming; 
+		GetCatapult()->CurrentState = CatapultState::Aiming; 
 		m_delta = Vector2(x, y);
 		auto deltaLength = m_delta.Length();
-		Catapult->ShotStrength =  deltaLength / m_maxDragDelta;
+		GetCatapult()->ShotStrength =  deltaLength / m_maxDragDelta;
 		float baseScale = 0.001f;
 		m_arrowScale = baseScale * deltaLength;
 		IsDragging = true;
@@ -36,10 +36,10 @@ namespace CatapultWars {
 
 	void Human::HandleRelease()
 	{
-		Catapult->ShotVelocity = MinShotStrength + Catapult->ShotStrength *
+		GetCatapult()->ShotVelocity = MinShotStrength + GetCatapult()->ShotStrength *
 			(MaxShotStrength - MinShotStrength);
-		Catapult->Fire(Catapult->ShotVelocity);
-		Catapult->CurrentState = CatapultState::Firing;
+		GetCatapult()->Fire(GetCatapult()->ShotVelocity);
+		GetCatapult()->CurrentState = CatapultState::Firing;
 		m_delta = Vector2(0, 0);
 
 		ResetDragState();
@@ -70,6 +70,6 @@ namespace CatapultWars {
 		//m_prevSample = nullptr;
 		IsDragging = false;
 		m_arrowScale = 0;
-		Catapult->ShotStrength = 0;
+		GetCatapult()->ShotStrength = 0;
 	}
 }

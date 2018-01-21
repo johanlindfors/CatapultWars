@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+VisualStudioVersion = 15.0.27130.2024
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CatapultWars", "CatapultWars", "{F488D40F-23BF-4ECF-A4AD-835AE7658C2E}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DirectXTK", "DirectXTK", "{BB7CEE2D-F24A-4A65-88BB-B3251FB24F99}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.UWP", "CatapultWars\CatapultWars.UWP\CatapultWars.UWP.vcxproj", "{21AACDCF-D0F5-492D-BD04-1526F82A7AAA}"
 EndProject

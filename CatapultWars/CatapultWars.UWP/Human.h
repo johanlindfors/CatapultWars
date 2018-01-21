@@ -3,12 +3,11 @@
 
 namespace CatapultWars {
 
-	ref class Human sealed : public Player
+	class Human final : public Player
 	{
 	public:
 		Human();
 		
-	internal:
 		bool IsDragging;
 		virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch) override;
 		virtual void Update(double elapsedSeconds) override;

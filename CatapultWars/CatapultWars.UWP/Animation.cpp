@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Animation.h"
 
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
 
 Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize)
@@ -24,7 +26,7 @@ Animation::~Animation()
 
 void Animation::PlayFromFrameIndex(int frameIndex)
 {
-	FrameIndex = frameIndex;
+	SetFrameIndex(frameIndex);
 	IsActive = true;
 }
 
@@ -32,10 +34,10 @@ void Animation::Update()
 {
 	if (IsActive)
 	{
-		if (FrameIndex >= FrameCount - 1)
+		if (GetFrameIndex() >= FrameCount - 1)
 		{
 			IsActive = false;
-			FrameIndex = FrameCount - 1; // Stop at last frame;
+			SetFrameIndex(FrameCount - 1); // Stop at last frame;
 		}
 		else
 		{
