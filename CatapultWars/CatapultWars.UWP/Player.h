@@ -11,7 +11,11 @@ namespace CatapultWars {
 			, m_isActive(true)
 		{}
 
-		virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch);
+		~Player() {
+
+		}
+
+		virtual void Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch);
 		virtual void Update(double elapsedSeconds);
 		virtual void Draw();
 
@@ -21,7 +25,7 @@ namespace CatapultWars {
 		const float		MinShotStrength = 150;
 		const float		MaxShotStrength = 400;
 
-		void SetEnemy(std::shared_ptr<Player> enemy) 
+		void SetEnemy(std::shared_ptr<CatapultWars::Player> enemy)
 		{
 			m_catapult->SetEnemy(enemy);
 			m_catapult->SetSelf(this);
@@ -54,9 +58,9 @@ namespace CatapultWars {
 	private:
 		std::shared_ptr<CatapultWars::Catapult>		m_catapult;
 		std::shared_ptr<CatapultWars::Player>		m_enemy;
-		wchar_t*						m_name;
-		int								m_score;
-		bool							m_isActive;
-		std::shared_ptr<SpriteBatch>	m_spriteBatch;
+		wchar_t*									m_name;
+		int											m_score;
+		bool										m_isActive;
+		std::shared_ptr<SpriteBatch>				m_spriteBatch;
 	};
 }

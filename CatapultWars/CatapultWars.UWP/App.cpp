@@ -19,12 +19,13 @@ using namespace Windows::Graphics::Display;
 [Platform::MTAThread]
 int main(Platform::Array<Platform::String^>^)
 {
-	auto direct3DApplicationSource = ref new Direct3DApplicationSource();
+	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+	auto direct3DApplicationSource = ref new CatapultWarsApplicationSource();
 	CoreApplication::Run(direct3DApplicationSource);
 	return 0;
 }
 
-IFrameworkView^ Direct3DApplicationSource::CreateView()
+IFrameworkView^ CatapultWarsApplicationSource::CreateView()
 {
 	return ref new App();
 }
@@ -86,6 +87,9 @@ void App::SetWindow(CoreWindow^ window)
 
 	window->PointerReleased +=
 		ref new TypedEventHandler<CoreWindow^, PointerEventArgs^>(this, &App::OnPointerReleased);
+
+	window->KeyDown +=
+		ref new TypedEventHandler<CoreWindow^, KeyEventArgs^>(this, &App::OnKeyDown);
 
 	m_deviceResources->SetWindow(window);
 }
@@ -244,4 +248,10 @@ void App::OnPointerReleased(CoreWindow^ sender, PointerEventArgs^ args)
 	m_oldPoints.erase(args->CurrentPoint->PointerId);
 
 	m_main->IsTouchDown(false);
+}
+
+void App::OnKeyDown(CoreWindow^ sender, KeyEventArgs^ args) {
+	if (args->VirtualKey == VirtualKey::Escape) {
+		CoreApplication::Exit();
+	}
 }

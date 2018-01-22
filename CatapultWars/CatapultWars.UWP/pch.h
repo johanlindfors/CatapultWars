@@ -1,5 +1,10 @@
 ﻿#pragma once
 
+// Trying to identify memory leaks
+#define _CRTDBG_MAP_ALLOC  
+#include <stdlib.h>  
+#include <crtdbg.h>  
+
 #include <wrl.h>
 #include <wrl/client.h>
 #include <d3d11_2.h>
