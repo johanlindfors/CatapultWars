@@ -8,6 +8,7 @@ Catapult::Catapult(const wchar_t* idleTexture, Vector2 position, SpriteEffects s
 	: m_winScore(5)
 	, m_gravity(500)
 	, m_idleTextureName(idleTexture)
+	, GameOver(false)
 {
 	m_catapultPosition = position;
 	m_spriteEffects = spriteEffect;
