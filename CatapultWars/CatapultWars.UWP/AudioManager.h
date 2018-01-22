@@ -1,5 +1,5 @@
 #pragma once
-ref class AudioManager sealed
+class AudioManager final
 {
 public:
 	AudioManager();
