@@ -1,9 +1,11 @@
 #include "pch.h"
 #include "Animation.h"
 
+using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
+using namespace Microsoft::WRL;
 
 Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize)
 {

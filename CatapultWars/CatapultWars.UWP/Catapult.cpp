@@ -1,30 +1,34 @@
 #include "pch.h"
 #include "Catapult.h"
 
+using namespace DX;
+using namespace std;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
 using namespace Platform;
+using namespace Microsoft::WRL;
 
-Catapult::Catapult(const wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) 
+Catapult::Catapult(const wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi)
 	: m_winScore(5)
 	, m_gravity(500)
 	, m_idleTextureName(idleTexture)
+	, m_catapultPosition(position)
+	, m_spriteEffects(spriteEffect)
+	, m_isAI(isAi)
 	, GameOver(false)
-{
-	m_catapultPosition = position;
-	m_spriteEffects = spriteEffect;
-	m_isAI = isAi;
-}
+{ }
 
-void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
+void Catapult::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteBatch)
 {
 	IsActive = true;
 	AnimationRunning = false;
-	CurrentState = CatapultState::Idle;
+	m_currentState = CatapultState::Idle;
 	m_stallUpdateCycles = 0;
 
 	ParseXmlAndCreateAnimations(device);
 
-	DX::ThrowIfFailed(
+	ThrowIfFailed(
 		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
@@ -34,16 +38,16 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile.reset(new CatapultWars::Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity));
+	m_projectile.reset(new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity));
 	m_projectile->Initialize(device);
 
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::CreateAnimation(ID3D11Device* device, std::wstring key, std::wstring textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
+void Catapult::CreateAnimation(ID3D11Device* device, wstring key, wstring textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
 {
 	ComPtr<ID3D11ShaderResourceView> texture;
-	DX::ThrowIfFailed(
+	ThrowIfFailed(
 		CreateDDSTextureFromFile(device, textureFilename.c_str(), nullptr, texture.ReleaseAndGetAddressOf())
 		);
 	POINT frameSize = { frameWidth, frameHeight };
@@ -148,7 +152,7 @@ void Catapult::Update(double elapsedSeconds)
 		return;
 	}
 
-	switch (CurrentState)
+	switch (m_currentState)
 	{
 	case CatapultState::Idle:
 		// Nothing to do
@@ -177,7 +181,7 @@ void Catapult::Update(double elapsedSeconds)
 		{
 			m_animations[L"Aim"]->Update();
 			startStall = AimReachedShotStrength();
-			CurrentState = startStall ? CatapultState::Stalling : CatapultState::Aiming;
+			m_currentState = startStall ? CatapultState::Stalling : CatapultState::Aiming;
 		}
 		break;
 
@@ -204,7 +208,7 @@ void Catapult::Update(double elapsedSeconds)
 		// projectile fire sequence
 		if (m_animations[L"Fire"]->GetFrameIndex() == m_splitFrames[L"Fire"])
 		{
-			postUpdateStateChange = (CatapultState)(CurrentState | CatapultState::ProjectileFlying);
+			postUpdateStateChange = (CatapultState)(m_currentState | CatapultState::ProjectileFlying);
 			m_projectile->ProjectilePosition = m_projectile->ProjectileStartPosition;
 		}
 		break;
@@ -284,10 +288,10 @@ void Catapult::Update(double elapsedSeconds)
 		break;
 	}
 
-	m_lastUpdateState = CurrentState;
+	m_lastUpdateState = m_currentState;
 	if (postUpdateStateChange != 0)
 	{
-		CurrentState = postUpdateStateChange;
+		m_currentState = postUpdateStateChange;
 	}
 }
 
@@ -359,7 +363,7 @@ void Catapult::Hit()
 	AnimationRunning = true;
 	m_animations[L"Destroyed"]->PlayFromFrameIndex(0);
 	m_animations[L"hitSmoke"]->PlayFromFrameIndex(0);
-	CurrentState = CatapultState::Hit;
+	m_currentState = CatapultState::Hit;
 }
 
 void Catapult::Fire(float velocity)
@@ -397,7 +401,7 @@ bool Catapult::CheckHit()
 	BoundingBox enemyBox = BoundingBox(catapultCenter, extents);
 
 	// Check self hit
-	if (sphere.Intersects(selfBox) && CurrentState != CatapultState::Hit)
+	if (sphere.Intersects(selfBox) && m_currentState != CatapultState::Hit)
 	{
 		//AudioManager.PlaySound("catapultExplosion");
 
@@ -408,8 +412,8 @@ bool Catapult::CheckHit()
 	}
 	// Check if enemy was hit
 	else if (sphere.Intersects(enemyBox)
-		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Hit
-		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Reset)
+		&& m_enemy->GetCatapult()->GetCurrentState() != CatapultState::Hit
+		&& m_enemy->GetCatapult()->GetCurrentState() != CatapultState::Reset)
 	{
 		//AudioManager.PlaySound("catapultExplosion");
 
@@ -417,7 +421,7 @@ bool Catapult::CheckHit()
 		m_enemy->GetCatapult()->Hit();
 		m_self->SetScore(m_self->GetScore() + 1);
 		bRes = true;
-		CurrentState = CatapultState::Reset;
+		m_currentState = CatapultState::Reset;
 	}
 
 	return bRes;

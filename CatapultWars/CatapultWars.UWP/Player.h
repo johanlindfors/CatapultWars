@@ -61,6 +61,6 @@ namespace CatapultWars {
 		wchar_t*									m_name;
 		int											m_score;
 		bool										m_isActive;
-		std::shared_ptr<SpriteBatch>				m_spriteBatch;
+		std::shared_ptr<DirectX::SpriteBatch>		m_spriteBatch;
 	};
 }

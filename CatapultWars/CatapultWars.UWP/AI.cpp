@@ -1,13 +1,18 @@
 #include "pch.h"
 #include "AI.h"
 
+using namespace std;
 using namespace CatapultWars;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 AI::AI()
 {
-	SetCatapult(std::make_shared<CatapultWars::Catapult>(
+	SetCatapult(make_shared<Catapult>(
 		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.dds",
-		Vector2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true));
+		Vector2(600,332), 
+		SpriteEffects::SpriteEffects_FlipHorizontally, 
+		true));
 }
 
 void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
@@ -19,7 +24,7 @@ void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBa
 
 void AI::Update(double elapsedSeconds)
 {
-	if (GetCatapult()->CurrentState == CatapultState::Aiming &&
+	if (GetCatapult()->GetCurrentState() == CatapultState::Aiming &&
 		!GetCatapult()->AnimationRunning)
 	{
 		// Fire at a random strength

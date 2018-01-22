@@ -5,6 +5,9 @@
 
 using namespace CatapultWars;
 
+using namespace DX;
+using namespace std;
+using namespace Platform;
 using namespace concurrency;
 using namespace Windows::ApplicationModel;
 using namespace Windows::ApplicationModel::Core;
@@ -16,8 +19,8 @@ using namespace Windows::Foundation;
 using namespace Windows::Graphics::Display;
 
 // The main function is only used to initialize our IFrameworkView class.
-[Platform::MTAThread]
-int main(Platform::Array<Platform::String^>^)
+[MTAThread]
+int main(Array<String^>^)
 {
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	auto direct3DApplicationSource = ref new CatapultWarsApplicationSource();
@@ -52,7 +55,7 @@ void App::Initialize(CoreApplicationView^ applicationView)
 
 	// At this point we have access to the device. 
 	// We can create the device-dependent resources.
-	m_deviceResources = std::make_shared<DX::DeviceResources>();
+	m_deviceResources = std::make_shared<DeviceResources>();
 }
 
 // Called when the CoreWindow object is created (or re-created).
@@ -95,11 +98,11 @@ void App::SetWindow(CoreWindow^ window)
 }
 
 // Initializes scene resources, or loads a previously saved app state.
-void App::Load(Platform::String^ entryPoint)
+void App::Load(String^ entryPoint)
 {
 	if (m_main == nullptr)
 	{
-		m_main = std::unique_ptr<CatapultWarsMain>(new CatapultWarsMain(m_deviceResources));
+		m_main = unique_ptr<CatapultWarsMain>(new CatapultWarsMain(m_deviceResources));
 	}
 }
 
@@ -141,7 +144,7 @@ void App::OnActivated(CoreApplicationView^ applicationView, IActivatedEventArgs^
 	CoreWindow::GetForCurrentThread()->Activate();
 }
 
-void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
+void App::OnSuspending(Object^ sender, SuspendingEventArgs^ args)
 {
 	// Save app state asynchronously after requesting a deferral. Holding a deferral
 	// indicates that the application is busy performing suspending operations. Be
@@ -159,7 +162,7 @@ void App::OnSuspending(Platform::Object^ sender, SuspendingEventArgs^ args)
 	});
 }
 
-void App::OnResuming(Platform::Object^ sender, Platform::Object^ args)
+void App::OnResuming(Object^ sender, Object^ args)
 {
 	// Restore any data or state that was unloaded on suspend. By default, data
 	// and state are persisted when resuming from suspend. Note that this event

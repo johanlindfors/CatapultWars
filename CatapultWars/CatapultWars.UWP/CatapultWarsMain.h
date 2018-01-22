@@ -29,8 +29,8 @@ namespace CatapultWars
 
 		// TODO: Replace with your own content renderers.
 		std::unique_ptr<SampleFpsTextRenderer>	m_fpsTextRenderer;
-		std::shared_ptr<SpriteBatch>			m_spriteBatch;
-		std::shared_ptr<SpriteFont>				m_hudFont;
+		std::shared_ptr<DirectX::SpriteBatch>	m_spriteBatch;
+		std::shared_ptr<DirectX::SpriteFont>	m_hudFont;
 
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_skyTexture;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>		m_foregroundTexture;
@@ -51,7 +51,7 @@ namespace CatapultWars
 
 		std::shared_ptr<Human>			m_player;
 		std::shared_ptr<AI>				m_computer;
-		Vector2			m_wind;
+		DirectX::SimpleMath::Vector2	m_wind;
 		bool			m_changeTurn;
 		bool			m_isHumanTurn;
 		bool			m_gameOver;
@@ -73,8 +73,8 @@ namespace CatapultWars
 		void DrawPlayer();
 		void Start();
 		void DrawHud();
-		void DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color);
-		void DrawString(std::shared_ptr<SpriteFont> font, const wchar_t* text, Vector2 position, FXMVECTOR color, float fontScale);
+		void DrawString(std::shared_ptr<DirectX::SpriteFont> font, const wchar_t* text, DirectX::SimpleMath::Vector2 position, DirectX::FXMVECTOR color);
+		void DrawString(std::shared_ptr<DirectX::SpriteFont> font, const wchar_t* text, DirectX::SimpleMath::Vector2 position, DirectX::FXMVECTOR color, float fontScale);
 		void UpdateClouds(double elapsedTime);
 	};
 }

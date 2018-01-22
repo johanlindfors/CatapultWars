@@ -3,8 +3,13 @@
 #include "Common\DirectXHelper.h"
 #include "DDSTextureLoader.h"
 
+using namespace std;
+using namespace DX;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
 using namespace Platform;
+using namespace Microsoft::WRL;
 
 Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, const wchar_t* textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
 	: m_spriteBatch(spriteBatch)
@@ -23,11 +28,11 @@ Projectile::~Projectile() {
 void Projectile::Initialize(ID3D11Device* device)
 {
 	ComPtr<ID3D11Resource> res;
-	DX::ThrowIfFailed(
+	ThrowIfFailed(
 		CreateDDSTextureFromFile(device, m_textureName, res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
 		);
 		
-	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
+	GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);
 
 	ProjectileTextureWidth = m_textureWidth;
 	ProjectileTextureHeight = m_textureHeight;

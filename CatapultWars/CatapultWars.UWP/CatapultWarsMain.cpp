@@ -2,22 +2,26 @@
 #include "CatapultWarsMain.h"
 #include "Common\DirectXHelper.h"
 
+using namespace std;
+using namespace DX;
 using namespace CatapultWars;
-
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
+using namespace Microsoft::WRL;
 
 // Loads and initializes application assets when the application is loaded.
-CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-m_deviceResources(deviceResources),
-m_minWind(0),
-m_maxWind(2) {
+CatapultWarsMain::CatapultWarsMain(const shared_ptr<DeviceResources>& deviceResources) 
+	: m_deviceResources(deviceResources)
+	, m_minWind(0)
+	, m_maxWind(2) {
 	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
 
 	// TODO: Replace this with your app's content initialization.
-	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
+	m_fpsTextRenderer = make_unique<SampleFpsTextRenderer>(m_deviceResources);
 
 	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
 	// e.g. for 60 FPS fixed timestep update logic, call:
@@ -118,7 +122,7 @@ void CatapultWarsMain::Start() {
 	m_wind = Vector2(0, 0);
 	m_isHumanTurn = false;
 	m_changeTurn = true;
-	m_computer->GetCatapult()->CurrentState = CatapultState::Reset;
+	m_computer->GetCatapult()->SetCurrentState(CatapultState::Reset);
 }
 
 // Updates the application state once per frame.
@@ -141,8 +145,8 @@ void CatapultWarsMain::Update() {
 
 		// If Reset flag raised and both catapults are not animating - 
 		// active catapult finished the cycle, new turn!
-		if ((m_player->GetCatapult()->CurrentState == CatapultState::Reset ||
-			m_computer->GetCatapult()->CurrentState == CatapultState::Reset) &&
+		if ((m_player->GetCatapult()->GetCurrentState() == CatapultState::Reset ||
+			m_computer->GetCatapult()->GetCurrentState() == CatapultState::Reset) &&
 			!(m_player->GetCatapult()->AnimationRunning ||
 			m_computer->GetCatapult()->AnimationRunning)) {
 			m_changeTurn = true;
@@ -152,15 +156,15 @@ void CatapultWarsMain::Update() {
 				m_player->SetIsActive(false);
 				m_computer->SetIsActive(true);
 				m_isHumanTurn = false;
-				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
-				m_computer->GetCatapult()->CurrentState = CatapultState::Aiming;
+				m_player->GetCatapult()->SetCurrentState(CatapultState::Idle);
+				m_computer->GetCatapult()->SetCurrentState(CatapultState::Aiming);
 			} else //It was an AI turn
 			{
 				m_player->SetIsActive(true);
 				m_computer->SetIsActive(false);
 				m_isHumanTurn = true;
-				m_computer->GetCatapult()->CurrentState = CatapultState::Idle;
-				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
+				m_computer->GetCatapult()->SetCurrentState(CatapultState::Idle);
+				m_player->GetCatapult()->SetCurrentState(CatapultState::Idle);
 			}
 		}
 
@@ -189,8 +193,8 @@ void CatapultWarsMain::Update() {
 
 void CatapultWarsMain::HandleInput(int x, int y) {
 	if (m_isHumanTurn &&
-		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
-		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->GetCurrentState() == CatapultState::Idle ||
+		m_player->GetCatapult()->GetCurrentState() == CatapultState::Aiming)) {
 		m_player->HandleInput(x, y);
 	}
 }
@@ -198,8 +202,8 @@ void CatapultWarsMain::HandleInput(int x, int y) {
 void CatapultWarsMain::IsTouchDown(bool isTouchDown) {
 	m_isDragging = isTouchDown;
 	if (m_isHumanTurn && !isTouchDown &&
-		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
-		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->GetCurrentState() == CatapultState::Idle ||
+		m_player->GetCatapult()->GetCurrentState() == CatapultState::Aiming)) {
 		m_player->HandleRelease();
 	}
 }
