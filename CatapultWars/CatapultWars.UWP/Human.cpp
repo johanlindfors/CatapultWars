@@ -31,7 +31,7 @@ void Human::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteBatc
 
 void Human::HandleInput(int x, int y)
 {
-	GetCatapult()->SetCurrentState(CatapultState::Aiming);
+	GetCatapult()->CurrentState =  CatapultState::Aiming;
 	m_delta = Vector2(x, y);
 	auto deltaLength = m_delta.Length();
 	GetCatapult()->ShotStrength = deltaLength / m_maxDragDelta;
@@ -45,7 +45,7 @@ void Human::HandleRelease()
 	GetCatapult()->ShotVelocity = MinShotStrength + GetCatapult()->ShotStrength *
 		(MaxShotStrength - MinShotStrength);
 	GetCatapult()->Fire(GetCatapult()->ShotVelocity);
-	GetCatapult()->SetCurrentState(CatapultState::Firing);
+	GetCatapult()->CurrentState = CatapultState::Firing;
 	m_delta = Vector2(0, 0);
 
 	ResetDragState();

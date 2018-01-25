@@ -24,7 +24,7 @@ void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBa
 
 void AI::Update(double elapsedSeconds)
 {
-	if (GetCatapult()->GetCurrentState() == CatapultState::Aiming &&
+	if (GetCatapult()->CurrentState == CatapultState::Aiming &&
 		!GetCatapult()->AnimationRunning)
 	{
 		// Fire at a random strength

@@ -9,7 +9,7 @@ using namespace CatapultWars;
 using namespace Platform;
 using namespace Microsoft::WRL;
 
-Catapult::Catapult(const wchar_t* idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi)
+Catapult::Catapult(const wstring idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi)
 	: m_winScore(5)
 	, m_gravity(500)
 	, m_idleTextureName(idleTexture)
@@ -29,7 +29,7 @@ void Catapult::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteB
 	ParseXmlAndCreateAnimations(device);
 
 	ThrowIfFailed(
-		CreateDDSTextureFromFile(device, m_idleTextureName, nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		CreateDDSTextureFromFile(device, m_idleTextureName.c_str(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
 	Vector2 projectileStartPosition;
@@ -411,8 +411,8 @@ bool Catapult::CheckHit()
 	}
 	// Check if enemy was hit
 	else if (sphere.Intersects(enemyBox)
-		&& m_enemy->GetCatapult()->GetCurrentState() != CatapultState::Hit
-		&& m_enemy->GetCatapult()->GetCurrentState() != CatapultState::Reset)
+		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Hit
+		&& m_enemy->GetCatapult()->CurrentState != CatapultState::Reset)
 	{
 		//AudioManager.PlaySound("catapultExplosion");
 

@@ -23,18 +23,19 @@ namespace CatapultWars {
 	class Catapult final
 	{
 	public:
-		Catapult(const wchar_t* idleTexture, DirectX::SimpleMath::Vector2 position, DirectX::SpriteEffects spriteEffect, bool isAi);
+		Catapult(const std::wstring idleTexture, DirectX::SimpleMath::Vector2 position, DirectX::SpriteEffects spriteEffect, bool isAi);
 		void Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch);
 		void Update(double elapsedSeconds);
 		void Draw();
 		void Fire(float velocity);
 
-		bool				AnimationRunning;
-		wchar_t*			Name;
-		bool				IsActive;
-		float				ShotStrength;
-		float				ShotVelocity;
-		bool				GameOver;
+		bool							AnimationRunning;
+		std::wstring					Name;
+		bool							IsActive;
+		float							ShotStrength;
+		float							ShotVelocity;
+		bool							GameOver;
+		CatapultWars::CatapultState		CurrentState;
 
 		DirectX::SimpleMath::Vector2 GetPosition() { return m_catapultPosition; }
 		
@@ -44,14 +45,12 @@ namespace CatapultWars {
 
 		void SetEnemy(std::shared_ptr<CatapultWars::Player> enemy) { m_enemy = enemy; }	
 
-		CatapultWars::CatapultState GetCurrentState() { return m_currentState; }
-		void SetCurrentState(CatapultWars::CatapultState state) { m_currentState = state; }
 
 	private:
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_idleTexture;		
 		DirectX::SpriteEffects								m_spriteEffects;
 		std::shared_ptr<CatapultWars::Projectile>			m_projectile;
-		const wchar_t*										m_idleTextureName;
+		const std::wstring									m_idleTextureName;
 		bool												m_isAI;
 		const float											m_gravity;
 		CatapultWars::CatapultState							m_lastUpdateState;

@@ -122,7 +122,7 @@ void CatapultWarsMain::Start() {
 	m_wind = Vector2(0, 0);
 	m_isHumanTurn = false;
 	m_changeTurn = true;
-	m_computer->GetCatapult()->SetCurrentState(CatapultState::Reset);
+	m_computer->GetCatapult()->CurrentState = CatapultState::Reset;
 }
 
 // Updates the application state once per frame.
@@ -145,8 +145,8 @@ void CatapultWarsMain::Update() {
 
 		// If Reset flag raised and both catapults are not animating - 
 		// active catapult finished the cycle, new turn!
-		if ((m_player->GetCatapult()->GetCurrentState() == CatapultState::Reset ||
-			m_computer->GetCatapult()->GetCurrentState() == CatapultState::Reset) &&
+		if ((m_player->GetCatapult()->CurrentState == CatapultState::Reset ||
+			m_computer->GetCatapult()->CurrentState == CatapultState::Reset) &&
 			!(m_player->GetCatapult()->AnimationRunning ||
 			m_computer->GetCatapult()->AnimationRunning)) {
 			m_changeTurn = true;
@@ -156,15 +156,15 @@ void CatapultWarsMain::Update() {
 				m_player->SetIsActive(false);
 				m_computer->SetIsActive(true);
 				m_isHumanTurn = false;
-				m_player->GetCatapult()->SetCurrentState(CatapultState::Idle);
-				m_computer->GetCatapult()->SetCurrentState(CatapultState::Aiming);
+				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
+				m_computer->GetCatapult()->CurrentState = CatapultState::Aiming;
 			} else //It was an AI turn
 			{
 				m_player->SetIsActive(true);
 				m_computer->SetIsActive(false);
 				m_isHumanTurn = true;
-				m_computer->GetCatapult()->SetCurrentState(CatapultState::Idle);
-				m_player->GetCatapult()->SetCurrentState(CatapultState::Idle);
+				m_computer->GetCatapult()->CurrentState = CatapultState::Idle;
+				m_player->GetCatapult()->CurrentState = CatapultState::Idle;
 			}
 		}
 
@@ -193,8 +193,8 @@ void CatapultWarsMain::Update() {
 
 void CatapultWarsMain::HandleInput(int x, int y) {
 	if (m_isHumanTurn &&
-		(m_player->GetCatapult()->GetCurrentState() == CatapultState::Idle ||
-		m_player->GetCatapult()->GetCurrentState() == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
+		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleInput(x, y);
 	}
 }
@@ -202,8 +202,8 @@ void CatapultWarsMain::HandleInput(int x, int y) {
 void CatapultWarsMain::IsTouchDown(bool isTouchDown) {
 	m_isDragging = isTouchDown;
 	if (m_isHumanTurn && !isTouchDown &&
-		(m_player->GetCatapult()->GetCurrentState() == CatapultState::Idle ||
-		m_player->GetCatapult()->GetCurrentState() == CatapultState::Aiming)) {
+		(m_player->GetCatapult()->CurrentState == CatapultState::Idle ||
+		m_player->GetCatapult()->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleRelease();
 	}
 }
