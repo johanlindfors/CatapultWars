@@ -1,5 +1,4 @@
 #pragma once
-#include "Common\property.hpp"
 
 namespace CatapultWars {
 	class Animation final
