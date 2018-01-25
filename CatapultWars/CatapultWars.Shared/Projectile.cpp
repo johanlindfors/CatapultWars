@@ -3,25 +3,29 @@
 #include "Common\DirectXHelper.h"
 #include "DDSTextureLoader.h"
 
+using namespace std;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
 using namespace Platform;
+using namespace Microsoft::WRL;
 
-Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, String^ textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
+Projectile::Projectile(shared_ptr<SpriteBatch>& spriteBatch, wstring textureName, Vector2 startPosition, float groundHitOffset, bool isAI, float gravity)
+	: m_spriteBatch(spriteBatch)
+	, m_textureName(textureName)
+	, m_isAI(isAI)
+	, m_hitOffset(groundHitOffset)
+	, m_gravity(gravity)
+	, m_projectileRotation(0)
 {	
-	m_spriteBatch = spriteBatch;
 	ProjectileStartPosition = startPosition;
-	m_textureName = textureName;
-	m_isAI = isAI;
-	m_hitOffset = groundHitOffset;
-	m_gravity = gravity;
-	m_projectileRotation = 0;
 }
 
 void Projectile::Initialize(ID3D11Device* device)
 {
 	ComPtr<ID3D11Resource> res;
 	DX::ThrowIfFailed(
-		CreateWICTextureFromFile(device, m_textureName->Data(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, m_textureName.c_str(), res.ReleaseAndGetAddressOf(), ProjectileTexture.ReleaseAndGetAddressOf())
 		);
 		
 	DX::GetTextureSize(res.Get(), &m_textureWidth, &m_textureHeight);

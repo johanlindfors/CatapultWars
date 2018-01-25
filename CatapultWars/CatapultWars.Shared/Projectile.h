@@ -4,7 +4,7 @@ namespace CatapultWars {
 	class Projectile
 	{
 	public:
-		Projectile(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, Platform::String^ textureName, DirectX::SimpleMath::Vector2 startPosition, float groundHitOffset, bool isAI, float gravity);
+		Projectile(std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, std::wstring textureName, DirectX::SimpleMath::Vector2 startPosition, float groundHitOffset, bool isAI, float gravity);
 		void Initialize(ID3D11Device* device);
 		void Draw();
 		void Fire(float velocityX, float velocityY);
@@ -18,7 +18,7 @@ namespace CatapultWars {
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	ProjectileTexture;
 
 	private:
-		Platform::String^						m_textureName;
+		std::wstring							m_textureName;
 		DirectX::SimpleMath::Vector2			m_projectileVelocity;
 		float									m_projectileInitialVelocityY;
 		DirectX::SimpleMath::Vector2			m_projectileRotationPosition;

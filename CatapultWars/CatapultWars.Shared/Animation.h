@@ -1,46 +1,39 @@
 #pragma once
-#include "property.hpp"
-
-using namespace std;
-using namespace Platform;
-using namespace DirectX;
-using namespace Microsoft::WRL;
-using namespace DirectX::SimpleMath;
+#include <SimpleMath.h>
 
 namespace CatapultWars {
-	ref class Animation sealed
+	class Animation final
 	{
-	internal:
-		Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize);
-		
+	public:
+		Animation(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize);
+		~Animation();
+
 		void PlayFromFrameIndex(int index);
 		void Update();
-		void Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, SpriteEffects spriteEffects);
-		void Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vector2 scale, SpriteEffects spriteEffects);
-		
-		property int FrameIndex {
-			void set(int frameIndex) {
-				if (frameIndex >= m_sheetSize.x*m_sheetSize.y + 1) {
-					 throw ref new OutOfBoundsException(L"FrameIndex is out of bounds");
-				}
-				m_currentFrame.y = frameIndex / m_sheetSize.x;
-				m_currentFrame.x = frameIndex % (int)m_sheetSize.x;
+		void Draw(std::shared_ptr<DirectX::SpriteBatch> spriteBatch, DirectX::SimpleMath::Vector2 position, DirectX::SpriteEffects spriteEffects);
+		void Draw(std::shared_ptr<DirectX::SpriteBatch> spriteBatch, DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, DirectX::SpriteEffects spriteEffects);
+
+		int SetFrameIndex(int frameIndex) {
+			if (frameIndex >= m_sheetSize.x*m_sheetSize.y + 1) {
+				throw ref new Platform::OutOfBoundsException(L"FrameIndex is out of bounds");
 			}
-			int get() {
-				return m_sheetSize.x * m_currentFrame.y + m_currentFrame.x;
-			}
+			m_currentFrame.y = frameIndex / m_sheetSize.x;
+			m_currentFrame.x = frameIndex % (int)m_sheetSize.x;
 		}
-	internal:
+
+		int GetFrameIndex() {
+			return m_sheetSize.x * m_currentFrame.y + m_currentFrame.x;
+		}
+
 		POINT FrameSize;
-		Vector2 Offset;
+		DirectX::SimpleMath::Vector2 Offset;
 		int FrameCount;
 		bool IsActive;
 
 	private:
-		~Animation();
 		POINT m_sheetSize;
 		POINT m_currentFrame;
-		ComPtr<ID3D11ShaderResourceView> m_animatedCharacter;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_animatedCharacter;
 	};
 }
 

@@ -1,17 +1,19 @@
 #include "pch.h"
 #include "AI.h"
 
+using namespace std;
 using namespace CatapultWars;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 
 AI::AI()
 {
-	Catapult = ref new CatapultWars::Catapult(
+	Catapult = make_shared<CatapultWars::Catapult>(
 		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.png",
-		Vector2(600,332),DirectX::SpriteEffects::SpriteEffects_FlipHorizontally, true);
-	// (game, screenSpriteBatch,
+		Vector2(600,332), SpriteEffects::SpriteEffects_FlipHorizontally, true);
 }
 
-void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
+void AI::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteBatch, shared_ptr<AudioManager>& audioManager)
 {	
 	Catapult->Initialize(device, spriteBatch, audioManager);
 

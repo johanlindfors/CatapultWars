@@ -1,13 +1,17 @@
 #include "pch.h"
 #include "Human.h"
 
+using namespace std;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+
 namespace CatapultWars {
 	Human::Human()
 		: m_maxDragDelta(Vector2(480, 800).Length())
 		, m_catapultPosition(Vector2(140,332))
 	{
 
-		Catapult = ref new CatapultWars::Catapult(
+		Catapult = make_shared<CatapultWars::Catapult>(
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png",
 			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
 	}

@@ -2,22 +2,27 @@
 #include "CatapultWarsMain.h"
 #include "Common\DirectXHelper.h"
 
+using namespace std;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
 using namespace CatapultWars;
 
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
+using namespace Microsoft::WRL;
 
 // Loads and initializes application assets when the application is loaded.
-CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-m_deviceResources(deviceResources),
-m_minWind(0),
-m_maxWind(2) {
+CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
+	: m_deviceResources(deviceResources)
+	, m_minWind(0)
+	, m_maxWind(2) 
+{
 	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
 
 	// TODO: Replace this with your app's content initialization.
-	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
+	//m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
 
 	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
 	// e.g. for 60 FPS fixed timestep update logic, call:
@@ -100,16 +105,16 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_windArrowPosition = Vector2(345, 46);
 
 	// Initialize human & AI players
-	m_player = ref new Human();
+	m_player = make_shared<Human>();
 	m_player->Initialize(device, m_spriteBatch, m_audioManager);
 	m_player->Name = L"Player";
 
-	m_computer = ref new AI();
+	m_computer = make_shared<AI>();
 	m_computer->Initialize(device, m_spriteBatch, m_audioManager);
 	m_computer->Name = L"Phone";
 
-	m_player->Enemy = m_computer;
-	m_computer->Enemy = m_player;
+	m_player->SetEnemy(m_computer.get());
+	m_computer->SetEnemy(m_player.get());
 
 	m_viewportWidth = 800;
 	m_viewportHeight = 480;
@@ -173,8 +178,8 @@ void CatapultWarsMain::Update() {
 			m_wind = Vector2(rand() % 4 - 1, rand() % (m_maxWind + 1) + m_minWind);
 
 			// Set new wind value to the players and 
-			m_player->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
-			m_computer->Catapult->Wind = m_wind.x > 0 ? m_wind.y : -m_wind.y;
+			m_player->Catapult->SetWind(m_wind.x > 0 ? m_wind.y : -m_wind.y);
+			m_computer->Catapult->SetWind(m_wind.x > 0 ? m_wind.y : -m_wind.y);
 			m_changeTurn = false;
 		}
 
@@ -187,7 +192,7 @@ void CatapultWarsMain::Update() {
 		// Updates the clouds position
 		UpdateClouds(elapsedSeconds);
 
-		m_fpsTextRenderer->Update(m_timer);
+		//m_fpsTextRenderer->Update(m_timer);
 
 		bool result = m_audioManager->Update();
 		if (!result) {
@@ -253,7 +258,7 @@ bool CatapultWarsMain::Render() {
 
 	m_spriteBatch->End();
 
-	m_fpsTextRenderer->Render();
+	//m_fpsTextRenderer->Render();
 
 	return true;
 }
@@ -296,18 +301,18 @@ void CatapultWarsMain::DrawHud() {
 		// Draw Player Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_playerHUDPosition, Colors::White);
 		m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_playerHUDPosition + Vector2(33, 35), Colors::White);
-		DrawString(m_hudFont, m_player->Score.ToString(), m_playerHUDPosition + Vector2(123, 35), Colors::White);
+		DrawString(m_hudFont, m_player->Score.ToString()->Data(), m_playerHUDPosition + Vector2(123, 35), Colors::White);
 		DrawString(m_hudFont, m_player->Name, m_playerHUDPosition + Vector2(40, 1), Colors::Blue);
 
 		// Draw Computer Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_computerHUDPosition, Colors::White);
 		m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_computerHUDPosition + Vector2(33, 35), Colors::White);
-		DrawString(m_hudFont, m_computer->Score.ToString(), m_computerHUDPosition + Vector2(123, 35), Colors::White);
+		DrawString(m_hudFont, m_computer->Score.ToString()->Data(), m_computerHUDPosition + Vector2(123, 35), Colors::White);
 		DrawString(m_hudFont, m_computer->Name, m_computerHUDPosition + Vector2(40, 1), Colors::Red);
 
 		// Draw Wind direction
-		Platform::String^ text = "WIND";
-		auto size = m_hudFont->MeasureString(text->Data());
+		wstring text(L"WIND");
+		auto size = m_hudFont->MeasureString(text.c_str());
 		Vector2 windarrowScale = Vector2(m_wind.y / 10, 1);
 		m_spriteBatch->Draw(m_windArrowTexture.Get(),
 			m_windArrowPosition, nullptr, Colors::White, 0, Vector2(0, 0),
@@ -315,19 +320,19 @@ void CatapultWarsMain::DrawHud() {
 
 		DrawString(m_hudFont, text, m_windArrowPosition - Vector2(0, XMVectorGetY(size)), Colors::Black);
 		if (m_wind.y == 0) {
-			text = "NONE";
+			text = L"NONE";
 			DrawString(m_hudFont, text, m_windArrowPosition, Colors::Black);
 		}
 
 		if (m_isHumanTurn) {
 			// Prepare human prompt message
 			text = !m_isDragging ?
-				"Drag Anywhere to Fire" : "Release to Fire!";
-			size = m_hudFont->MeasureString(text->Data());
+				L"Drag Anywhere to Fire" : L"Release to Fire!";
+			size = m_hudFont->MeasureString(text.c_str());
 		} else {
 			// Prepare AI message
-			text = "I'll get you yet!";
-			size = m_hudFont->MeasureString(text->Data());
+			text = L"I'll get you yet!";
+			size = m_hudFont->MeasureString(text.c_str());
 		}
 
 		DrawString(m_hudFont, text,
@@ -348,14 +353,14 @@ void CatapultWarsMain::DrawPlayer() {
 		m_player->Draw();
 }
 
-void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color) {
-	font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
-	font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+void CatapultWarsMain::DrawString(shared_ptr<SpriteFont> font, wstring text, Vector2 position, FXMVECTOR color) {
+	font->DrawString(m_spriteBatch.get(), text.c_str(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	font->DrawString(m_spriteBatch.get(), text.c_str(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
 }
 
-void CatapultWarsMain::DrawString(std::shared_ptr<SpriteFont> font, Platform::String^ text, Vector2 position, FXMVECTOR color, float fontScale) {
-	font->DrawString(m_spriteBatch.get(), text->Data(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
-	font->DrawString(m_spriteBatch.get(), text->Data(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
+void CatapultWarsMain::DrawString(shared_ptr<SpriteFont> font, wstring text, Vector2 position, FXMVECTOR color, float fontScale) {
+	font->DrawString(m_spriteBatch.get(), text.c_str(), position, Colors::Black, 0, Vector2(0, 0), Vector2(1, 1), SpriteEffects::SpriteEffects_None, 0);
+	font->DrawString(m_spriteBatch.get(), text.c_str(), position + Vector2(1, 1), color, 0, Vector2(0, 0), Vector2(fontScale, fontScale), SpriteEffects::SpriteEffects_None, 0);
 }
 
 void CatapultWarsMain::UpdateClouds(double elapsedTime) {

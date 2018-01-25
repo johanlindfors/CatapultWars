@@ -28,14 +28,14 @@ namespace CatapultWars {
 	//	EnemyCrate = 0x8
 	//};
 
-	ref class Animation;
-	ref class Player;
+	class Animation;
+	class Player;
 
-	ref class Catapult sealed
+	class Catapult final
 	{
-	internal:
-		Catapult(Platform::String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi);
-		void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
+	public:
+		Catapult(std::wstring idleTexture, DirectX::SimpleMath::Vector2 position, DirectX::SpriteEffects spriteEffect, bool isAi);
+		void Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
 		void Update(double elapsedSeconds);
 		void Draw();
 		void Fire(float velocity);
@@ -48,41 +48,32 @@ namespace CatapultWars {
 		float				ShotVelocity;
 		bool				GameOver;
 
-		property Vector2 Position {
-			Vector2 get() { return m_catapultPosition; }
-		}
+		DirectX::SimpleMath::Vector2 GetPosition() { return m_catapultPosition; }	
 		
-		property float Wind {
-			void set(float wind) { m_wind = wind; }
-		}
+		void SetWind(float wind) { m_wind = wind; }
 		
-		property Player^ Self{
-			void set(Player^ self) { m_self = self; }
-		}
+		void SetSelf(Player* self) { m_self = self; }		
 		
-		property Player^ Enemy {
-			void set(Player^ enemy) { m_enemy = enemy; }
-		}
+		void SetEnemy(Player* enemy) { m_enemy = enemy; }
 
 	private:
-		ComPtr<ID3D11ShaderResourceView>				m_idleTexture;		
-		SpriteEffects									m_spriteEffects;
-		Projectile*										m_projectile;
-		Platform::String^								m_idleTextureName;
-		bool											m_isAI;
-		const float										m_gravity;
-		CatapultState									m_lastUpdateState;
-		int												m_stallUpdateCycles;
-		//CatapultState									m_currentState;
-		float											m_wind;
-		Player^											m_enemy;
-		Player^											m_self;
-		Vector2											m_catapultPosition;
-		const int										m_winScore;
-		const int										m_MaxActiveProjectiles = 3;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_idleTexture;		
+		DirectX::SpriteEffects								m_spriteEffects;
+		Projectile*											m_projectile;
+		std::wstring										m_idleTextureName;
+		bool												m_isAI;
+		const float											m_gravity;
+		CatapultState										m_lastUpdateState;
+		int													m_stallUpdateCycles;
+		float												m_wind;
+		Player*												m_enemy;
+		Player*												m_self;
+		DirectX::SimpleMath::Vector2						m_catapultPosition;
+		const int											m_winScore;
+		const int											m_MaxActiveProjectiles = 3;
 
-		std::unordered_map<Platform::String^, Animation^>		m_animations;
-		std::unordered_map<Platform::String^, int>				m_splitFrames;
+		std::unordered_map<std::wstring, std::shared_ptr<Animation>>	m_animations;
+		std::unordered_map<std::wstring, int>							m_splitFrames;
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
@@ -91,10 +82,10 @@ namespace CatapultWars {
 		void DrawIdleCatapult();
 		void Hit();
 		bool CheckHit();
-		void CreateAnimation(ID3D11Device* device, Platform::String^ key, Platform::String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
+		void CreateAnimation(ID3D11Device* device, std::wstring key, std::wstring , int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY);
 
-		shared_ptr<SpriteBatch>							m_spriteBatch;
-		shared_ptr<AudioManager>						m_audioManager;
+		std::shared_ptr<DirectX::SpriteBatch>				m_spriteBatch;
+		std::shared_ptr<AudioManager>						m_audioManager;
 	};
 
 }

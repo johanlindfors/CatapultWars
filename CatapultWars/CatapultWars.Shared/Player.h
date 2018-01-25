@@ -2,52 +2,36 @@
 
 namespace CatapultWars {
 
-	ref class Player abstract
+	class Player
 	{
 
-	internal:
+	public:
 		Player();
-		virtual void Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
+		virtual void Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
 		virtual void Update(double elapsedSeconds);
 		virtual void Draw();
 
-		property CatapultWars::Catapult^ Catapult
-		{
-			CatapultWars::Catapult^ get() { return m_catapult; }
-			void set(CatapultWars::Catapult^ catapult) { m_catapult = catapult; }
-		}
+		std::shared_ptr<CatapultWars::Catapult> Catapult;
+
 		const float		MinShotStrength;
 		const float		MaxShotStrength;
 
-		property Player^ Enemy {
-			void set(Player^ enemy) {
-				this->Catapult->Enemy = enemy;
-				this->Catapult->Self = this;
-			}
+		void SetEnemy(Player* enemy) {
+			this->Catapult->SetEnemy(enemy);
+			this->Catapult->SetSelf(this);
 		}
 
-		property Platform::String^ Name {
-			Platform::String^ get() { return m_name; }
-			void set(Platform::String^ name) { m_name = name; }
-		}
-
-		property int Score {
-			int get() { return m_score; }
-			void set(int score) { m_score = score; }
-		}
-
-		property bool IsActive {
-			bool get() { return m_isActive; }
-			void set(bool isActive) { m_isActive = isActive; }
-		}
+		std::wstring Name;
+		int Score;
+		bool IsActive;
 
 
 	private:
-		CatapultWars::Catapult^			m_catapult;
-		CatapultWars::Player^			m_enemy;
-		Platform::String^				m_name;
-		int								m_score;
-		bool							m_isActive;
-		std::shared_ptr<SpriteBatch>	m_spriteBatch;
+		std::shared_ptr<CatapultWars::Catapult>			m_catapult;
+		std::shared_ptr<CatapultWars::Player>			m_enemy;
+		Platform::String^								m_name;
+		int												m_score;
+		bool											m_isActive;
+		std::shared_ptr<DirectX::SpriteBatch>			m_spriteBatch;
 	};
 }

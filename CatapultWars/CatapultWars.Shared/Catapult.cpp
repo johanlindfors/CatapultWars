@@ -1,17 +1,22 @@
 #include "pch.h"
 #include "Catapult.h"
 
+using namespace std;
 using namespace CatapultWars;
 using namespace Platform;
+using namespace DirectX;
+using namespace DirectX::SimpleMath;
+using namespace Microsoft::WRL;
 
-Catapult::Catapult(String^ idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi) :
-m_winScore(5),
-m_gravity(500)
+Catapult::Catapult(wstring idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi)
+	: m_winScore(5)
+	, m_gravity(500)
+	, m_idleTextureName(idleTexture)
+	, m_catapultPosition(position)
+	, m_spriteEffects(spriteEffect)
+	, m_isAI(isAi)
 {
-	m_idleTextureName = idleTexture;
-	m_catapultPosition = position;
-	m_spriteEffects = spriteEffect;
-	m_isAI = isAi;
+	GameOver = false;
 }
 
 void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
@@ -25,7 +30,7 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	ParseXmlAndCreateAnimations(device);
 
 	DX::ThrowIfFailed(
-		CreateWICTextureFromFile(device, m_idleTextureName->Data(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, m_idleTextureName.c_str(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
 	Vector2 projectileStartPosition;
@@ -40,15 +45,15 @@ void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& sp
 	m_spriteBatch = spriteBatch;
 }
 
-void Catapult::CreateAnimation(ID3D11Device* device, String^ key, String^ textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
+void Catapult::CreateAnimation(ID3D11Device* device, wstring key, wstring textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
 {
 	ComPtr<ID3D11ShaderResourceView> texture;
 	DX::ThrowIfFailed(
-		CreateWICTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
+		CreateWICTextureFromFile(device, textureFilename.c_str(), nullptr, texture.ReleaseAndGetAddressOf())
 		);
 	POINT frameSize = { frameWidth, frameHeight };
 	POINT sheetSize = { sheetColumns, sheetRows };
-	auto animation = ref new Animation(texture.Get(), frameSize, sheetSize);
+	auto animation = std::make_shared<Animation>(texture.Get(), frameSize, sheetSize);
 	animation->Offset = Vector2(offsetX, offsetY);
 	m_animations[key] = animation;
 	m_splitFrames[key] = splitFrame;
@@ -202,7 +207,7 @@ void Catapult::Update(double elapsedSeconds)
 
 		// If in the "split" point of the animation start
 		// projectile fire sequence
-		if (m_animations[L"Fire"]->FrameIndex == m_splitFrames[L"Fire"])
+		if (m_animations[L"Fire"]->SetFrameIndex(m_splitFrames[L"Fire"]))
 		{
 			postUpdateStateChange = (CatapultState)(CurrentState | CatapultState::ProjectileFlying);
 			m_projectile->ProjectilePosition = m_projectile->ProjectileStartPosition;
@@ -293,7 +298,7 @@ void Catapult::Update(double elapsedSeconds)
 
 bool Catapult::AimReachedShotStrength()
 {
-	int frameIndex = m_animations[L"Aim"]->FrameIndex;
+	int frameIndex = m_animations[L"Aim"]->GetFrameIndex();
 	int frameCount = m_animations[L"Aim"]->FrameCount;
 	int frameShot = frameCount * ShotStrength - 1;
 	return(frameIndex == frameShot);
@@ -303,13 +308,13 @@ void Catapult::UpdateAimAccordingToShotStrength()
 {
 	auto aimAnimation = m_animations[L"Aim"];
 	int frameToDisplay = aimAnimation->FrameCount * ShotStrength;
-	aimAnimation->FrameIndex = frameToDisplay;
+	aimAnimation->SetFrameIndex(frameToDisplay);
 }
 
 void Catapult::StartFiringFromLastAimPosition()
 {
 	int startFrame = m_animations[L"Aim"]->FrameCount -
-		m_animations[L"Aim"]->FrameIndex;
+		m_animations[L"Aim"]->GetFrameIndex();
 	m_animations[L"Fire"]->PlayFromFrameIndex(startFrame);
 }
 
@@ -388,8 +393,8 @@ bool Catapult::CheckHit()
 
 	// Check enemy - create a bounding box around the enemy
 	catapultCenter = XMFLOAT3(
-		m_enemy->Catapult->Position.x + (m_animations[L"Fire"]->FrameSize.x / 2),
-		m_enemy->Catapult->Position.y + (m_animations[L"Fire"]->FrameSize.y / 2), 0);
+		m_enemy->Catapult->GetPosition().x + (m_animations[L"Fire"]->FrameSize.x / 2),
+		m_enemy->Catapult->GetPosition().y + (m_animations[L"Fire"]->FrameSize.y / 2), 0);
 	extents = XMFLOAT3(
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,

@@ -1,15 +1,17 @@
 #include "pch.h"
 
+using namespace std;
+using namespace DirectX;
 using namespace CatapultWars;
 
 Player::Player()
-: MinShotStrength(150)
-, MaxShotStrength(400)
+	: MinShotStrength(150)
+	, MaxShotStrength(400)
 {
 
 }
 
-void Player::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
+void Player::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteBatch, shared_ptr<AudioManager>& audioManager)
 {
 	m_score = 0;
 }
