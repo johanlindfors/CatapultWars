@@ -212,7 +212,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CatapultWars.UWP_TemporaryKey.pfx" />
-    <None Include="packages.config" />
     <None Include="Assets\Fonts\TestHudFont.spritefont">
       <Filter>Assets\Fonts</Filter>
     </None>

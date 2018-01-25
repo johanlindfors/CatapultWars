@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CatapultWars", "CatapultWar
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CatapultWars.UWP", "CatapultWars\CatapultWars.UWP\CatapultWars.UWP.vcxproj", "{21AACDCF-D0F5-492D-BD04-1526F82A7AAA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DirectXTK", "DirectXTK\DirectXTK_Windows10.vcxproj", "{F4776924-619C-42C7-88B2-82C947CCC9E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -35,6 +37,18 @@ Global
 		{21AACDCF-D0F5-492D-BD04-1526F82A7AAA}.Release|x64.ActiveCfg = Release|x64
 		{21AACDCF-D0F5-492D-BD04-1526F82A7AAA}.Release|x64.Build.0 = Release|x64
 		{21AACDCF-D0F5-492D-BD04-1526F82A7AAA}.Release|x64.Deploy.0 = Release|x64
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|ARM.ActiveCfg = Debug|ARM
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|ARM.Build.0 = Debug|ARM
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|Win32.Build.0 = Debug|Win32
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|x64.ActiveCfg = Debug|x64
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Debug|x64.Build.0 = Debug|x64
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|ARM.ActiveCfg = Release|ARM
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|ARM.Build.0 = Release|ARM
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|Win32.ActiveCfg = Release|Win32
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|Win32.Build.0 = Release|Win32
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|x64.ActiveCfg = Release|x64
+		{F4776924-619C-42C7-88B2-82C947CCC9E7}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

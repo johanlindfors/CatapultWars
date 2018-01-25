@@ -83,7 +83,7 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 		);
 
 	// Load font
-	//m_hudFont.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHUDFont.spritefont"));
+	m_hudFont.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHUDFont.spritefont"));
 
 	// Define initial cloud position
 
@@ -242,7 +242,7 @@ bool CatapultWarsMain::Render() {
 	DrawBackground();
 	DrawComputer();
 	DrawPlayer();
-	//DrawHud();
+	DrawHud();
 
 	m_spriteBatch->End();
 
