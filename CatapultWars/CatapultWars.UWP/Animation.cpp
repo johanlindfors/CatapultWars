@@ -12,7 +12,7 @@ Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, PO
 	, m_sheetSize(frameSheetSize)
 	, FrameSize(size)
 	, Offset(0, 0)
-	, FrameCount(m_sheetSize.x * m_sheetSize.y)
+	, FrameCount(frameSheetSize.x * frameSheetSize.y)
 {
 
 }

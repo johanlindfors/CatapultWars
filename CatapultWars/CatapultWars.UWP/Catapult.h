@@ -55,7 +55,6 @@ namespace CatapultWars {
 		const float											m_gravity;
 		CatapultWars::CatapultState							m_lastUpdateState;
 		int													m_stallUpdateCycles;
-		CatapultState										m_currentState;
 		float												m_wind;
 		std::shared_ptr<CatapultWars::Player>				m_enemy;
 		std::shared_ptr<CatapultWars::Player>				m_self;

@@ -8,30 +8,29 @@ using namespace DirectX::SimpleMath;
 
 AI::AI()
 {
-	SetCatapult(make_shared<Catapult>(
+	Catapult = make_shared<CatapultWars::Catapult>(
 		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.dds",
 		Vector2(600,332), 
 		SpriteEffects::SpriteEffects_FlipHorizontally, 
-		true));
+		true);
 }
 
 void AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch)
 {	
-	GetCatapult()->Initialize(device, spriteBatch);
+	Catapult->Initialize(device, spriteBatch);
 
 	Player::Initialize(device, spriteBatch);
 }
 
 void AI::Update(double elapsedSeconds)
 {
-	if (GetCatapult()->CurrentState == CatapultState::Aiming &&
-		!GetCatapult()->AnimationRunning)
+	if (Catapult->CurrentState == CatapultState::Aiming && !Catapult->AnimationRunning)
 	{
 		// Fire at a random strength
 		float shotVelocity = rand() % ((int)MaxShotStrength-(int)MinShotStrength)+(int)MinShotStrength;
 
-		GetCatapult()->ShotStrength = (shotVelocity / MaxShotStrength);
-		GetCatapult()->ShotVelocity = shotVelocity;
+		Catapult->ShotStrength = (shotVelocity / MaxShotStrength);
+		Catapult->ShotVelocity = shotVelocity;
 	}
 	Player::Update(elapsedSeconds);
 }
