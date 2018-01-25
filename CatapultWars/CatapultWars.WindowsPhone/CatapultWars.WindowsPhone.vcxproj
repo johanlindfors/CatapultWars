@@ -123,11 +123,6 @@
       <SubType>Designer</SubType>
     </AppxManifest>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DirectXTK\DirectXTK_Universal_2013.WindowsPhone.vcxproj">
-      <Project>{a6e9c6b0-15d6-4aea-8e2b-6e507adcc4da}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VSINSTALLDIR)\Common7\IDE\Extensions\Microsoft\VsGraphics\ImageContentTask.targets" />

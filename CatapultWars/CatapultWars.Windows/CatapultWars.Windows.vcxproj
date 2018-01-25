@@ -194,11 +194,6 @@
     </AppxManifest>
     <None Include="CatapultWars.Windows_TemporaryKey.pfx" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DirectXTK\DirectXTK_Universal_2013.Windows.vcxproj">
-      <Project>{6b88a2cc-d2cc-424a-bb00-0b28882cf683}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VSINSTALLDIR)\Common7\IDE\Extensions\Microsoft\VsGraphics\ImageContentTask.targets" />
