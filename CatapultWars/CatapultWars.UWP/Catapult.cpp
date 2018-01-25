@@ -37,7 +37,7 @@ void Catapult::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteB
 		projectileStartPosition = Vector2(630, 340);
 	else
 		projectileStartPosition = Vector2(175, 340);
-
+	
 	m_projectile.reset(new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.dds", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity));
 	m_projectile->Initialize(device);
 
@@ -312,8 +312,7 @@ void Catapult::UpdateAimAccordingToShotStrength()
 
 void Catapult::StartFiringFromLastAimPosition()
 {
-	int startFrame = m_animations[L"Aim"]->FrameCount -
-		m_animations[L"Aim"]->GetFrameIndex();
+	int startFrame = m_animations[L"Aim"]->FrameCount - m_animations[L"Aim"]->GetFrameIndex();
 	m_animations[L"Fire"]->PlayFromFrameIndex(startFrame);
 }
 

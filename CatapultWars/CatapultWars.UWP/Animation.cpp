@@ -8,13 +8,13 @@ using namespace CatapultWars;
 using namespace Microsoft::WRL;
 
 Animation::Animation(ComPtr<ID3D11ShaderResourceView> frameSheet, POINT size, POINT frameSheetSize)
+	: m_animatedCharacter(frameSheet)
+	, m_sheetSize(frameSheetSize)
+	, FrameSize(size)
+	, Offset(0, 0)
+	, FrameCount(m_sheetSize.x * m_sheetSize.y)
 {
-	m_animatedCharacter = frameSheet;
-	FrameSize = size;
-	m_sheetSize = frameSheetSize;
-	Offset = Vector2(0, 0);
 
-	FrameCount = m_sheetSize.x * m_sheetSize.y;
 }
 
 Animation::~Animation()
@@ -64,7 +64,7 @@ void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Spri
 }
 
 void Animation::Draw(shared_ptr<SpriteBatch> spriteBatch, Vector2 position, Vector2 scale, SpriteEffects spriteEffects)
-{
+{	
 	int left = FrameSize.x * m_currentFrame.x;
 	int top = FrameSize.y * m_currentFrame.y;
 	int right = left + FrameSize.x;

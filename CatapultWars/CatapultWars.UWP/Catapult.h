@@ -3,6 +3,7 @@
 #include <Projectile.h>
 #include <Animation.h>
 #include <unordered_map>
+#include "Common\property.hpp"
 
 namespace CatapultWars {
 
