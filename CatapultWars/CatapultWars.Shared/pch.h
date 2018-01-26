@@ -21,7 +21,18 @@
 #include "SimpleMath.h"
 #include "Catapult.h"
 #include "Player.h"
+#include "SupplyCrate.h"
 #include "Audio.h"
 #include "AudioManager.h"
 #include "WICTextureLoader.h"
 #include "CommonStates.h"
+
+#include "InsightsHelper.h"
+#include <ppltasks.h>
+
+#include "MathHelper.h"
+#include "GameScreen.h"
+#include "ScreenManager.h"
+#include "MenuEntry.h"
+#include "MainMenuScreen.h"
+

@@ -1,7 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)CatapultWarsMain.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)pch.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Common\DirectXHelper.h">
@@ -23,9 +22,34 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Human.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Player.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)Projectile.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)InsightsHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)app.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)SupplyCrate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)GameScreen.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)ScreenManager.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MathHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuEntry.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MenuScreen.h">
+      <Filter>ScreenManager</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)BackgroundScreen.h">
+      <Filter>Screens</Filter>
+    </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)MainMenuScreen.h">
+      <Filter>Screens</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)pch.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Common\DeviceResources.cpp">
@@ -41,6 +65,26 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)Player.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Projectile.cpp" />
     <ClCompile Include="$(MSBuildThisFileDirectory)Catapult.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)app.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)SupplyCrate.cpp" />
+    <ClCompile Include="$(MSBuildThisFileDirectory)GameScreen.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)ScreenManager.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuEntry.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MenuScreen.cpp">
+      <Filter>ScreenManager</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)BackgroundScreen.cpp">
+      <Filter>Screens</Filter>
+    </ClCompile>
+    <ClCompile Include="$(MSBuildThisFileDirectory)MainMenuScreen.cpp">
+      <Filter>Screens</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -111,6 +155,12 @@
     </Filter>
     <Filter Include="Assets\Textures\Catapults\Red\redPullback">
       <UniqueIdentifier>{28ab32f3-f89a-4793-9563-f68e75688420}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScreenManager">
+      <UniqueIdentifier>{7f30da3b-fafc-47c5-a05d-c7779bf3a493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Screens">
+      <UniqueIdentifier>{5a1e3c5b-bc0b-421f-9e40-8079751e60f1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

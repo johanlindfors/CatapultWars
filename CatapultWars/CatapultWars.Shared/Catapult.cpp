@@ -7,149 +7,150 @@ using namespace Platform;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 using namespace Microsoft::WRL;
+using namespace concurrency;
+using namespace Windows::Data::Xml;
+using namespace Windows::Data::Xml::Dom;
+using namespace Windows::Storage;
 
-Catapult::Catapult(wstring idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isAi)
+Catapult::Catapult(wstring idleTexture, Vector2 position, SpriteEffects spriteEffect, bool isLeftSide, bool isHuman)
 	: m_winScore(5)
 	, m_gravity(500)
 	, m_idleTextureName(idleTexture)
 	, m_catapultPosition(position)
 	, m_spriteEffects(spriteEffect)
-	, m_isAI(isAi)
+	, m_isLeftSide(isLeftSide)
+	, m_isHuman(isHuman)
 {
 	GameOver = false;
+
+	if (m_isLeftSide)
+		ProjectileStartPosition = Vector2(630, 340);
+	else
+		ProjectileStartPosition = Vector2(175, 340);
 }
 
-void Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
-{
+task<void> Catapult::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager) {
 	IsActive = true;
 	AnimationRunning = false;
 	CurrentState = CatapultState::Idle;
 	m_stallUpdateCycles = 0;
 	m_audioManager = audioManager;
 
-	ParseXmlAndCreateAnimations(device);
+	m_spriteBatch = spriteBatch;
 
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, m_idleTextureName.c_str(), nullptr, m_idleTexture.ReleaseAndGetAddressOf())
 		);
 
+
 	Vector2 projectileStartPosition;
-	if (m_isAI)
+	if (m_isHuman)
 		projectileStartPosition = Vector2(630, 340);
 	else
 		projectileStartPosition = Vector2(175, 340);
 
-	m_projectile = new Projectile(spriteBatch, L"Assets\\Textures\\Ammo\\rock_ammo.png", projectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isAI, m_gravity);
-	m_projectile->Initialize(device);
-
 	m_spriteBatch = spriteBatch;
+
+	return ParseXmlAndCreateAnimations(device).then([&, device]() {
+		m_normalProjectile = make_shared<Projectile>(spriteBatch, m_activeProjectiles, L"Assets\\Textures\\Ammo\\rock_ammo.png", ProjectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isLeftSide, m_gravity);
+		m_splitProjectile = make_shared<Projectile>(spriteBatch, m_activeProjectiles, L"Assets\\Textures\\Ammo\\split_ammo.png", ProjectileStartPosition, m_animations[L"Fire"]->FrameSize.y, m_isLeftSide, m_gravity);
+		m_crate = make_shared<SupplyCrate>(spriteBatch, L"Assets\\Textures\\Crate\\box.png", GetPosition() + Vector2(m_animations[L"Fire"]->FrameSize.x / 2, 0), m_isLeftSide);
+		array<task<void>, 3> tasks =
+		{
+			m_normalProjectile->Initialize(device),
+			m_splitProjectile->Initialize(device),
+			m_crate->Initialize(device)
+		};
+		return when_all(begin(tasks), end(tasks))
+			.then([&]() {
+				m_isInitialized = true;
+			});
+	});
 }
 
-void Catapult::CreateAnimation(ID3D11Device* device, wstring key, wstring textureFilename, int frameWidth, int frameHeight, int sheetColumns, int sheetRows, int splitFrame, int offsetX, int offsetY)
-{
-	ComPtr<ID3D11ShaderResourceView> texture;
-	DX::ThrowIfFailed(
-		CreateWICTextureFromFile(device, textureFilename.c_str(), nullptr, texture.ReleaseAndGetAddressOf())
-		);
-	POINT frameSize = { frameWidth, frameHeight };
-	POINT sheetSize = { sheetColumns, sheetRows };
-	auto animation = std::make_shared<Animation>(texture.Get(), frameSize, sheetSize);
-	animation->Offset = Vector2(offsetX, offsetY);
-	m_animations[key] = animation;
-	m_splitFrames[key] = splitFrame;
-}
+task<void> Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device) {
+	try {
+		return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("Assets\\Textures\\Catapults\\AnimationsDef.xml"))
+			.then([&,device](Windows::Storage::StorageFile^ file) {
+			return create_task(FileIO::ReadTextAsync(file)).then([&,device](String^ xml) {
+				XmlDocument^ doc = ref new XmlDocument();
+				doc->LoadXml(xml);
 
-void Catapult::ParseXmlAndCreateAnimations(ID3D11Device* device)
-{
-	if (m_isAI){
-		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Red\\redFire\\redCatapult_fire.png",
-			75, 60, 15, 2, 20, 0, 0);
-		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Red\\redPullback\\redCatapult_Pullback.png",
-			75, 60, 18, 1, 0, 0, 0);
-		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Red\\redDestroyed\\redCatapult_destroyed.png",
-			122, 62, 15, 2, 20, -11, 0);
-		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.png",
-			90, 80, 15, 2, 0, -50, 0);
-		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.png",
-			128, 128, 15, 2, 20, -30, -64);
+				auto path = "descendant::Definition[@IsAI=\"" + (m_isLeftSide ? "true" : "false") + "\"]";
+				auto definitions = doc->SelectNodes(path);
+				for (auto definition : definitions)
+				{
+					String^ animationAlias = definition->Attributes->GetNamedItem("Alias")->InnerText;
+					POINT frameSize;
+					POINT sheetSize;
+					//			TimeSpan frameInterval;
+					ComPtr<ID3D11ShaderResourceView> texture;
+					Vector2 offset;
+
+					for (auto attribute : definition->Attributes)
+					{
+						if (attribute->NodeName == "SheetName") {
+							auto textureFilename = "Assets\\" + attribute->InnerText + ".png";
+							DX::ThrowIfFailed(
+								CreateWICTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
+								);
+							continue;
+						}
+						if (attribute->NodeName == "FrameWidth") {
+							frameSize.x = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						if (attribute->NodeName == "FrameHeight") {
+							frameSize.y = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						if (attribute->NodeName == "SheetColumns") {
+							sheetSize.x = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						if (attribute->NodeName == "SheetRows") {
+							sheetSize.y = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						if (attribute->NodeName == "SplitFrame") {
+							m_splitFrames[animationAlias->Data()] = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						//if (attribute->NodeName == "Speed") {
+						//	float speed = _wtol(attribute->InnerText->Data());
+						//	frameInterval.Duration = 1 / speed * 100;
+						//	continue;
+						//}
+						if (attribute->NodeName == "OffsetX") {
+							offset.x = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+						if (attribute->NodeName == "OffsetY") {
+							offset.y = _wtol(attribute->InnerText->Data());
+							continue;
+						}
+					}
+
+					auto animation = make_shared<Animation>(texture.Get(), frameSize, sheetSize);
+					animation->Offset = offset;
+					wstring key(animationAlias->Data());
+					m_animations[key] = animation;
+				}
+
+			});
+
+		});
 	}
-	else {
-		CreateAnimation(device, L"Fire", L"Assets\\Textures\\Catapults\\Blue\\blueFire\\blueCatapult_fire.png",
-			75, 60, 15, 2, 20, 0, 0);
-		CreateAnimation(device, L"Aim", L"Assets\\Textures\\Catapults\\Blue\\bluePullback\\blueCatapult_Pullback.png",
-			75, 60, 18, 1, 0, 0, 0);
-		CreateAnimation(device, L"Destroyed", L"Assets\\Textures\\Catapults\\Blue\\blueDestroyed\\blueCatapult_destroyed.png",
-			122, 62, 15, 2, 20, -40, 0);
-		CreateAnimation(device, L"fireMiss", L"Assets\\Textures\\Catapults\\Fire_Miss\\fire_miss.png",
-			90, 80, 15, 2, 0, -50, 0);
-		CreateAnimation(device, L"hitSmoke", L"Assets\\Textures\\Catapults\\Hit_Smoke\\smoke.png",
-			128, 128, 15, 2, 20, 0, -64);
+	catch (Exception^ ex) {
+
 	}
-	//// Load multiple animations form XML definition
-	//XDocument doc = XDocument.Load("Content/Textures/Catapults/AnimationsDef.xml");
-	//XName name = XName.Get("Definition");
-	//var definitions = doc.Document.Descendants(name);
-
-
-
-	//// Loop over all definitions in XML
-	//foreach(var animationDefinition in definitions)
-	//{
-	//	bool ? toLoad = null;
-	//	bool val;
-	//	if (bool.TryParse(animationDefinition.Attribute("IsAI").Value, out val))
-	//		toLoad = val;
-
-	//	// Check if the animation definition need to be loaded for current catapult
-	//	if (toLoad == isAI || null == toLoad)
-	//	{
-	//		// Get a name of the animation
-	//		string animatonAlias = animationDefinition.Attribute("Alias").Value;
-	//		Texture2D texture =
-	//			curGame.Content.Load<Texture2D>(animationDefinition.Attribute("SheetName").Value);
-
-	//		// Get the frame size (width & height)
-	//		Point frameSize = new Point();
-	//		frameSize.X = int.Parse(animationDefinition.Attribute("FrameWidth").Value);
-	//		frameSize.Y = int.Parse(animationDefinition.Attribute("FrameHeight").Value);
-
-	//		// Get the frames sheet dimensions
-	//		Point sheetSize = new Point();
-	//		sheetSize.X = int.Parse(animationDefinition.Attribute("SheetColumns").Value);
-	//		sheetSize.Y = int.Parse(animationDefinition.Attribute("SheetRows").Value);
-
-	//		// If definition has a "SplitFrame" - means that other animation should start here - load it
-	//		if (null != animationDefinition.Attribute("SplitFrame"))
-	//			splitFrames.Add(animatonAlias,
-	//			int.Parse(animationDefinition.Attribute("SplitFrame").Value));
-
-	//		// Defing animation speed
-	//		TimeSpan frameInterval = TimeSpan.FromSeconds((float)1 /
-	//			int.Parse(animationDefinition.Attribute("Speed").Value));
-
-	//		Animation animation = new Animation(texture, frameSize, sheetSize);
-
-	//		// If definition has an offset defined - means that it should be rendered relatively
-	//		// to some element/other animation - load it
-	//		if (null != animationDefinition.Attribute("OffsetX") &&
-	//			null != animationDefinition.Attribute("OffsetY"))
-	//		{
-	//			animation.Offset = new Vector2(int.Parse(animationDefinition.Attribute("OffsetX").Value),
-	//				int.Parse(animationDefinition.Attribute("OffsetY").Value));
-	//		}
-
-	//		animations.Add(animatonAlias, animation);
-	//	}
-	//}
 }
 
-void Catapult::Update(double elapsedSeconds)
-{
-	bool isGroundHit;
+void Catapult::Update(double elapsedSeconds) {
 	bool startStall;
 	CatapultState postUpdateStateChange = CatapultState::Idle;
 
-	if (!IsActive){
+	if (!IsActive || !m_isInitialized) {
 		return;
 	}
 
@@ -162,10 +163,10 @@ void Catapult::Update(double elapsedSeconds)
 	case CatapultState::Aiming:
 		if (m_lastUpdateState != CatapultState::Aiming)
 		{
-			m_audioManager->PlaySound("RopeStretch",true);
+			m_audioManager->PlaySound("RopeStretch", true);
 
 			AnimationRunning = true;
-			if (m_isAI == true)
+			if (m_isLeftSide == true && ! m_isHuman)
 			{
 				m_animations[L"Aim"]->PlayFromFrameIndex(0);
 				m_stallUpdateCycles = 20;
@@ -174,12 +175,9 @@ void Catapult::Update(double elapsedSeconds)
 		}
 
 		// Progress Aiming "animation"
-		if (m_isAI == false)
-		{
+		if (m_isHuman) {
 			UpdateAimAccordingToShotStrength();
-		}
-		else
-		{
+		} else if(m_isLeftSide && !m_isHuman) {
 			m_animations[L"Aim"]->Update();
 			startStall = AimReachedShotStrength();
 			CurrentState = startStall ? CatapultState::Stalling : CatapultState::Aiming;
@@ -189,7 +187,7 @@ void Catapult::Update(double elapsedSeconds)
 	case CatapultState::Stalling:
 		if (m_stallUpdateCycles-- <= 0)
 		{
-			Fire(ShotVelocity);
+			//Fire(ShotVelocity);
 			postUpdateStateChange = CatapultState::Firing;
 		}
 		break;
@@ -207,60 +205,26 @@ void Catapult::Update(double elapsedSeconds)
 
 		// If in the "split" point of the animation start
 		// projectile fire sequence
-		if (m_animations[L"Fire"]->SetFrameIndex(m_splitFrames[L"Fire"]))
+		if (m_animations[L"Fire"]->GetFrameIndex() == m_splitFrames[L"Fire"])
 		{
-			postUpdateStateChange = (CatapultState)(CurrentState | CatapultState::ProjectileFlying);
-			m_projectile->ProjectilePosition = m_projectile->ProjectileStartPosition;
+			Fire(ShotVelocity, ShotAngle);
+		} 
+		if(m_animations[L"Fire"]->IsActive == false) {
+			postUpdateStateChange = CatapultState::ProjectilesFalling;
 		}
 		break;
 
-	case (CatapultState::Firing | CatapultState::ProjectileFlying) :
-		// Progress Fire animation
-		m_animations[L"Fire"]->Update();
-
-		// Update projectile velocity & position in flight
-		isGroundHit = m_projectile->UpdateProjectileFlightData(elapsedSeconds,m_wind, m_gravity);
-		if (isGroundHit)
-		{
-			postUpdateStateChange = CatapultState::ProjectileHit;
-			m_animations[L"fireMiss"]->PlayFromFrameIndex(0);
+	case CatapultState::ProjectilesFalling:
+		if (m_activeProjectiles.size() == 0) {
+			postUpdateStateChange = CatapultState::Reset;
 		}
 		break;
 
-	case CatapultState::ProjectileFlying:
-		// Update projectile velocity & position in flight
-		isGroundHit = m_projectile->UpdateProjectileFlightData(elapsedSeconds, m_wind, m_gravity);
-		if (isGroundHit)
-		{
-			postUpdateStateChange = CatapultState::ProjectileHit;
-			m_animations[L"fireMiss"]->PlayFromFrameIndex(0);
+	case CatapultState::HitDamage:
+		if (m_animations[L"hitSmoke"]->IsActive == false) {
+			postUpdateStateChange = CatapultState::Reset;
 		}
-		break;
-
-	case CatapultState::ProjectileHit:
-		if (!CheckHit())
-		{
-			if (m_lastUpdateState != CatapultState::ProjectileHit)
-			{
-				//VibrateController.Default.Start(TimeSpan.FromMilliseconds(100));
-				m_audioManager->PlaySound("BoulderHit");
-			}
-
-			// Hit animation finished playing
-			if (m_animations[L"fireMiss"]->IsActive == false)
-			{
-				postUpdateStateChange = CatapultState::Reset;
-			}
-
-			m_animations[L"fireMiss"]->Update();
-		}
-		else {
-			// Catapult hit - start longer vibration on any catapult hit
-			// Remember that the call to "CheckHit" updates the catapult's
-			// state to "Hit"
-
-			//VibrateController.Default.Start(TimeSpan.FromMilliseconds(500));
-		}
+		m_animations[L"hitSmoke"]->Update();
 		break;
 
 	case CatapultState::HitKill:
@@ -273,6 +237,7 @@ void Catapult::Update(double elapsedSeconds)
 				break;
 			}
 
+			m_self->Health = 100;
 			postUpdateStateChange = CatapultState::Reset;
 		}
 
@@ -289,11 +254,42 @@ void Catapult::Update(double elapsedSeconds)
 		break;
 	}
 
+
 	m_lastUpdateState = CurrentState;
-	if (postUpdateStateChange != 0)
+	if (postUpdateStateChange != CatapultState::Idle)
 	{
 		CurrentState = postUpdateStateChange;
 	}
+
+	m_destroyedProjectiles.clear();
+	m_activeProjectilesCopy.clear();
+		
+	m_activeProjectilesCopy = vector<shared_ptr<Projectile>>(m_activeProjectiles);
+
+	for (auto projectile : m_activeProjectilesCopy)
+	{
+		projectile->Update(elapsedSeconds);
+
+		if ((projectile->State == ProjectileState::HitGround) &&
+			(projectile->HitHandled == false)) {
+			HandleProjectileHit(projectile);
+		}
+		if (projectile->State == ProjectileState::Destroyed) {
+			m_destroyedProjectiles.push_back(projectile);
+		}
+	}
+
+	for (auto projectile : m_destroyedProjectiles)
+	{
+		for (int i = 0; i < m_activeProjectiles.size(); i++)
+		{
+			if (m_activeProjectiles.at(i) == projectile) {
+				m_activeProjectiles.erase(m_activeProjectiles.begin()+i);
+			}
+		}
+	}
+
+	m_crate->Update(elapsedSeconds);
 }
 
 bool Catapult::AimReachedShotStrength()
@@ -304,8 +300,7 @@ bool Catapult::AimReachedShotStrength()
 	return(frameIndex == frameShot);
 }
 
-void Catapult::UpdateAimAccordingToShotStrength()
-{
+void Catapult::UpdateAimAccordingToShotStrength() {
 	auto aimAnimation = m_animations[L"Aim"];
 	int frameToDisplay = aimAnimation->FrameCount * ShotStrength;
 	aimAnimation->SetFrameIndex(frameToDisplay);
@@ -313,73 +308,144 @@ void Catapult::UpdateAimAccordingToShotStrength()
 
 void Catapult::StartFiringFromLastAimPosition()
 {
-	int startFrame = m_animations[L"Aim"]->FrameCount -
-		m_animations[L"Aim"]->GetFrameIndex();
+	int startFrame = m_animations[L"Aim"]->FrameCount - m_animations[L"Aim"]->GetFrameIndex();
 	m_animations[L"Fire"]->PlayFromFrameIndex(startFrame);
 }
 
-void Catapult::Draw()
-{
+void Catapult::Draw() {
+
+	if (!m_isInitialized) {
+		return;
+	}
+
 	switch (m_lastUpdateState)
 	{
+	case CatapultState::ProjectilesFalling:
 	case CatapultState::Idle:
+	case CatapultState::Reset:
 		DrawIdleCatapult();
 		break;
-	case CatapultState::Stalling:
 	case CatapultState::Aiming:
+	case CatapultState::Stalling:
 		m_animations[L"Aim"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
 		break;
 	case CatapultState::Firing:
 		m_animations[L"Fire"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
-		break;
-	case CatapultState::Firing | CatapultState::ProjectileFlying:
-	case CatapultState::ProjectileFlying:
-		m_animations[L"Fire"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
-		m_projectile->Draw();
-		break;
-	case CatapultState::ProjectileHit:
+		break;	
+	case CatapultState::HitDamage:
 		// Draw the catapult
 		DrawIdleCatapult();
-
-		// Projectile Hit animation
-		m_animations[L"fireMiss"]->Draw(m_spriteBatch, m_projectile->ProjectileHitPosition, m_spriteEffects);
 		break;
 	case CatapultState::HitKill:
 		// Catapult hit animation
 		m_animations[L"Destroyed"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
-
-		// Projectile smoke animation
-		m_animations[L"hitSmoke"]->Draw(m_spriteBatch, m_catapultPosition, m_spriteEffects);
-		break;
-	case CatapultState::Reset:
-		DrawIdleCatapult();
 		break;
 	default:
 		break;
 	}
+
+	for (auto projectile : m_activeProjectiles) {
+		projectile->Draw();
+	}
+
+	m_crate->Draw();
 }
 
-void Catapult::Hit()
-{
+void Catapult::HandleProjectileHit(shared_ptr<Projectile> projectile) {
+	projectile->HitHandled = true;
+
+	switch (CheckHit(projectile))
+	{
+	case HitCheckResult::SelfCrate:
+		// Ignore self crate hits
+	case HitCheckResult::Nothing:
+		PerformNothingHit(projectile);
+		break;
+
+	case HitCheckResult::SelfCatapult:
+		if ((CurrentState == CatapultState::HitKill) ||
+			(CurrentState == CatapultState::HitDamage)) {
+			projectile->HitAnimation = m_animations[L"hitSmoke"];
+		}
+		break;
+
+	case HitCheckResult::EnemyCatapult:
+		if ((m_enemy->Catapult->CurrentState == CatapultState::HitKill) ||
+			(m_enemy->Catapult->CurrentState == CatapultState::HitDamage)) {
+			projectile->HitAnimation = m_animations[L"hitSmoke"];
+		} else {
+			PerformNothingHit(projectile);
+		}
+		break;
+	case HitCheckResult::EnemyCrate:
+		if (m_enemy->Catapult->GetCrate()->CurrentState == CrateState::Idle) {
+			m_audioManager->PlaySound("CatapultExplosion");
+			projectile->HitAnimation = m_animations[L"hitSmoke"];
+			m_enemy->Catapult->GetCrate()->Hit();
+			m_self->Weapon = WeaponType::Split;
+		} else {
+			PerformNothingHit(projectile);
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	if (projectile->HitAnimation != nullptr) {
+		projectile->HitAnimation->PlayFromFrameIndex(0);
+	}
+}
+
+void Catapult::PerformNothingHit(shared_ptr<Projectile> projectile) {
+	m_audioManager->PlaySound("BoulderHit");
+	projectile->HitAnimation = m_animations[L"fireMiss"];
+}
+
+void Catapult::Hit(bool isKilled) {
 	AnimationRunning = true;
-	m_animations[L"Destroyed"]->PlayFromFrameIndex(0);
+	if (isKilled) {
+		m_animations[L"Destroyed"]->PlayFromFrameIndex(0);
+	}
+
 	m_animations[L"hitSmoke"]->PlayFromFrameIndex(0);
-	CurrentState = CatapultState::HitKill;
+
+	if (isKilled) {
+		CurrentState = CatapultState::HitKill;
+	} else {
+		CurrentState = CatapultState::HitDamage;
+	}
+
+	m_self->Weapon = WeaponType::Normal;
 }
 
-void Catapult::Fire(float velocity)
-{
-	m_projectile->Fire(velocity, velocity);
+void Catapult::Fire(float velocity, float angle) {
+	std::shared_ptr<Projectile> firedProjectile = nullptr;
+
+	switch (m_self->Weapon)
+	{
+	case WeaponType::Normal:
+		firedProjectile = m_normalProjectile;
+		break;
+	case WeaponType::Split:
+		firedProjectile = m_splitProjectile;
+		break;
+	default:
+		break;
+	}
+	firedProjectile->ProjectilePosition = firedProjectile->ProjectileStartPosition;
+	firedProjectile->Fire(velocity * cos(angle), velocity * sin(angle));
+	firedProjectile->Wind = m_wind;
+	m_activeProjectiles.push_back(firedProjectile);
 }
 
-bool Catapult::CheckHit()
-{
-	bool bRes = false;
+HitCheckResult Catapult::CheckHit(shared_ptr<Projectile> projectile) {
+	HitCheckResult hitRes = HitCheckResult::Nothing;
 
-	XMFLOAT3 center = XMFLOAT3(m_projectile->ProjectilePosition.x, m_projectile->ProjectilePosition.y, 0);
+	XMFLOAT3 center = XMFLOAT3(projectile->ProjectilePosition.x, projectile->ProjectilePosition.y, 0);
 	BoundingSphere sphere = BoundingSphere(center,
-		max(m_projectile->ProjectileTextureWidth / 2,
-		m_projectile->ProjectileTextureHeight / 2));
+		max(projectile->ProjectileTextureWidth / 2,
+			projectile->ProjectileTextureHeight / 2));
 
 	// Check Self-Hit - create a bounding box around self
 	XMFLOAT3 catapultCenter = XMFLOAT3(
@@ -389,7 +455,7 @@ bool Catapult::CheckHit()
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,
 		0);
-	BoundingBox selfBox = BoundingBox(catapultCenter, extents);
+	BoundingBox selfBox(catapultCenter, extents);
 
 	// Check enemy - create a bounding box around the enemy
 	catapultCenter = XMFLOAT3(
@@ -399,7 +465,17 @@ bool Catapult::CheckHit()
 		m_animations[L"Fire"]->FrameSize.x,
 		m_animations[L"Fire"]->FrameSize.y,
 		0);
-	BoundingBox enemyBox = BoundingBox(catapultCenter, extents);
+	BoundingBox enemyBox(catapultCenter, extents);
+
+	// Check self-crate - Create bounding box around own crate
+	auto selfBoxCenter = XMFLOAT3(m_crate->Position.x, m_crate->Position.y, 0);
+	auto selfBoxExtents = XMFLOAT3(m_crate->Width, m_crate->Height, 0);
+	BoundingBox selfCrateBox(selfBoxCenter, selfBoxExtents);
+
+	// Check enemy-crate - Create bounding box around enemy crate
+	auto enemyBoxCenter = XMFLOAT3(m_enemy->Catapult->GetCrate()->Position.x, m_enemy->Catapult->GetCrate()->Position.y, 0);
+	auto enemyBoxExtents = XMFLOAT3(m_enemy->Catapult->GetCrate()->Width, m_enemy->Catapult->GetCrate()->Height, 0);
+	BoundingBox enemyCrateBox(enemyBoxCenter, enemyBoxExtents);
 
 	// Check self hit
 	if (sphere.Intersects(selfBox) && CurrentState != CatapultState::HitKill)
@@ -407,9 +483,13 @@ bool Catapult::CheckHit()
 		m_audioManager->PlaySound("CatapultExplosion");
 
 		// Launch hit animation sequence on self
-		Hit();
-		m_enemy->Score = m_enemy->Score + 1;
-		bRes = true;
+		UpdateHealth(m_self, sphere, selfBox);
+		if (m_self->Health <= 0) {
+			Hit(true);
+			m_enemy->Score = m_enemy->Score + 1;
+		}
+
+		hitRes = HitCheckResult::SelfCatapult;
 	}
 	// Check if enemy was hit
 	else if (sphere.Intersects(enemyBox)
@@ -419,16 +499,34 @@ bool Catapult::CheckHit()
 		m_audioManager->PlaySound("CatapultExplosion");
 
 		// Launch enemy hit animaton
-		m_enemy->Catapult->Hit();
-		m_self->Score = m_self->Score + 1;
-		bRes = true;
+		UpdateHealth(m_enemy, sphere, enemyBox);
+		if (m_enemy->Health <= 0) {
+			m_enemy->Catapult->Hit(true);
+			m_self->Score = m_self->Score + 1;
+		}
+		hitRes = HitCheckResult::EnemyCatapult;
 		CurrentState = CatapultState::Reset;
+	} 
+	// Check if own crate was hit
+	else if (sphere.Intersects(selfCrateBox)) {
+		hitRes = HitCheckResult::SelfCrate;
+	}
+	// Check if enemy crate was hit
+	else if (sphere.Intersects(enemyCrateBox)) {
+		hitRes = HitCheckResult::EnemyCrate;
 	}
 
-	return bRes;
+	return hitRes;
 }
 
-void Catapult::DrawIdleCatapult()
-{
+void Catapult::UpdateHealth(Player* player, BoundingSphere projectile, BoundingBox catapult) {
+	bool isHit = false;
+
+	float midPoint = catapult.Extents.x / 2;
+
+	//BoundingBox catapultCenter()
+}
+
+void Catapult::DrawIdleCatapult() {
 	m_spriteBatch->Draw(m_idleTexture.Get(), m_catapultPosition, nullptr, Colors::White, 0.0f, Vector2(0, 0), 1.0f, m_spriteEffects, 0);
 }

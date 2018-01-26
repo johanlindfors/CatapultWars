@@ -13,7 +13,7 @@ public:
 	void StopSound(const char* assetName);
 
 private:
-	void LoadSound(const char* fileName, const char* assetName);
+	//void LoadSound(const char* fileName, const char* assetName);
 	
 	std::unique_ptr<DirectX::AudioEngine> m_audioEngine;
 	std::unique_ptr<DirectX::SoundEffectInstance> m_soundEffect;

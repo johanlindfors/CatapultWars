@@ -67,6 +67,7 @@ namespace CatapultWars
 		UINT m_cloud2TextureWidth, m_cloud2TextureHeight;
 		UINT m_defeatTextureWidth, m_defeatTextureHeight;
 		UINT m_victoryTextureWidth, m_victoryTextureHeight;
+		bool			m_isInitialized;
 
 		// Rendering loop timer.
 		DX::StepTimer m_timer;
@@ -79,5 +80,7 @@ namespace CatapultWars
 		void DrawString(std::shared_ptr<DirectX::SpriteFont> font, std::wstring text, DirectX::SimpleMath::Vector2 position, DirectX::FXMVECTOR color);
 		void DrawString(std::shared_ptr<DirectX::SpriteFont> font, std::wstring text, DirectX::SimpleMath::Vector2 position, DirectX::FXMVECTOR color, float fontScale);
 		void UpdateClouds(double elapsedTime);
+
+		ScreenManager^ m_screenManager;
 	};
 }

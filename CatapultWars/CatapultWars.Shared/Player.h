@@ -2,12 +2,17 @@
 
 namespace CatapultWars {
 
+	enum WeaponType {
+		Normal,
+		Split
+	};
+
 	class Player
 	{
 
 	public:
 		Player();
-		virtual void Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager);
+		virtual concurrency::task<void> Initialize(ID3D11Device* device, std::shared_ptr<DirectX::SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager) = 0;
 		virtual void Update(double elapsedSeconds);
 		virtual void Draw();
 
@@ -24,7 +29,13 @@ namespace CatapultWars {
 		std::wstring Name;
 		int Score;
 		bool IsActive;
+		int Health;
+		WeaponType Weapon;
 
+		const float MinShotVelocity = 200.0;
+		const float MaxShotVelocity = 665.0;
+		const float MinShotAngle = 0; // 0 degrees
+		const float MaxShotAngle = 1.3962634f; // 80 degrees
 
 	private:
 		std::shared_ptr<CatapultWars::Catapult>			m_catapult;

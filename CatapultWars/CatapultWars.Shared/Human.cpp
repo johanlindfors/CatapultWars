@@ -1,30 +1,41 @@
 #include "pch.h"
 #include "Human.h"
+#include <math.h>
 
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 namespace CatapultWars {
-	Human::Human()
-		: m_maxDragDelta(Vector2(480, 800).Length())
-		, m_catapultPosition(Vector2(140,332))
-	{
 
-		Catapult = make_shared<CatapultWars::Catapult>(
+
+	Human::Human(PlayerSide playerSide)
+		: m_maxDragDelta(Vector2(480, 800).Length())
+		, m_spriteEffects(SpriteEffects::SpriteEffects_None)
+	{
+		m_playerSide = playerSide;
+		wstring idleTextureName;
+
+		if (playerSide == PlayerSide::Left) {
+			m_catapultPosition = Vector2(140, 332);
+			idleTextureName = L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png";
+		} else {
+			m_catapultPosition = Vector2(600, 332);
+			m_spriteEffects = SpriteEffects::SpriteEffects_FlipHorizontally;
+			idleTextureName = L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\redIdle.png";
+		}
+			Catapult = make_shared<CatapultWars::Catapult>(
+
 			L"Assets\\Textures\\Catapults\\Blue\\blueIdle\\blueIdle.png",
-			m_catapultPosition, DirectX::SpriteEffects::SpriteEffects_None, false);
+			m_catapultPosition, m_spriteEffects, playerSide == PlayerSide::Left ? false : true, true);
 	}
 
-	void Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
+	concurrency::task<void> Human::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager)
 	{
 		DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\arrow.png", nullptr, m_arrow.ReleaseAndGetAddressOf()));
-
-		Catapult->Initialize(device, spriteBatch, audioManager);
-
-		Player::Initialize(device, spriteBatch, audioManager);
-
 		m_spriteBatch = spriteBatch;
+
+		return Catapult->Initialize(device, spriteBatch, audioManager);
 	}
 
 	void Human::HandleInput(int x, int y)
@@ -40,10 +51,11 @@ namespace CatapultWars {
 
 	void Human::HandleRelease()
 	{
-		Catapult->ShotVelocity = MinShotStrength + Catapult->ShotStrength *
-			(MaxShotStrength - MinShotStrength);
-		Catapult->Fire(Catapult->ShotVelocity);
+		Catapult->ShotVelocity = MinShotVelocity + Catapult->ShotStrength *
+			(MaxShotVelocity - MinShotVelocity);
+		//Catapult->Fire(Catapult->ShotVelocity, Catapult->ShotAngle);
 		Catapult->CurrentState = CatapultState::Firing;
+		Catapult->ShotAngle = MaxShotAngle;
 		m_delta = Vector2(0, 0);
 
 		ResetDragState();

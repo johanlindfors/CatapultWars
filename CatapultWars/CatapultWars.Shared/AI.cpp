@@ -3,6 +3,7 @@
 
 using namespace std;
 using namespace CatapultWars;
+using namespace concurrency;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
@@ -10,31 +11,31 @@ AI::AI()
 {
 	Catapult = make_shared<CatapultWars::Catapult>(
 		L"Assets\\Textures\\Catapults\\Red\\redIdle\\redIdle.png",
-		Vector2(600,332), SpriteEffects::SpriteEffects_FlipHorizontally, true);
+		Vector2(600,332), 
+		SpriteEffects::SpriteEffects_FlipHorizontally, 
+		true, 
+		false);
 }
 
-void AI::Initialize(ID3D11Device* device, shared_ptr<SpriteBatch>& spriteBatch, shared_ptr<AudioManager>& audioManager)
-{	
-	Catapult->Initialize(device, spriteBatch, audioManager);
-
-	Player::Initialize(device, spriteBatch, audioManager);
+task<void> AI::Initialize(ID3D11Device* device, std::shared_ptr<SpriteBatch>& spriteBatch, std::shared_ptr<AudioManager>& audioManager) {
+	return create_task(Catapult->Initialize(device, spriteBatch, audioManager));
 }
 
-void AI::Update(double elapsedSeconds)
-{
+void AI::Update(double elapsedSeconds) {
 	if (Catapult->CurrentState == CatapultState::Aiming &&
 		!Catapult->AnimationRunning)
 	{
 		// Fire at a random strength
-		float shotVelocity = rand() % ((int)MaxShotStrength-(int)MinShotStrength)+(int)MinShotStrength;
+		float shotVelocity = rand() % ((int)MaxShotVelocity - (int)MinShotVelocity) + (int)MinShotVelocity;
+		float shotAngle = MinShotAngle + rand() % 100 / 100 * (MaxShotAngle - MinShotAngle);
 
-		Catapult->ShotStrength = (shotVelocity / MaxShotStrength);
+		Catapult->ShotStrength = (shotVelocity / MaxShotVelocity);
 		Catapult->ShotVelocity = shotVelocity;
+		Catapult->ShotAngle = shotAngle;
 	}
 	Player::Update(elapsedSeconds);
 }
 
-void AI::Draw()
-{
+void AI::Draw() {
 	Player::Draw();
 }

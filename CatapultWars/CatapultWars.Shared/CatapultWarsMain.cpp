@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "CatapultWarsMain.h"
 #include "Common\DirectXHelper.h"
+#include "BackgroundScreen.h"
 
 using namespace std;
 using namespace DirectX;
@@ -16,7 +17,8 @@ using namespace Microsoft::WRL;
 CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	: m_deviceResources(deviceResources)
 	, m_minWind(0)
-	, m_maxWind(2) 
+	, m_maxWind(2)
+	, m_isInitialized(false)
 {
 	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
@@ -31,10 +33,15 @@ CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& d
 
 	m_audioManager.reset(new AudioManager());
 
+	m_screenManager = ref new ScreenManager(m_deviceResources);
+
 	CreateWindowSizeDependentResources();
 }
 
 CatapultWarsMain::~CatapultWarsMain() {
+
+	ApplicationInsights::CloseSession();
+
 	// Deregister device notification
 	m_deviceResources->RegisterDeviceNotify(nullptr);
 	m_audioManager.reset();
@@ -42,6 +49,8 @@ CatapultWarsMain::~CatapultWarsMain() {
 
 // Updates application state when the window size changes (e.g. device orientation change)
 void CatapultWarsMain::CreateWindowSizeDependentResources() {
+	m_isInitialized = false;
+	
 	auto device = m_deviceResources->GetD3DDevice();
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
@@ -105,23 +114,42 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_windArrowPosition = Vector2(345, 46);
 
 	// Initialize human & AI players
-	m_player = make_shared<Human>();
-	m_player->Initialize(device, m_spriteBatch, m_audioManager);
+
+	m_player = make_shared<Human>(PlayerSide::Left);
 	m_player->Name = L"Player";
+	create_task(m_player->Initialize(device, m_spriteBatch, m_audioManager)).get();
+		//.then([&,device]() {
+	
+		m_computer = make_shared<AI>();
+		m_computer->Name = L"AI";
+		//create_task(
+		m_computer->Initialize(device, m_spriteBatch, m_audioManager).get();// then([&, device]() {
+		
+			m_player->SetEnemy(m_computer.get());
+			m_computer->SetEnemy(m_player.get());
 
-	m_computer = make_shared<AI>();
-	m_computer->Initialize(device, m_spriteBatch, m_audioManager);
-	m_computer->Name = L"Phone";
+			auto viewport = m_deviceResources->GetScreenViewport();
+			auto orientation = m_deviceResources->ComputeDisplayRotation();
+			if (orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE90 || orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE270) {
+				m_viewportWidth = viewport.Height;
+				m_viewportHeight = viewport.Width;
+			} else {
+				m_viewportWidth = viewport.Width;
+				m_viewportHeight = viewport.Height;
+			}
+			m_audioManager->LoadSounds();
 
-	m_player->SetEnemy(m_computer.get());
-	m_computer->SetEnemy(m_player.get());
+			m_isInitialized = true;
 
-	m_viewportWidth = 800;
-	m_viewportHeight = 480;
+			m_screenManager->AddScreen(ref new BackgroundScreen(m_screenManager));
+			m_screenManager->AddScreen(ref new MainMenuScreen(m_screenManager));
 
-	m_audioManager->LoadSounds();
+			m_screenManager->Initialize();
 
-	Start();
+			m_screenManager->LoadContent(device, m_spriteBatch);
+			Start();
+	//	});
+	//});
 }
 
 void CatapultWarsMain::Start() {
@@ -129,10 +157,22 @@ void CatapultWarsMain::Start() {
 	m_isHumanTurn = false;
 	m_changeTurn = true;
 	m_computer->Catapult->CurrentState = CatapultState::Reset;
+
+	ApplicationInsights::TrackSessionStart();
 }
 
 // Updates the application state once per frame.
 void CatapultWarsMain::Update() {
+	if (!m_isInitialized) {
+		return;
+	}
+
+	m_timer.Tick([&]() {
+		double elapsedSeconds = m_timer.GetElapsedSeconds();
+		m_screenManager->Update(elapsedSeconds);
+	});
+	return;
+
 	// Update scene objects.
 	m_timer.Tick([&]() {
 		// Check it one of the players reached 5 and stop the game
@@ -141,8 +181,10 @@ void CatapultWarsMain::Update() {
 			m_gameOver = true;
 
 			if (m_player->Score > m_computer->Score) {
+				ApplicationInsights::TrackEvent(L"WinGame");
 				m_audioManager->PlaySound("Win");
 			} else {
+				ApplicationInsights::TrackEvent(L"LoseGame");
 				m_audioManager->PlaySound("Lose");
 			}
 
@@ -247,7 +289,9 @@ bool CatapultWarsMain::Render() {
 	//XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
 	//m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
 	
-    
+	//m_screenManager->Draw(m_timer.GetElapsedSeconds());
+	//return true;
+
 	CommonStates states(m_deviceResources->GetD3DDevice());
 	m_spriteBatch->Begin(SpriteSortMode::SpriteSortMode_Deferred, states.NonPremultiplied());
 
