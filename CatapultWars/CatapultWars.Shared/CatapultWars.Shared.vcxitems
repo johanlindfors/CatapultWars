@@ -58,6 +58,7 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)Projectile.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)ScreenManager.h" />
     <ClInclude Include="$(MSBuildThisFileDirectory)SupplyCrate.h" />
+    <ClInclude Include="$(MSBuildThisFileDirectory)XmlHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectCapability Include="SourceItemsFromImports" />

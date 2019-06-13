@@ -13,9 +13,9 @@ namespace CatapultWars {
 		void Draw(std::shared_ptr<DirectX::SpriteBatch> spriteBatch, DirectX::SimpleMath::Vector2 position, DirectX::SpriteEffects spriteEffects);
 		void Draw(std::shared_ptr<DirectX::SpriteBatch> spriteBatch, DirectX::SimpleMath::Vector2 position, DirectX::SimpleMath::Vector2 scale, DirectX::SpriteEffects spriteEffects);
 
-		int SetFrameIndex(int frameIndex) {
-			if (frameIndex >= m_sheetSize.x*m_sheetSize.y + 1) {
-				throw ref new Platform::OutOfBoundsException(L"FrameIndex is out of bounds");
+		void SetFrameIndex(int frameIndex) {
+			if (frameIndex >= m_sheetSize.x * (m_sheetSize.y + 1)) {
+				frameIndex = m_sheetSize.x * (m_sheetSize.y + 1); 
 			}
 			m_currentFrame.y = frameIndex / m_sheetSize.x;
 			m_currentFrame.x = frameIndex % (int)m_sheetSize.x;

@@ -48,6 +48,9 @@
     <ClInclude Include="$(MSBuildThisFileDirectory)MainMenuScreen.h">
       <Filter>Screens</Filter>
     </ClInclude>
+    <ClInclude Include="$(MSBuildThisFileDirectory)XmlHelper.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="$(MSBuildThisFileDirectory)CatapultWarsMain.cpp" />

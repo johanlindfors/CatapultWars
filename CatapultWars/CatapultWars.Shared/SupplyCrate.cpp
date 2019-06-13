@@ -44,75 +44,85 @@ task<void> SupplyCrate::Initialize(ID3D11Device* device) {
 		})
 	};
 
-	return when_all(begin(tasks), end(tasks));
+	return when_all(tasks.begin(), tasks.end())
+		.then([](task<void> t) {
+		try {
+			t.get();
+		}
+		catch (...) {
+
+		}
+	});
 }
 
 task<void> SupplyCrate::ParseXmlAndCreateAnimations(ID3D11Device* device) {
-	try {
-		return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("Assets\\Textures\\Crate\\AnimationsDef.xml"))
-			.then([&, device](Windows::Storage::StorageFile^ file) {
-			return create_task(FileIO::ReadTextAsync(file)).then([&, device](String^ xml) {
-				XmlDocument^ doc = ref new XmlDocument();
-				doc->LoadXml(xml);
+	return create_task(Windows::ApplicationModel::Package::Current->InstalledLocation->GetFileAsync("Assets\\Textures\\Crate\\AnimationsDef.xml"))
+		.then([&, device](Windows::Storage::StorageFile^ file) {
+		return create_task(FileIO::ReadTextAsync(file)).then([&, device](String^ xml) {
+			XmlDocument^ doc = ref new XmlDocument();
+			doc->LoadXml(xml);
 
-				String^ path = L"descendant::Definition";
-				auto definitions = doc->SelectNodes(path);
-				for (auto definition : definitions)
+			String^ path = L"descendant::Definition";
+			auto definitions = doc->SelectNodes(path);
+			for (auto definition : definitions)
+			{
+				String^ animationAlias = definition->Attributes->GetNamedItem("Alias")->InnerText;
+				POINT frameSize;
+				POINT sheetSize;
+				//			TimeSpan frameInterval;
+				ComPtr<ID3D11ShaderResourceView> texture;
+				Vector2 offset;
+
+				for (auto attribute : definition->Attributes)
 				{
-					String^ animationAlias = definition->Attributes->GetNamedItem("Alias")->InnerText;
-					POINT frameSize;
-					POINT sheetSize;
-					//			TimeSpan frameInterval;
-					ComPtr<ID3D11ShaderResourceView> texture;
-					Vector2 offset;
-
-					for (auto attribute : definition->Attributes)
-					{
-						if (attribute->NodeName == "SheetName") {
-							auto textureFilename = "Assets\\" + attribute->InnerText + ".png";
-							DX::ThrowIfFailed(
-								CreateWICTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
-								);
-							continue;
-						}
-						if (attribute->NodeName == "FrameWidth") {
-							frameSize.x = _wtol(attribute->InnerText->Data());
-							continue;
-						}
-						if (attribute->NodeName == "FrameHeight") {
-							frameSize.y = _wtol(attribute->InnerText->Data());
-							continue;
-						}
-						if (attribute->NodeName == "SheetColumns") {
-							sheetSize.x = _wtol(attribute->InnerText->Data());
-							continue;
-						}
-						if (attribute->NodeName == "SheetRows") {
-							sheetSize.y = _wtol(attribute->InnerText->Data());
-							continue;
-						}
-						if (attribute->NodeName == "OffsetX") {
-							offset.x = _wtol(attribute->InnerText->Data());
-							continue;
-						}
-						if (attribute->NodeName == "OffsetY") {
-							offset.y = _wtol(attribute->InnerText->Data());
-							continue;
-						}
+					if (attribute->NodeName == "SheetName") {
+						auto textureFilename = "Assets\\" + attribute->InnerText + ".png";
+						DX::ThrowIfFailed(
+							CreateWICTextureFromFile(device, textureFilename->Data(), nullptr, texture.ReleaseAndGetAddressOf())
+						);
+						continue;
 					}
-
-					auto animation = make_shared<Animation>(texture.Get(), frameSize, sheetSize);
-					animation->Offset = offset;
-					wstring key(animationAlias->Data());
-					m_animations[key] = animation;
+					if (attribute->NodeName == "FrameWidth") {
+						frameSize.x = _wtol(attribute->InnerText->Data());
+						continue;
+					}
+					if (attribute->NodeName == "FrameHeight") {
+						frameSize.y = _wtol(attribute->InnerText->Data());
+						continue;
+					}
+					if (attribute->NodeName == "SheetColumns") {
+						sheetSize.x = _wtol(attribute->InnerText->Data());
+						continue;
+					}
+					if (attribute->NodeName == "SheetRows") {
+						sheetSize.y = _wtol(attribute->InnerText->Data());
+						continue;
+					}
+					if (attribute->NodeName == "OffsetX") {
+						offset.x = _wtol(attribute->InnerText->Data());
+						continue;
+					}
+					if (attribute->NodeName == "OffsetY") {
+						offset.y = _wtol(attribute->InnerText->Data());
+						continue;
+					}
 				}
-			});
 
+				auto animation = make_shared<Animation>(texture.Get(), frameSize, sheetSize);
+				animation->Offset = offset;
+				wstring key(animationAlias->Data());
+				m_animations[key] = animation;
+			}
 		});
-	}
-	catch (Exception^ ex) {
 
-	}
+	}).then([](task<void> t) {
+		try {
+			t.get();
+		}
+		catch (...) {
+
+		}
+	});
 }
 
 
@@ -162,7 +172,7 @@ void SupplyCrate::Draw() {
 			IsDestroyed = true;
 		}
 
-		m_animations[L"explode"]->Draw(m_spriteBatch,Position,SpriteEffects::SpriteEffects_None);
+		m_animations[L"explode"]->Draw(m_spriteBatch, Position, SpriteEffects::SpriteEffects_None);
 		break;
 	default:
 		break;

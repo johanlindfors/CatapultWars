@@ -94,7 +94,7 @@ namespace CatapultWars {
 
 		bool AimReachedShotStrength();
 		void UpdateAimAccordingToShotStrength();
-		concurrency::task<void> ParseXmlAndCreateAnimations(ID3D11Device* device);
+		//concurrency::task<void> ParseXmlAndCreateAnimations(ID3D11Device* device);
 		void StartFiringFromLastAimPosition();
 		void DrawIdleCatapult();
 

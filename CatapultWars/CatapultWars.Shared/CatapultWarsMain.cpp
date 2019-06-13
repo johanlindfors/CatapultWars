@@ -14,7 +14,7 @@ using namespace Concurrency;
 using namespace Microsoft::WRL;
 
 // Loads and initializes application assets when the application is loaded.
-CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
+CatapultWarsMain::CatapultWarsMain(const std::shared_ptr<DX::DeviceResources>& deviceResources)
 	: m_deviceResources(deviceResources)
 	, m_minWind(0)
 	, m_maxWind(2)
@@ -50,7 +50,7 @@ CatapultWarsMain::~CatapultWarsMain() {
 // Updates application state when the window size changes (e.g. device orientation change)
 void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_isInitialized = false;
-	
+
 	auto device = m_deviceResources->GetD3DDevice();
 	auto context = m_deviceResources->GetD3DDeviceContext();
 
@@ -62,38 +62,38 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 #endif
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\sky.png", nullptr, m_skyTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\gameplay_screen.png", nullptr, m_foregroundTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	ComPtr<ID3D11Resource> cloud1TextureRes;
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud1.png", cloud1TextureRes.ReleaseAndGetAddressOf(), m_cloud1Texture.ReleaseAndGetAddressOf())
-		);
+	);
 	ComPtr<ID3D11Resource> cloud2TextureRes;
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\cloud2.png", cloud2TextureRes.ReleaseAndGetAddressOf(), m_cloud2Texture.ReleaseAndGetAddressOf())
-		);
+	);
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\mountain.png", nullptr, m_mountainTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	ComPtr<ID3D11Resource> defeatTextureRes;
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\defeat.png", defeatTextureRes.ReleaseAndGetAddressOf(), m_defeatTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	ComPtr<ID3D11Resource> victoryTextureRes;
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\Backgrounds\\victory.png", victoryTextureRes.ReleaseAndGetAddressOf(), m_victoryTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\hudBackground.png", nullptr, m_hudBackgroundTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\windArrow.png", nullptr, m_windArrowTexture.ReleaseAndGetAddressOf())
-		);
+	);
 	DX::ThrowIfFailed(
 		CreateWICTextureFromFile(device, L"Assets\\Textures\\HUD\\ammoType.png", nullptr, m_ammoTypeTexture.ReleaseAndGetAddressOf())
-		);
+	);
 
 	// Load font
 	m_hudFont.reset(new SpriteFont(device, L"Assets\\Fonts\\TestHUDFont.spritefont"));
@@ -113,43 +113,48 @@ void CatapultWarsMain::CreateWindowSizeDependentResources() {
 	m_computerHUDPosition = Vector2(613, 7);
 	m_windArrowPosition = Vector2(345, 46);
 
+	auto viewport = m_deviceResources->GetScreenViewport();
+	auto orientation = m_deviceResources->ComputeDisplayRotation();
+	if (orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE90 || orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE270) {
+		m_viewportWidth = viewport.Height;
+		m_viewportHeight = viewport.Width;
+	}
+	else {
+		m_viewportWidth = viewport.Width;
+		m_viewportHeight = viewport.Height;
+	}
+
+
 	// Initialize human & AI players
 
 	m_player = make_shared<Human>(PlayerSide::Left);
 	m_player->Name = L"Player";
-	create_task(m_player->Initialize(device, m_spriteBatch, m_audioManager)).get();
-		//.then([&,device]() {
-	
-		m_computer = make_shared<AI>();
-		m_computer->Name = L"AI";
-		//create_task(
-		m_computer->Initialize(device, m_spriteBatch, m_audioManager).get();// then([&, device]() {
-		
-			m_player->SetEnemy(m_computer.get());
-			m_computer->SetEnemy(m_player.get());
 
-			auto viewport = m_deviceResources->GetScreenViewport();
-			auto orientation = m_deviceResources->ComputeDisplayRotation();
-			if (orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE90 || orientation == DXGI_MODE_ROTATION::DXGI_MODE_ROTATION_ROTATE270) {
-				m_viewportWidth = viewport.Height;
-				m_viewportHeight = viewport.Width;
-			} else {
-				m_viewportWidth = viewport.Width;
-				m_viewportHeight = viewport.Height;
-			}
-			m_audioManager->LoadSounds();
+	m_computer = make_shared<AI>();
+	m_computer->Name = L"AI";
 
-			m_isInitialized = true;
+	m_player->SetEnemy(m_computer.get());
+	m_computer->SetEnemy(m_player.get());
 
-			m_screenManager->AddScreen(ref new BackgroundScreen(m_screenManager));
-			m_screenManager->AddScreen(ref new MainMenuScreen(m_screenManager));
+	auto playerTasks = {
+		m_player->Initialize(device, m_spriteBatch, m_audioManager),
+		m_computer->Initialize(device, m_spriteBatch, m_audioManager)
+	};
 
-			m_screenManager->Initialize();
+	when_all(playerTasks.begin(), playerTasks.end()).then([=]() {
+		m_isInitialized = true;
 
-			m_screenManager->LoadContent(device, m_spriteBatch);
-			Start();
-	//	});
-	//});
+		m_audioManager->LoadSounds();
+
+		m_screenManager->AddScreen(ref new BackgroundScreen(m_screenManager));
+		m_screenManager->AddScreen(ref new MainMenuScreen(m_screenManager));
+
+		m_screenManager->Initialize();
+
+		m_screenManager->LoadContent(device, m_spriteBatch);
+
+		Start();
+	});
 }
 
 void CatapultWarsMain::Start() {
@@ -167,11 +172,11 @@ void CatapultWarsMain::Update() {
 		return;
 	}
 
-	m_timer.Tick([&]() {
-		double elapsedSeconds = m_timer.GetElapsedSeconds();
-		m_screenManager->Update(elapsedSeconds);
-	});
-	return;
+	//m_timer.Tick([&]() {
+	//	double elapsedSeconds = m_timer.GetElapsedSeconds();
+	//	m_screenManager->Update(elapsedSeconds);
+	//});
+	//return;
 
 	// Update scene objects.
 	m_timer.Tick([&]() {
@@ -183,7 +188,8 @@ void CatapultWarsMain::Update() {
 			if (m_player->Score > m_computer->Score) {
 				ApplicationInsights::TrackEvent(L"WinGame");
 				m_audioManager->PlaySound("Win");
-			} else {
+			}
+			else {
 				ApplicationInsights::TrackEvent(L"LoseGame");
 				m_audioManager->PlaySound("Lose");
 			}
@@ -196,7 +202,7 @@ void CatapultWarsMain::Update() {
 		if ((m_player->Catapult->CurrentState == CatapultState::Reset ||
 			m_computer->Catapult->CurrentState == CatapultState::Reset) &&
 			!(m_player->Catapult->AnimationRunning ||
-			m_computer->Catapult->AnimationRunning)) {
+				m_computer->Catapult->AnimationRunning)) {
 			m_changeTurn = true;
 			if (m_player->IsActive == true) //Last turn was a human turn?
 			{
@@ -205,7 +211,8 @@ void CatapultWarsMain::Update() {
 				m_isHumanTurn = false;
 				m_player->Catapult->CurrentState = CatapultState::Idle;
 				m_computer->Catapult->CurrentState = CatapultState::Aiming;
-			} else //It was an AI turn
+			}
+			else //It was an AI turn
 			{
 				m_player->IsActive = true;
 				m_computer->IsActive = false;
@@ -246,7 +253,7 @@ void CatapultWarsMain::Update() {
 void CatapultWarsMain::HandleInput(int x, int y) {
 	if (m_isHumanTurn &&
 		(m_player->Catapult->CurrentState == CatapultState::Idle ||
-		m_player->Catapult->CurrentState == CatapultState::Aiming)) {
+			m_player->Catapult->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleInput(x, y);
 	}
 }
@@ -255,7 +262,7 @@ void CatapultWarsMain::IsTouchDown(bool isTouchDown) {
 	m_isDragging = isTouchDown;
 	if (m_isHumanTurn && !isTouchDown &&
 		(m_player->Catapult->CurrentState == CatapultState::Idle ||
-		m_player->Catapult->CurrentState == CatapultState::Aiming)) {
+			m_player->Catapult->CurrentState == CatapultState::Aiming)) {
 		m_player->HandleRelease();
 	}
 }
@@ -288,7 +295,7 @@ bool CatapultWarsMain::Render() {
 	//float dpi = m_deviceResources->GetScalingFactor();
 	//XMMATRIX matrix = XMMATRIX(dpi, 0, 0, 0, 0, dpi, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1);
 	//m_spriteBatch->Begin(SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr, matrix);
-	
+
 	//m_screenManager->Draw(m_timer.GetElapsedSeconds());
 	//return true;
 
@@ -338,10 +345,12 @@ void CatapultWarsMain::DrawHud() {
 	if (m_gameOver) {
 		if (m_player->Score > m_computer->Score) {
 			m_spriteBatch->Draw(m_victoryTexture.Get(), Vector2(m_viewportWidth / 2 - m_victoryTextureWidth / 2, m_viewportHeight / 2 - m_victoryTextureHeight / 2), Colors::White);
-		} else {
+		}
+		else {
 			m_spriteBatch->Draw(m_defeatTexture.Get(), Vector2(m_viewportWidth / 2 - m_defeatTextureWidth / 2, m_viewportHeight / 2 - m_defeatTextureHeight / 2), Colors::White);
 		}
-	} else {
+	}
+	else {
 		// Draw Player Hud
 		m_spriteBatch->Draw(m_hudBackgroundTexture.Get(), m_playerHUDPosition, Colors::White);
 		m_spriteBatch->Draw(m_ammoTypeTexture.Get(), m_playerHUDPosition + Vector2(33, 35), Colors::White);
@@ -373,7 +382,8 @@ void CatapultWarsMain::DrawHud() {
 			text = !m_isDragging ?
 				L"Drag Anywhere to Fire" : L"Release to Fire!";
 			size = m_hudFont->MeasureString(text.c_str());
-		} else {
+		}
+		else {
 			// Prepare AI message
 			text = L"I'll get you yet!";
 			size = m_hudFont->MeasureString(text.c_str());
@@ -381,8 +391,8 @@ void CatapultWarsMain::DrawHud() {
 
 		DrawString(m_hudFont, text,
 			Vector2(
-			m_viewportWidth / 2 - XMVectorGetX(size) / 2,
-			m_viewportHeight - XMVectorGetY(size)),
+				m_viewportWidth / 2 - XMVectorGetX(size) / 2,
+				m_viewportHeight - XMVectorGetY(size)),
 			Colors::Green);
 	}
 }
